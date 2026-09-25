@@ -1006,13 +1006,13 @@ export function App() {
           </div>
 
           {/* Right: Auth Buttons, Target Metrics & Toggles */}
-          <div className="flex w-full min-w-0 flex-wrap items-center justify-start gap-2 sm:gap-2.5 md:w-auto md:flex-nowrap md:justify-end">
+          <div className="flex w-full min-w-0 flex-nowrap items-center justify-start gap-1 overflow-x-auto sm:gap-2.5 md:w-auto md:justify-end">
             <div className="flex items-center gap-2 whitespace-nowrap">
             {/* Mobile Drawer Trigger */}
             <button
               id="mobile-menu-btn"
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 transition-all cursor-pointer"
+              className="md:hidden max-md:p-2 p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 transition-all cursor-pointer shrink-0"
               title="Open hoofdmenu"
             >
               <Menu className="w-5 h-5" />
@@ -1021,7 +1021,7 @@ export function App() {
             {/* Licht / Donker Modus Toggle Knop */}
             <button
               onClick={toggleTheme}
-              className={`p-2 sm:px-2.5 sm:py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer text-xs shadow-sm border ${
+              className={`p-2 sm:px-2.5 sm:py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer text-xs shadow-sm border shrink-0 ${
                 theme === 'light'
                   ? 'bg-amber-50 hover:bg-amber-100/80 border-amber-200 text-amber-900 shadow-amber-500/10'
                   : 'bg-slate-900/90 hover:bg-slate-800 border-slate-800 hover:border-amber-500/40 text-slate-300 hover:text-amber-300'
@@ -1050,33 +1050,18 @@ export function App() {
             </button>
             </div>
 
-            <div className="flex items-center gap-1.5 sm:gap-2 whitespace-nowrap">
-            {/* NL / EN Taal Toggle Knop */}
-            <button
-              onClick={toggleLanguage}
-              className={`px-2.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 cursor-pointer text-xs font-mono font-bold shadow-sm ${
-                theme === 'light'
-                  ? 'bg-sky-50/90 hover:bg-sky-100 border-sky-200 text-sky-800'
-                  : 'bg-slate-900/90 hover:bg-slate-800 border-slate-800 hover:border-cyan-500/40 text-slate-300 hover:text-cyan-300'
-              }`}
-              title={language === 'nl' ? 'Switch to English (EN)' : 'Wissel naar Nederlands (NL)'}
-            >
-              <Globe className={`w-3.5 h-3.5 ${theme === 'light' ? 'text-sky-600' : 'text-cyan-400'}`} />
-              <span>{language.toUpperCase()}</span>
-            </button>
-
-            <div className="flex items-center gap-1.5 sm:gap-2 whitespace-nowrap">
+            <div className="flex items-center gap-1 sm:gap-2 whitespace-nowrap shrink-0">
               {/* NL / EN Taal Toggle Knop */}
               <button
                 onClick={toggleLanguage}
-                className={`px-2.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 cursor-pointer text-xs font-mono font-bold shadow-sm ${
+                className={`max-md:px-2 max-md:py-1 px-2.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 cursor-pointer text-xs font-mono font-bold shadow-sm ${
                   theme === 'light'
                     ? 'bg-sky-50/90 hover:bg-sky-100 border-sky-200 text-sky-800'
                     : 'bg-slate-900/90 hover:bg-slate-800 border-slate-800 hover:border-cyan-500/40 text-slate-300 hover:text-cyan-300'
                 }`}
                 title={language === 'nl' ? 'Switch to English (EN)' : 'Wissel naar Nederlands (NL)'}
               >
-                <Globe className={`w-3.5 h-3.5 ${theme === 'light' ? 'text-sky-600' : 'text-cyan-400'}`} />
+                <Globe className={`max-md:hidden w-3.5 h-3.5 ${theme === 'light' ? 'text-sky-600' : 'text-cyan-400'}`} />
                 <span>{language.toUpperCase()}</span>
               </button>
 
@@ -1125,10 +1110,10 @@ export function App() {
                 </button>
               </div>
             ) : (
-              <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="flex items-center gap-1 sm:gap-2 shrink-0">
                 <button
                   onClick={() => setActiveTab('login')}
-                  className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  className={`max-md:px-2 max-md:py-1 px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                     activeTab === 'login'
                       ? theme === 'light'
                         ? 'bg-amber-100 border-amber-300 text-amber-950 shadow-sm shadow-amber-500/10'
@@ -1139,21 +1124,21 @@ export function App() {
                   }`}
                   title={language === 'en' ? 'Sign In' : 'Inloggen'}
                 >
-                  <LogIn className="w-3.5 h-3.5 text-amber-400" />
+                  <LogIn className="max-md:hidden w-3.5 h-3.5 text-amber-400" />
                   <span>{language === 'en' ? 'Sign In' : 'Login'}</span>
                 </button>
 
                 {/* REGISTREER KNOP VOLGENS OPDRACHT */}
                 <button
                   onClick={() => setActiveTab('register')}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  className={`max-md:px-2 max-md:py-1 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                     activeTab === 'register'
                       ? 'bg-cyan-400 text-slate-950 shadow-md shadow-cyan-400/25'
                       : 'bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 shadow-sm shadow-amber-500/20'
                   }`}
                   title={language === 'en' ? 'Register as shareholder' : 'Registreer als aandeelhouder'}
                 >
-                  <UserPlus className="w-3.5 h-3.5" />
+                  <UserPlus className="max-md:hidden w-3.5 h-3.5" />
                   <span>{language === 'en' ? 'Register' : 'Registreer'}</span>
                 </button>
               </div>
