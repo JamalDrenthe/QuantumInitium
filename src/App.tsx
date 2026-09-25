@@ -8,8 +8,6 @@ import {
   Bot,
   Calculator,
   BookOpen,
-  Maximize2,
-  Minimize2,
   ChevronLeft,
   ChevronRight,
   Search,
@@ -676,7 +674,6 @@ export function App() {
   const [selectedArchNode, setSelectedArchNode] = useState<string>('mother');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
-  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
   // Upgraded Menu & Sidebar State
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
@@ -758,80 +755,6 @@ export function App() {
       (entityCategoryFilter === 'proptech' && sub.id === 'RealEstate');
     return matchesSearch && matchesCategory;
   });
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      const doc = document as any;
-      const isFs = Boolean(
-        doc.fullscreenElement ||
-        doc.webkitFullscreenElement ||
-        doc.mozFullScreenElement ||
-        doc.msFullscreenElement
-      );
-      setIsFullscreen(isFs);
-    };
-
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
-    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
-
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
-    };
-  }, []);
-
-  const toggleFullscreen = () => {
-    try {
-      const doc = document as any;
-      const docEl = document.documentElement as any;
-      const isCurrentlyFullscreen = Boolean(
-        doc.fullscreenElement ||
-        doc.webkitFullscreenElement ||
-        doc.mozFullScreenElement ||
-        doc.msFullscreenElement
-      );
-
-      if (!isCurrentlyFullscreen) {
-        if (typeof docEl?.requestFullscreen === 'function') {
-          docEl.requestFullscreen().catch(() => {});
-          setIsFullscreen(true);
-        } else if (typeof docEl?.webkitRequestFullscreen === 'function') {
-          docEl.webkitRequestFullscreen();
-          setIsFullscreen(true);
-        } else if (typeof docEl?.mozRequestFullScreen === 'function') {
-          docEl.mozRequestFullScreen();
-          setIsFullscreen(true);
-        } else if (typeof docEl?.msRequestFullscreen === 'function') {
-          docEl.msRequestFullscreen();
-          setIsFullscreen(true);
-        } else {
-          setIsFullscreen((prev) => !prev);
-        }
-      } else {
-        if (typeof doc?.exitFullscreen === 'function') {
-          doc.exitFullscreen().catch(() => {});
-          setIsFullscreen(false);
-        } else if (typeof doc?.webkitExitFullscreen === 'function') {
-          doc.webkitExitFullscreen();
-          setIsFullscreen(false);
-        } else if (typeof doc?.mozCancelFullScreen === 'function') {
-          doc.mozCancelFullScreen();
-          setIsFullscreen(false);
-        } else if (typeof doc?.msExitFullscreen === 'function') {
-          doc.msExitFullscreen();
-          setIsFullscreen(false);
-        } else {
-          setIsFullscreen(false);
-        }
-      }
-    } catch {
-      setIsFullscreen((prev) => !prev);
-    }
-  };
 
   const handleRunSimulation = () => {
     const timestamp = new Date().toLocaleTimeString();
@@ -1239,13 +1162,6 @@ export function App() {
               </span>
               <span className="text-amber-400 font-mono font-bold text-xs">Medio 2027 • €82M</span>
             </div>
-            <button
-              onClick={toggleFullscreen}
-              className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
-              title={language === 'en' ? 'Toggle Fullscreen' : 'Volledig scherm wisselen'}
-            >
-              {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-            </button>
           </div>
         </div>
 
