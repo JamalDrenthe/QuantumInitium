@@ -53,6 +53,7 @@ import RegisterPage from './components/RegisterPage';
 import InvestorDashboard from './components/InvestorDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import { AuthUser, DEMO_INVESTOR, DEMO_ADMIN, SHARE_PRICE_CURRENT } from './types/auth';
+import { authUserFromSupabaseUser, supabase } from './lib/supabase';
 import { ecosystemData } from './data/ecosystem';
 import quantumInitiumLogo from './assets/images/quantum_initium_logo_1790097745176.jpg';
 
@@ -536,6 +537,31 @@ export function App() {
   >('architecture');
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
 
+  useEffect(() => {
+    if (!supabase) {
+      return;
+    }
+
+    let mounted = true;
+    supabase.auth.getSession().then(({ data }) => {
+      if (mounted && data.session?.user) {
+        setCurrentUser(authUserFromSupabaseUser(data.session.user));
+        setActiveTab('investor_dashboard');
+      }
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (mounted && session?.user) {
+        setCurrentUser(authUserFromSupabaseUser(session.user));
+      }
+    });
+
+    return () => {
+      mounted = false;
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
   const handleLoginSuccess = (user: AuthUser) => {
     setCurrentUser(user);
     if (user.role === 'admin') {
@@ -550,7 +576,8 @@ export function App() {
     setActiveTab('investor_dashboard');
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await supabase?.auth.signOut();
     setCurrentUser(null);
     setActiveTab('architecture');
   };

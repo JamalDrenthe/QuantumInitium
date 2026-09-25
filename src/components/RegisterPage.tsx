@@ -15,6 +15,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { AuthUser, SHARE_PRICE_CURRENT } from '../types/auth';
+import { authUserFromSupabaseUser, supabase } from '../lib/supabase';
 
 interface RegisterPageProps {
   onRegisterSuccess: (user: AuthUser) => void;
@@ -37,7 +38,7 @@ export default function RegisterPage({
 
   const totalInvestment = desiredShares * SHARE_PRICE_CURRENT;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
 
@@ -62,25 +63,39 @@ export default function RegisterPage({
       return;
     }
 
-    const randomId = Math.floor(1000 + Math.random() * 9000);
-    const newUser: AuthUser = {
-      id: `inv_${Date.now()}`,
-      name: name.trim(),
-      email: email.trim().toLowerCase(),
-      role: 'investor',
-      sharesOwned: desiredShares,
-      purchasePrice: SHARE_PRICE_CURRENT,
-      currentPrice: SHARE_PRICE_CURRENT,
-      certificateId: `QI INV ${randomId} NL`,
-      joinDate: new Date().toLocaleDateString('nl-NL', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      }),
-      title: 'Geregistreerd Participatiehouder'
-    };
+    if (!supabase) {
+      setErrorMsg('Supabase is nog niet geconfigureerd.');
+      return;
+    }
 
-    onRegisterSuccess(newUser);
+    const { data, error } = await supabase.auth.signUp({
+      email: email.trim().toLowerCase(),
+      password,
+      options: {
+        data: {
+          name: name.trim(),
+          role: 'investor',
+          desiredShares
+        }
+      }
+    });
+
+    if (error) {
+      setErrorMsg(error.message);
+      return;
+    }
+
+    if (!data.user) {
+      setErrorMsg('Account kon niet worden aangemaakt.');
+      return;
+    }
+
+    if (!data.session) {
+      setErrorMsg('Account aangemaakt. Bevestig eerst uw e-mailadres en log daarna in.');
+      return;
+    }
+
+    onRegisterSuccess(authUserFromSupabaseUser(data.user));
   };
 
   return (
