@@ -1017,20 +1017,6 @@ export function App() {
               <Menu className="w-5 h-5" />
             </button>
 
-            {/* NL / EN Taal Toggle Knop */}
-            <button
-              onClick={toggleLanguage}
-              className={`px-2.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 cursor-pointer text-xs font-mono font-bold shadow-sm ${
-                theme === 'light'
-                  ? 'bg-sky-50/90 hover:bg-sky-100 border-sky-200 text-sky-800'
-                  : 'bg-slate-900/90 hover:bg-slate-800 border-slate-800 hover:border-cyan-500/40 text-slate-300 hover:text-cyan-300'
-              }`}
-              title={language === 'nl' ? 'Switch to English (EN)' : 'Wissel naar Nederlands (NL)'}
-            >
-              <Globe className={`w-3.5 h-3.5 ${theme === 'light' ? 'text-sky-600' : 'text-cyan-400'}`} />
-              <span>{language.toUpperCase()}</span>
-            </button>
-
             {/* Licht / Donker Modus Toggle Knop */}
             <button
               onClick={toggleTheme}
@@ -1061,6 +1047,21 @@ export function App() {
                 </>
               )}
             </button>
+
+            <div className="flex items-center gap-1.5 sm:gap-2 whitespace-nowrap">
+              {/* NL / EN Taal Toggle Knop */}
+              <button
+                onClick={toggleLanguage}
+                className={`px-2.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 cursor-pointer text-xs font-mono font-bold shadow-sm ${
+                  theme === 'light'
+                    ? 'bg-sky-50/90 hover:bg-sky-100 border-sky-200 text-sky-800'
+                    : 'bg-slate-900/90 hover:bg-slate-800 border-slate-800 hover:border-cyan-500/40 text-slate-300 hover:text-cyan-300'
+                }`}
+                title={language === 'nl' ? 'Switch to English (EN)' : 'Wissel naar Nederlands (NL)'}
+              >
+                <Globe className={`w-3.5 h-3.5 ${theme === 'light' ? 'text-sky-600' : 'text-cyan-400'}`} />
+                <span>{language.toUpperCase()}</span>
+              </button>
 
             {currentUser ? (
               <div className="flex items-center gap-2">
@@ -1140,6 +1141,7 @@ export function App() {
                 </button>
               </div>
             )}
+            </div>
 
             <div className="text-right hidden xl:block">
               <span className="text-slate-500 block text-[9px] font-mono tracking-wider uppercase">
