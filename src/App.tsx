@@ -1176,14 +1176,16 @@ export function App() {
             theme === 'light' ? 'bg-sky-50/90 border-sky-200' : 'bg-slate-900/60 border-slate-800'
           }`}>
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-amber-400 to-blue-700 p-0.5 flex items-center justify-center shrink-0 overflow-hidden shadow-md">
-                <img
-                  src={quantumInitiumLogo}
-                  alt="QuantumInitium Logo"
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover rounded-[7px]"
-                />
-              </div>
+              <a href="https://quantuminitium.com/" aria-label="Open quantuminitium.com">
+                <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-amber-400 to-blue-700 p-0.5 flex items-center justify-center shrink-0 overflow-hidden shadow-md">
+                  <img
+                    src={quantumInitiumLogo}
+                    alt="QuantumInitium Logo"
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover rounded-[7px]"
+                  />
+                </div>
+              </a>
               <div>
                 <div className={`font-extrabold text-sm ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>QuantumInitium Ltd</div>
                 <div className={`text-[10px] font-mono ${theme === 'light' ? 'text-amber-700 font-semibold' : 'text-amber-400'}`}>LSE Main Market Prospectus</div>
