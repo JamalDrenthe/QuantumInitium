@@ -910,7 +910,7 @@ export function App() {
     },
     {
       id: 'dossier' as const,
-      label: language === 'en' ? 'Institutional Dossier' : 'Institutioneel Dossier',
+      label: 'Dossier',
       shortLabel: language === 'en' ? 'Dossier' : 'Dossier',
       description: language === 'en'
         ? '10 Detailed chapters of the official LSE Main Market prospectus'
@@ -1945,7 +1945,7 @@ export function App() {
               <div className="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                    <Network className="w-4 h-4 text-cyan-400" /> Interactief Entiteiten Netwerk
+                    <Network className="w-4 h-4 text-cyan-400" /> Network
                   </h3>
                 </div>
 
