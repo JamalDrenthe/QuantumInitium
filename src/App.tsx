@@ -535,7 +535,7 @@ function renderHoldcoIcon(iconName: string, className: string = 'w-4 h-4') {
 export function App() {
   const [activeTab, setActiveTab] = useState<
     'architecture' | 'simulator' | 'calculator' | 'dossier' | '3d' | 'login' | 'register' | 'investor_dashboard' | 'admin_dashboard'
-  >('architecture');
+  >('simulator');
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [managedAccounts, setManagedAccounts] = useState<AuthUser[]>([]);
   const [accountsLoading, setAccountsLoading] = useState<boolean>(false);
@@ -558,7 +558,7 @@ export function App() {
   const handleLogout = () => {
     void clearAuthSession();
     setCurrentUser(null);
-    setActiveTab('architecture');
+    setActiveTab('simulator');
   };
 
   useEffect(() => {
@@ -890,7 +890,7 @@ export function App() {
     setMobileMenuOpen(false);
   };
 
-  const handleSelectEntity = (item: EntityItem, targetView: 'architecture' | '3d') => {
+  const handleSelectEntity = (item: EntityItem, targetView: '3d') => {
     setSelectedArchNode(item.holdingKey);
     const mapped3dKey = archKeyToHoldcoKey[item.holdingKey] || 'Moederholding';
     setSelected3dKey(mapped3dKey);
@@ -900,7 +900,7 @@ export function App() {
     setMobileMenuOpen(false);
   };
 
-  const handleSelectSubholding = (holdcoKey: string, targetView: 'architecture' | '3d' = '3d') => {
+  const handleSelectSubholding = (holdcoKey: string, targetView: '3d' = '3d') => {
     const canonicalHoldcoKey = archKeyToHoldcoKey[holdcoKey] || holdcoKey;
     const archKey = holdcoKeyToArchKey[canonicalHoldcoKey] || 'mother';
     setSelectedArchNode(archKey);
@@ -959,19 +959,6 @@ export function App() {
     Object.values(ecosystemData)[0];
 
   const navTabs = [
-    {
-      id: 'architecture' as const,
-      label: language === 'en' ? 'Architecture' : 'Architectuur',
-      shortLabel: language === 'en' ? 'Architecture' : 'Architectuur',
-      description: language === 'en'
-        ? '5 Ring-fenced Subholdings & legal capital routing flow'
-        : '5 Ring-fenced Subholdings & juridische kapitaalstromen',
-      icon: Network,
-      badge: language === 'en' ? '12 Ent.' : '12 Ent.',
-      badgeColor: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/25',
-      activeClass: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 shadow-sm shadow-cyan-500/20',
-      iconColor: 'text-cyan-400'
-    },
     {
       id: 'simulator' as const,
       label: 'IQ Bot / Agent',
@@ -1079,7 +1066,7 @@ export function App() {
 
             {/* Brand Logo & Name */}
             <div
-              onClick={() => setActiveTab('architecture')}
+              onClick={() => setActiveTab('simulator')}
               className="flex min-w-0 items-center gap-3 cursor-pointer group"
             >
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-400 via-yellow-500 to-blue-700 p-0.5 flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0 group-hover:shadow-amber-500/40 transition-all overflow-hidden">
@@ -1874,13 +1861,6 @@ export function App() {
                               >
                                 Kaart
                               </button>
-                              <button
-                                onClick={() => handleSelectSubholding(sub.id, 'architecture')}
-                                className="px-2 py-0.5 rounded bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/20 font-mono transition-colors cursor-pointer"
-                                title="Bekijk in Flow Architectuur"
-                              >
-                                Flow
-                              </button>
                             </div>
                           </div>
                         </div>
@@ -1915,13 +1895,6 @@ export function App() {
                       <div className="pt-1 flex items-center justify-between text-[10px] text-slate-500">
                         <span className="truncate max-w-[140px]">{item.holdingName.split(':')[0]}</span>
                         <div className="flex items-center gap-1 shrink-0">
-                          <button
-                            onClick={() => handleSelectEntity(item, 'architecture')}
-                            className="px-1.5 py-0.5 rounded bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/20 font-mono transition-colors cursor-pointer"
-                            title="Bekijk in Flow Architectuur"
-                          >
-                            Flow
-                          </button>
                           <button
                             onClick={() => handleSelectEntity(item, '3d')}
                             className="px-1.5 py-0.5 rounded bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-300 border border-yellow-500/20 font-mono transition-colors cursor-pointer"
@@ -2023,7 +1996,7 @@ export function App() {
             </div>
           )}
           {/* TAB 1: VISUAL FLOW ARCHITECTURE MAP */}
-          {activeTab === 'architecture' && (
+          {false && activeTab === 'architecture' && (
             <div className="flex-1 min-w-0 overflow-y-auto p-3 sm:p-5 lg:p-8 space-y-6 sm:space-y-8">
               <div className="glass-panel min-w-0 p-4 sm:p-7 rounded-2xl border border-yellow-500/30 gold-glow flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 sm:gap-6">
                 <div className="min-w-0 space-y-2">
@@ -3186,21 +3159,6 @@ export function App() {
                     {/* Snelle actieknoppen */}
                     <div className="pt-2 flex items-center gap-2">
                       <button
-                        onClick={() => {
-                          const archKey = holdcoKeyToArchKey[selectedEntityData.holdcoKey] || 'mother';
-                          setSelectedArchNode(archKey);
-                          setActiveTab('architecture');
-                        }}
-                        className={`flex-1 py-2 px-3 rounded-xl border text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                          theme === 'light'
-                            ? 'bg-cyan-50 hover:bg-cyan-100 border-cyan-300 text-cyan-950 font-bold'
-                            : 'bg-cyan-500/20 hover:bg-cyan-500/30 border-cyan-500/40 text-cyan-300'
-                        }`}
-                      >
-                        <Network className="w-3.5 h-3.5" />
-                        <span>Bekijk in Architectuur</span>
-                      </button>
-                      <button
                         onClick={() => setSelected3dEntity(null)}
                         className={`py-2 px-3 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                           theme === 'light'
@@ -3504,20 +3462,6 @@ export function App() {
                         {/* Quick Acties */}
                         <div className="pt-2 flex items-center gap-2">
                           <button
-                            onClick={() => {
-                              const archKey = holdcoKeyToArchKey[current3dNode.id] || 'mother';
-                              setSelectedArchNode(archKey);
-                              setActiveTab('architecture');
-                            }}
-                            className={`flex-1 py-2 rounded-xl text-xs font-mono font-bold transition-all text-center cursor-pointer border ${
-                              theme === 'light'
-                                ? 'bg-cyan-50 hover:bg-cyan-100 text-cyan-900 border-cyan-300'
-                                : 'bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 border-cyan-500/30'
-                            }`}
-                          >
-                            Bekijk in Flow Architectuur
-                          </button>
-                          <button
                             onClick={() => setShowSubholdingsModal(true)}
                             className={`py-2 px-3 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 border ${
                               theme === 'light'
@@ -3683,7 +3627,7 @@ export function App() {
                               </button>
                               <button
                                 onClick={() => {
-                                  handleSelectSubholding(sub.id, 'architecture');
+                                  handleSelectSubholding(sub.id, '3d');
                                   setShowSubholdingsModal(false);
                                 }}
                                 className={`py-1.5 px-3 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer ${
@@ -3734,7 +3678,7 @@ export function App() {
               <LoginPage
                 onLoginSuccess={handleLoginSuccess}
                 onNavigateRegister={() => setActiveTab('register')}
-                onNavigateHome={(t) => setActiveTab(t || 'architecture')}
+                onNavigateHome={(t) => setActiveTab(t || 'simulator')}
               />
             </div>
           )}
@@ -3745,7 +3689,7 @@ export function App() {
               <RegisterPage
                 onRegisterSuccess={handleRegisterSuccess}
                 onNavigateLogin={() => setActiveTab('login')}
-                onNavigateHome={(t) => setActiveTab(t || 'architecture')}
+                onNavigateHome={(t) => setActiveTab(t || 'simulator')}
               />
             </div>
           )}
@@ -3756,7 +3700,7 @@ export function App() {
               <InvestorDashboard
                 user={currentUser && currentUser.role !== 'admin' ? currentUser : DEMO_INVESTOR}
                 onLogout={handleLogout}
-                onNavigateHome={(t) => setActiveTab(t || 'architecture')}
+                onNavigateHome={(t) => setActiveTab(t || 'simulator')}
                 onUpdateShares={(newTotal) => {
                   if (currentUser) {
                     handleCurrentUserUpdate({ ...currentUser, sharesOwned: newTotal });
@@ -3777,7 +3721,7 @@ export function App() {
                 accountsLoading={accountsLoading}
                 onUpdateAccount={handleManagedAccountUpdate}
                 onLogout={handleLogout}
-                onNavigateHome={(t) => setActiveTab(t || 'architecture')}
+                onNavigateHome={(t) => setActiveTab(t || 'simulator')}
                 onSwitchRole={() => {
                   setCurrentUser(DEMO_INVESTOR);
                   setActiveTab('investor_dashboard');
