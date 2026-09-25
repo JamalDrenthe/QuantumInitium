@@ -89,7 +89,7 @@ export default function LoginPage({
       return;
     }
 
-    if (!['investor', 'shareholder'].includes(selectedRole) || !supabase) {
+    if (!supabase) {
       setErrorMsg('Controleer uw inloggegevens.');
       return;
     }

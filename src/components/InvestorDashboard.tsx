@@ -152,6 +152,7 @@ export default function InvestorDashboard({
   const [cashBalance, setCashBalance] = useState<number>(
     storedPortfolio?.cashBalance ?? currentUser.cashBalance ?? 0
   );
+  const canUseInvestorWorkflows = currentUser.role === 'investor';
 
   useEffect(() => {
     const storageKey = `qi_portfolio_${initialUser.id}`;
@@ -625,6 +626,7 @@ export default function InvestorDashboard({
   // Handler: Saldo Opladen / Storten
   const handleDepositCash = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!canUseInvestorWorkflows) return;
     if (depositAmount <= 0) return;
 
     const storedPortfolio = readStoredPortfolio(currentUser.id);
@@ -660,6 +662,7 @@ export default function InvestorDashboard({
   // Handler: Aandelen Kopen vanuit Wallet Saldo
   const handleBuyFromWallet = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!canUseInvestorWorkflows) return;
     const totalCost = walletBuyShares * SHARE_PRICE_CURRENT;
     const storedPortfolio = readStoredPortfolio(currentUser.id);
     const baseShares = storedPortfolio?.sharesOwned ?? currentUser.sharesOwned;
@@ -704,6 +707,7 @@ export default function InvestorDashboard({
   // Handler: Transfer Uitvoeren (Aandelen of Geld naar ander account)
   const handleExecuteTransfer = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!canUseInvestorWorkflows) return;
     const storedPortfolio = readStoredPortfolio(currentUser.id);
     const baseShares = storedPortfolio?.sharesOwned ?? currentUser.sharesOwned;
     const baseCash = storedPortfolio?.cashBalance ?? cashBalance;
@@ -897,7 +901,10 @@ export default function InvestorDashboard({
     }
   ];
 
-  const currentMenuItem = menuItems.find(m => m.id === internalView) || menuItems[0];
+  const visibleMenuItems = canUseInvestorWorkflows
+    ? menuItems
+    : menuItems.filter(({ id }) => ['overview', 'koers', 'history', 'certificate', 'account', 'settings'].includes(id));
+  const currentMenuItem = visibleMenuItems.find(m => m.id === internalView) || visibleMenuItems[0];
   const CurrentIcon = currentMenuItem.icon;
 
   // Koers grafiek data generator op basis van timeframe
@@ -1249,7 +1256,7 @@ export default function InvestorDashboard({
                   </div>
 
                   <div className="space-y-1">
-                    {menuItems.map((item) => {
+                    {visibleMenuItems.map((item) => {
                       const Icon = item.icon;
                       const isSelected = internalView === item.id;
                       return (
@@ -1479,23 +1486,26 @@ export default function InvestorDashboard({
                   €{cashBalance.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>
-              <button
-                type="button"
-                onClick={() => setInternalView('wallet')}
-                className="px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition-colors cursor-pointer"
-              >
-                Naar Wallet
-              </button>
+              {canUseInvestorWorkflows && (
+                <button
+                  type="button"
+                  onClick={() => setInternalView('wallet')}
+                  className="px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition-colors cursor-pointer"
+                >
+                  Naar Wallet
+                </button>
+              )}
             </div>
           </div>
 
           {/* SNELKOPPELINGEN NAAR BELANGRIJKE MODULES */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <button
-              type="button"
-              onClick={() => setInternalView('wallet')}
-              className="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-emerald-500/50 text-left transition-all group cursor-pointer"
-            >
+            {canUseInvestorWorkflows && (
+              <button
+                type="button"
+                onClick={() => setInternalView('wallet')}
+                className="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-emerald-500/50 text-left transition-all group cursor-pointer"
+              >
               <div className="flex items-center justify-between mb-3">
                 <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:scale-110 transition-transform">
                   <Wallet className="w-5 h-5" />
@@ -1504,7 +1514,8 @@ export default function InvestorDashboard({
               </div>
               <h4 className="text-sm font-bold text-white mb-1">Wallet & Saldo Opladen</h4>
               <p className="text-xs text-slate-400">Bekijk uw aandelen saldo, stort werkkapitaal of verstuur aandelen.</p>
-            </button>
+              </button>
+            )}
 
             <button
               type="button"
@@ -1521,11 +1532,12 @@ export default function InvestorDashboard({
               <p className="text-xs text-slate-400">Bekijk de historische koers en tranches per uur, dag, week en jaar.</p>
             </button>
 
-            <button
-              type="button"
-              onClick={() => setShowTransferModal(true)}
-              className="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-amber-500/50 text-left transition-all group cursor-pointer"
-            >
+            {canUseInvestorWorkflows && (
+              <button
+                type="button"
+                onClick={() => setShowTransferModal(true)}
+                className="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-amber-500/50 text-left transition-all group cursor-pointer"
+              >
               <div className="flex items-center justify-between mb-3">
                 <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 group-hover:scale-110 transition-transform">
                   <Send className="w-5 h-5" />
@@ -1534,7 +1546,8 @@ export default function InvestorDashboard({
               </div>
               <h4 className="text-sm font-bold text-white mb-1">Directe Aandelen Transfer</h4>
               <p className="text-xs text-slate-400">Draag direct aandelen of werkkapitaal over aan een ander account.</p>
-            </button>
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -1542,7 +1555,7 @@ export default function InvestorDashboard({
       {/* ========================================================================= */}
       {/* 2. TAB: WALLET (SALDO, OPLADEN, AANDELEN VERSTUREN & BIJKOPEN)             */}
       {/* ========================================================================= */}
-      {internalView === 'wallet' && (
+      {internalView === 'wallet' && canUseInvestorWorkflows && (
         <div className="space-y-6">
           {/* WALLET SALDO OVERZICHT */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -2889,7 +2902,7 @@ export default function InvestorDashboard({
       {/* ========================================================================= */}
       {/* MODAL: TRANSFER (AANDELEN OF WANDELEND GELD OVERBOEKEN)                   */}
       {/* ========================================================================= */}
-      {showTransferModal && (
+      {showTransferModal && canUseInvestorWorkflows && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200">
           <div className="glass-panel w-full max-w-lg p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl space-y-6 relative">
             <div className="flex justify-between items-start pb-4 border-b border-slate-800">
