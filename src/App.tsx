@@ -546,8 +546,9 @@ export function App() {
     let mounted = true;
     supabase.auth.getSession().then(({ data }) => {
       if (mounted && data.session?.user) {
-        setCurrentUser(authUserFromSupabaseUser(data.session.user));
-        setActiveTab('investor_dashboard');
+        const user = authUserFromSupabaseUser(data.session.user);
+        setCurrentUser(user);
+        setActiveTab(user.role === 'admin' ? 'admin_dashboard' : 'investor_dashboard');
       }
     });
 
@@ -563,9 +564,10 @@ export function App() {
       }
 
       if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
-        setCurrentUser(authUserFromSupabaseUser(session.user));
+        const user = authUserFromSupabaseUser(session.user);
+        setCurrentUser(user);
         if (event === 'SIGNED_IN') {
-          setActiveTab('investor_dashboard');
+          setActiveTab(user.role === 'admin' ? 'admin_dashboard' : 'investor_dashboard');
         }
       }
     });
@@ -583,6 +585,16 @@ export function App() {
     } else {
       setActiveTab('investor_dashboard');
     }
+  };
+
+  const roleLabel = (role: AuthUser['role']) => {
+    if (role === 'admin') {
+      return 'Admin';
+    }
+
+    return role === 'shareholder'
+      ? 'Share Holder'
+      : language === 'en' ? 'Investor' : 'Investeerder';
   };
 
   const handleRegisterSuccess = (user: AuthUser) => {
@@ -998,15 +1010,21 @@ export function App() {
             id: (currentUser.role === 'admin' ? 'admin_dashboard' : 'investor_dashboard') as any,
             label: currentUser.role === 'admin'
               ? (language === 'en' ? 'Executive Dashboard' : 'Admin Dashboard')
-              : (language === 'en' ? 'Investor Dashboard' : 'Investor Dashboard'),
+              : currentUser.role === 'shareholder'
+                ? 'Share Holder Dashboard'
+                : (language === 'en' ? 'Investor Dashboard' : 'Investor Dashboard'),
             shortLabel: 'Dashboard',
             description: currentUser.role === 'admin'
               ? (language === 'en' ? 'Executive governance, audits & investor control' : 'Bestuurlijk beheer, audits & aandeelhouderscontrole')
-              : (language === 'en' ? 'Share wallet, market quote, transfers & integration' : 'Aandelenwallet, koers, transfers & entiteitenintegratie'),
+              : currentUser.role === 'shareholder'
+                ? 'Share ownership, reports & shareholder access'
+                : (language === 'en' ? 'Share wallet, market quote, transfers & integration' : 'Aandelenwallet, koers, transfers & entiteitenintegratie'),
             icon: currentUser.role === 'admin' ? ShieldCheck : TrendingUp,
             badge: currentUser.role === 'admin'
               ? (language === 'en' ? 'Board' : 'Directie')
-              : (language === 'en' ? 'Portfolio' : 'Portefeuille'),
+              : currentUser.role === 'shareholder'
+                ? 'Ownership'
+                : (language === 'en' ? 'Portfolio' : 'Portefeuille'),
             badgeColor:
               currentUser.role === 'admin'
                 ? 'text-cyan-400 bg-cyan-500/10 border-cyan-500/25'
@@ -1014,8 +1032,12 @@ export function App() {
             activeClass:
               currentUser.role === 'admin'
                 ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 shadow-sm shadow-cyan-500/20'
-                : 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm shadow-amber-500/20',
-            iconColor: currentUser.role === 'admin' ? 'text-cyan-400' : 'text-amber-400'
+                : currentUser.role === 'shareholder'
+                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm shadow-emerald-500/20'
+                  : 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm shadow-amber-500/20',
+            iconColor: currentUser.role === 'admin'
+              ? 'text-cyan-400'
+              : currentUser.role === 'shareholder' ? 'text-emerald-400' : 'text-amber-400'
           }
         ]
       : [])
@@ -1146,9 +1168,7 @@ export function App() {
                       ? 'bg-sky-100 text-sky-800 font-semibold'
                       : 'bg-slate-800 text-slate-400'
                   }`}>
-                    {currentUser.role === 'admin'
-                      ? (language === 'en' ? 'Admin' : 'Admin')
-                      : (language === 'en' ? 'Investor' : 'Investeerder')}
+                    {roleLabel(currentUser.role)}
                   </span>
                 </button>
 
@@ -1341,7 +1361,7 @@ export function App() {
                         ? 'bg-amber-100 text-amber-900 border-amber-300 font-semibold'
                         : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
                     }`}>
-                      {currentUser.role === 'admin' ? 'Admin' : 'Investeerder'}
+                      {roleLabel(currentUser.role)}
                     </span>
                   </div>
                   <div className="grid grid-cols-2 gap-2 pt-1">
@@ -3740,7 +3760,7 @@ export function App() {
             <div className="flex-1 overflow-y-auto h-full w-full">
               <InvestorDashboard
                 key={currentUser?.id ?? 'investor-dashboard'}
-                user={currentUser && currentUser.role === 'investor' ? currentUser : DEMO_INVESTOR}
+                user={currentUser && currentUser.role !== 'admin' ? currentUser : DEMO_INVESTOR}
                 onLogout={handleLogout}
                 onNavigateHome={(t) => setActiveTab(t || 'architecture')}
                 onUpdateShares={(newTotal) => {

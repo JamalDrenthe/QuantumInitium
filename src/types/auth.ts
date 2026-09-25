@@ -1,4 +1,4 @@
-export type UserRole = 'investor' | 'admin';
+export type UserRole = 'investor' | 'shareholder' | 'admin';
 
 export interface ShareTransaction {
   id: string;

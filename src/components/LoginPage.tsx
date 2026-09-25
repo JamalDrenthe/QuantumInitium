@@ -18,6 +18,8 @@ import {
 import { AuthUser, DEMO_ADMIN, SHARE_PRICE_CURRENT } from '../types/auth';
 import { authUserFromSupabaseUser, supabase } from '../lib/supabase';
 
+type LoginRole = 'investor' | 'shareholder' | 'admin';
+
 interface LoginPageProps {
   onLoginSuccess: (user: AuthUser) => void;
   onNavigateRegister: () => void;
@@ -29,21 +31,24 @@ export default function LoginPage({
   onNavigateRegister,
   onNavigateHome
 }: LoginPageProps) {
-  const [selectedRole, setSelectedRole] = useState<'investor' | 'admin'>('investor');
+  const [selectedRole, setSelectedRole] = useState<LoginRole>('investor');
   const [email, setEmail] = useState<string>('investor@quantuminitium.com');
   const [password, setPassword] = useState<string>('investor2027');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const handleSelectRole = (role: 'investor' | 'admin') => {
+  const handleSelectRole = (role: LoginRole) => {
     setSelectedRole(role);
     setErrorMsg(null);
     if (role === 'investor') {
       setEmail('investor@quantuminitium.com');
       setPassword('investor2027');
-    } else {
+    } else if (role === 'admin') {
       setEmail('admin@quantuminitium.com');
       setPassword('admin2027');
+    } else {
+      setEmail('');
+      setPassword('');
     }
   };
 
@@ -84,7 +89,7 @@ export default function LoginPage({
       return;
     }
 
-    if (selectedRole !== 'investor' || !supabase) {
+    if (!['investor', 'shareholder'].includes(selectedRole) || !supabase) {
       setErrorMsg('Controleer uw inloggegevens.');
       return;
     }
@@ -99,7 +104,14 @@ export default function LoginPage({
       return;
     }
 
-    onLoginSuccess(authUserFromSupabaseUser(data.user));
+    const user = authUserFromSupabaseUser(data.user);
+    if (user.role !== selectedRole) {
+      setErrorMsg('Deze account hoort niet bij de geselecteerde profielrol.');
+      await supabase.auth.signOut();
+      return;
+    }
+
+    onLoginSuccess(user);
   };
 
   return (
@@ -147,7 +159,7 @@ export default function LoginPage({
               <span className="text-amber-400 font-semibold">Live Demo Gereed</span>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {/* Knop voor Investeerder */}
               <button
                 type="button"
@@ -167,6 +179,28 @@ export default function LoginPage({
                 <div className="text-sm font-bold text-white">Investor Account</div>
                 <div className="text-[11px] text-slate-400 mt-0.5">
                   12.500 aandelen • €{SHARE_PRICE_CURRENT.toFixed(2)} koers
+                </div>
+              </button>
+
+              {/* Knop voor Share Holder */}
+              <button
+                type="button"
+                onClick={() => handleSelectRole('shareholder')}
+                className={`p-3.5 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
+                  selectedRole === 'shareholder'
+                    ? 'bg-emerald-500/20 border-emerald-500/60 shadow-lg shadow-emerald-500/20 text-white'
+                    : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                    Share Holder
+                  </span>
+                  <Award className="w-4 h-4 text-emerald-400" />
+                </div>
+                <div className="text-sm font-bold text-white">Share Holder Account</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">
+                  Aandeelhoudersinzage zonder investor-workflows
                 </div>
               </button>
 
@@ -256,9 +290,11 @@ export default function LoginPage({
                 <label className="block text-xs font-mono font-medium text-slate-300">
                   Wachtwoord
                 </label>
-                <span className="text-[11px] text-slate-500 font-mono">
-                  Demo: {selectedRole === 'investor' ? 'investor2027' : 'admin2027'}
-                </span>
+                {selectedRole !== 'shareholder' && (
+                  <span className="text-[11px] text-slate-500 font-mono">
+                    Demo: {selectedRole === 'investor' ? 'investor2027' : 'admin2027'}
+                  </span>
+                )}
               </div>
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -284,7 +320,15 @@ export default function LoginPage({
               type="submit"
               className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
-              <span>Inloggen als {selectedRole === 'investor' ? 'Investeerder' : 'Admin'}</span>
+              <span>
+                Inloggen als {
+                  selectedRole === 'investor'
+                    ? 'Investeerder'
+                    : selectedRole === 'shareholder'
+                      ? 'Share Holder'
+                      : 'Admin'
+                }
+              </span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
