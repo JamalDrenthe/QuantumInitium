@@ -1249,9 +1249,9 @@ export function App() {
           </div>
         </div>
 
-        {/* Mobile Horizontal Quick Tab Bar (< md) - Alleen zichtbaar op algemene presentatie pagina's */}
+        {/* Mobile Quick Tab Bar (< md) - Alleen zichtbaar op algemene presentatie pagina's */}
         {!['investor_dashboard', 'admin_dashboard', 'login', 'register'].includes(activeTab) && (
-          <div className="md:hidden mt-2.5 pt-2 border-t border-slate-800/80 overflow-x-auto no-scrollbar flex items-center gap-1.5 pb-1 overscroll-x-contain">
+          <div className="md:hidden mt-2.5 pt-2 border-t border-slate-800/80 grid grid-cols-2 gap-1.5 pb-1">
             {navTabs.map((tab) => {
               const isActive = activeTab === tab.id;
               const IconComponent = tab.icon;
@@ -1259,14 +1259,14 @@ export function App() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                    className={`min-h-9 px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 whitespace-nowrap flex items-center gap-1.5 border transition-all cursor-pointer ${
+                  className={`min-h-9 min-w-0 px-2 py-1.5 rounded-xl text-[11px] font-semibold flex items-center justify-center gap-1 border transition-all cursor-pointer ${
                     isActive
                       ? tab.activeClass
                       : 'text-slate-400 bg-slate-900/60 border-slate-800 hover:text-white'
                   }`}
                 >
-                  <IconComponent className="w-3.5 h-3.5" />
-                  <span>{tab.shortLabel}</span>
+                  <IconComponent className={`w-3.5 h-3.5 shrink-0 ${tab.iconColor}`} />
+                  <span className="min-w-0 truncate">{tab.shortLabel}</span>
                 </button>
               );
             })}
@@ -2061,9 +2061,9 @@ export function App() {
                   </p>
                 </div>
                 <div className="w-full lg:w-auto flex items-center gap-2 bg-slate-900/90 p-3 sm:p-4 rounded-xl border border-slate-800 text-xs shrink-0">
-                  <div className="text-right">
+                  <div className="min-w-0 text-right">
                     <span className="text-[10px] text-slate-400 block font-mono tracking-wider">RISICO ISOLATIE</span>
-                    <span className="text-emerald-400 font-bold flex items-center gap-1.5 text-xs sm:text-sm whitespace-nowrap">
+                    <span className="text-emerald-400 font-bold flex items-center justify-end gap-1.5 text-xs sm:text-sm whitespace-normal break-words">
                       <ShieldCheck className="w-4 h-4" /> 100% Gefirewalled
                     </span>
                   </div>
