@@ -8,7 +8,8 @@ Interactief portaal voor de holdingstructuur en strategische deelnemingen van Qu
 - Architectuuroverzicht met filters, zoekfunctie, detailkaarten en relaties tussen deelnemingen.
 - Institutionele dossierlezer met governance, kapitaalstructuur, groeimodellen, compliance en IPO-roadmap.
 - Investeerdersdashboard met aandelenoverzicht, cap table-informatie, transacties, waarderingsscenario's en ROI-calculator.
-- Admin-dashboard voor aandeelhoudersrecords, subholdingstatussen, auditacties en export van de cap table.
+- Admin-dashboard voor accountselectie, Investor- en Shareholder-beheer, subholdingstatussen, auditacties en export van de cap table.
+- Investor-integraties met directe links naar de officiële bedrijfsdomeinen.
 - Demo-login voor investeerders en beheerders, inclusief registratieflow.
 - Licht/donker thema en responsive navigatie voor desktop- en mobiele schermen.
 - Animaties, modals, notificaties en interactieve financiële visualisaties.
@@ -49,6 +50,8 @@ Maak indien nodig een lokale omgevingsconfiguratie:
 cp .env.example .env.local
 ```
 
+Vul voor persistente accountdata de Supabase-URL en publishable key in `.env.local` in. De SQL-migratie staat in `supabase/migrations/`; zonder deze variabelen gebruikt de demo automatisch lokale fallback-accounts.
+
 Start daarna de ontwikkelserver:
 
 ```bash
@@ -83,6 +86,7 @@ De applicatie is vervolgens beschikbaar op `http://localhost:3000`.
 ├── index.html              # HTML-entrypoint en metadata
 ├── metadata.json           # Projectnaam en projectbeschrijving
 ├── package.json            # Dependencies en scripts
+├── supabase/migrations/    # Schema en seeddata voor accountbeheer
 ├── tsconfig.json           # TypeScript-configuratie
 └── vite.config.ts          # Vite-configuratie
 ```

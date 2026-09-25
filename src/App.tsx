@@ -53,6 +53,7 @@ import RegisterPage from './components/RegisterPage';
 import InvestorDashboard from './components/InvestorDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import { AuthUser, DEMO_INVESTOR, DEMO_ADMIN, SHARE_PRICE_CURRENT } from './types/auth';
+import { loadManagedAccounts, saveManagedAccount } from './lib/accountStore';
 import { ecosystemData } from './data/ecosystem';
 import quantumInitiumLogo from './assets/images/quantum_initium_logo_1790097745176.jpg';
 
@@ -535,6 +536,8 @@ export function App() {
     'architecture' | 'simulator' | 'calculator' | 'dossier' | '3d' | 'login' | 'register' | 'investor_dashboard' | 'admin_dashboard'
   >('architecture');
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const [managedAccounts, setManagedAccounts] = useState<AuthUser[]>([]);
+  const [accountsLoading, setAccountsLoading] = useState<boolean>(false);
 
   const handleLoginSuccess = (user: AuthUser) => {
     setCurrentUser(user);
@@ -553,6 +556,40 @@ export function App() {
   const handleLogout = () => {
     setCurrentUser(null);
     setActiveTab('architecture');
+  };
+
+  useEffect(() => {
+    if (currentUser?.role !== 'admin') {
+      return;
+    }
+
+    let isMounted = true;
+    setAccountsLoading(true);
+    loadManagedAccounts()
+      .then((accounts) => {
+        if (isMounted) {
+          setManagedAccounts(accounts);
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setAccountsLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [currentUser?.role]);
+
+  const handleManagedAccountUpdate = (updatedAccount: AuthUser) => {
+    setManagedAccounts((accounts) => {
+      const exists = accounts.some((account) => account.id === updatedAccount.id);
+      return exists
+        ? accounts.map((account) => (account.id === updatedAccount.id ? updatedAccount : account))
+        : [...accounts, updatedAccount];
+    });
+    void saveManagedAccount(updatedAccount).catch(() => undefined);
   };
 
   // Theme (Dark/Light) en Taal (NL/EN) state
@@ -3698,7 +3735,7 @@ export function App() {
           {activeTab === 'investor_dashboard' && (
             <div className="flex-1 overflow-y-auto h-full w-full">
               <InvestorDashboard
-                user={currentUser && currentUser.role === 'investor' ? currentUser : DEMO_INVESTOR}
+                user={currentUser && currentUser.role !== 'admin' ? currentUser : DEMO_INVESTOR}
                 onLogout={handleLogout}
                 onNavigateHome={(t) => setActiveTab(t || 'architecture')}
                 onSwitchRole={() => {
@@ -3720,6 +3757,9 @@ export function App() {
             <div className="flex-1 overflow-y-auto h-full w-full">
               <AdminDashboard
                 user={currentUser && currentUser.role === 'admin' ? currentUser : DEMO_ADMIN}
+                managedAccounts={managedAccounts}
+                accountsLoading={accountsLoading}
+                onUpdateAccount={handleManagedAccountUpdate}
                 onLogout={handleLogout}
                 onNavigateHome={(t) => setActiveTab(t || 'architecture')}
                 onSwitchRole={() => {
