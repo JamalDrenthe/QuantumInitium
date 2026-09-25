@@ -194,7 +194,7 @@ interface SubholdingNode {
 
 const subholdingMatrix: Record<string, SubholdingNode> = {
   mother: {
-    title: 'QuantumInitium Ltd (Moederholding)',
+    title: 'QuantumInitium Ltd',
     desc: 'Centrale holding direct verantwoordelijk voor de overall kapitaalallocatie, geconsolideerde IFRS verslaglegging, intellectueel eigendom en LSE Main Market beursgang.',
     entities: [
       {
