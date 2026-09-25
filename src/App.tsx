@@ -190,8 +190,6 @@ const allEntitiesList: EntityItem[] = [
 
 interface SubholdingNode {
   title: string;
-  subtitle: string;
-  badge: string;
   desc: string;
   entities: { name: string; type: string; role: string }[];
 }
@@ -199,8 +197,6 @@ interface SubholdingNode {
 const subholdingMatrix: Record<string, SubholdingNode> = {
   mother: {
     title: 'QuantumInitium Ltd (Moederholding)',
-    subtitle: 'Centrale Directie & Holding • Londen, UK Substance',
-    badge: 'Moederholding',
     desc: 'Centrale holding direct verantwoordelijk voor de overall kapitaalallocatie, geconsolideerde IFRS verslaglegging, intellectueel eigendom en LSE Main Market beursgang.',
     entities: [
       {
@@ -212,8 +208,6 @@ const subholdingMatrix: Record<string, SubholdingNode> = {
   },
   sub1: {
     title: 'IP & Tech Subholding',
-    subtitle: 'Gespecialiseerde Tak 01',
-    badge: 'Subholding 1',
     desc: 'Eigenaar en beheerder van alle intellectuele eigendommen, AI modellen, CRMos B2B SaaS en de Investbotiq centrale executiemotor.',
     entities: [
       {
@@ -230,8 +224,6 @@ const subholdingMatrix: Record<string, SubholdingNode> = {
   },
   sub2: {
     title: 'Fintech & Liquidity Subholding',
-    subtitle: 'Gespecialiseerde Tak 02',
-    badge: 'Subholding 2',
     desc: 'Clearing, betaalinfrastructuur en beveiligde liquiditeitsretentie voor de gehele groep zonder traditioneel bancair balansrisico.',
     entities: [
       {
@@ -243,8 +235,6 @@ const subholdingMatrix: Record<string, SubholdingNode> = {
   },
   sub3: {
     title: 'Talent & Gateway Subholding',
-    subtitle: 'Gespecialiseerde Tak 03',
-    badge: 'Subholding 3',
     desc: 'Onboarding hub en recruitment motor voor de frictieloze instroom van gekwalificeerd internationaal IT talent.',
     entities: [
       {
@@ -271,8 +261,6 @@ const subholdingMatrix: Record<string, SubholdingNode> = {
   },
   sub4: {
     title: 'Compute & Media Subholding',
-    subtitle: 'Gespecialiseerde Tak 04',
-    badge: 'Subholding 4',
     desc: 'Infrastructuur voor high performance GPU AI inferentie, bandbreedte monetarisering, accountverhuur en Time Gap Cashflow.',
     entities: [
       {
@@ -294,8 +282,6 @@ const subholdingMatrix: Record<string, SubholdingNode> = {
   },
   sub5: {
     title: 'Real Estate & Operations Subholding',
-    subtitle: 'Gespecialiseerde Tak 05',
-    badge: 'Subholding 5',
     desc: 'PropTech oplossingen voor residentiële huisvesting, short stay BnB verhuur en expat doorstroom.',
     entities: [
       {
@@ -2037,14 +2023,6 @@ export function App() {
                     Geconsolideerde holdingstructuur rondom <strong>QuantumInitium Ltd (Moederholding)</strong>. Strikte juridische entiteitsscheiding (firewalling) elimineert kruisbesmetting van passiva tussen sectoren.
                   </p>
                 </div>
-                <div className="w-full lg:w-auto flex items-center gap-2 bg-slate-900/90 p-3 sm:p-4 rounded-xl border border-slate-800 text-xs shrink-0">
-                  <div className="min-w-0 text-right">
-                    <span className="text-[10px] text-slate-400 block font-mono tracking-wider">RISICO ISOLATIE</span>
-                    <span className="text-emerald-400 font-bold flex items-center justify-end gap-1.5 text-xs sm:text-sm whitespace-normal break-words">
-                      <ShieldCheck className="w-4 h-4" /> 100% Gefirewalled
-                    </span>
-                  </div>
-                </div>
               </div>
 
               {/* Interactive Network Diagram Container */}
@@ -2053,17 +2031,6 @@ export function App() {
                   <h3 className="text-sm font-bold text-white flex items-center gap-2">
                     <Network className="w-4 h-4 text-cyan-400" /> Interactief Entiteiten Netwerk
                   </h3>
-                  <div className="flex items-center gap-2 text-[11px] font-mono">
-                    <span className="px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-300 border border-yellow-500/40">
-                      Moederholding
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                      5 Subholdings
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                      12 Werkmaatschappijen
-                    </span>
-                  </div>
                 </div>
 
                 {/* Flow Diagram Grid */}
@@ -2257,14 +2224,8 @@ export function App() {
                     </div>
                     <div>
                       <h4 className={`text-base font-bold ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>{activeSubholdingNode.title}</h4>
-                      <p className={`text-xs font-mono ${theme === 'light' ? 'text-sky-700' : 'text-cyan-400'}`}>{activeSubholdingNode.subtitle}</p>
                     </div>
                   </div>
-                  <span className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold border ${
-                    theme === 'light' ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
-                  }`}>
-                    {activeSubholdingNode.badge}
-                  </span>
                 </div>
                 <p className={`text-xs leading-relaxed ${theme === 'light' ? 'text-sky-900/80' : 'text-slate-300'}`}>{activeSubholdingNode.desc}</p>
                 <div className={`mt-4 pt-4 border-t ${theme === 'light' ? 'border-sky-100' : 'border-slate-800'}`}>
