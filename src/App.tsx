@@ -551,8 +551,16 @@ export function App() {
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (mounted && session?.user) {
+      if (!mounted) {
+        return;
+      }
+
+      if (session?.user) {
         setCurrentUser(authUserFromSupabaseUser(session.user));
+        setActiveTab('investor_dashboard');
+      } else {
+        setCurrentUser(null);
+        setActiveTab('architecture');
       }
     });
 
@@ -3725,13 +3733,10 @@ export function App() {
           {activeTab === 'investor_dashboard' && (
             <div className="flex-1 overflow-y-auto h-full w-full">
               <InvestorDashboard
+                key={currentUser?.id ?? 'investor-dashboard'}
                 user={currentUser && currentUser.role === 'investor' ? currentUser : DEMO_INVESTOR}
                 onLogout={handleLogout}
                 onNavigateHome={(t) => setActiveTab(t || 'architecture')}
-                onSwitchRole={() => {
-                  setCurrentUser(DEMO_ADMIN);
-                  setActiveTab('admin_dashboard');
-                }}
                 onUpdateShares={(newTotal) => {
                   if (currentUser) {
                     setCurrentUser({ ...currentUser, sharesOwned: newTotal });

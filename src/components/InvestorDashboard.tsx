@@ -68,7 +68,6 @@ interface InvestorDashboardProps {
   user: AuthUser;
   onLogout: () => void;
   onNavigateHome: (tab?: 'architecture' | '3d' | 'dossier' | 'calculator' | 'simulator') => void;
-  onSwitchRole: (targetRole: 'admin') => void;
   onUpdateShares: (newTotal: number) => void;
   onUpdateUser?: (updated: AuthUser) => void;
   theme?: 'dark' | 'light';
@@ -80,7 +79,6 @@ export default function InvestorDashboard({
   user: initialUser,
   onLogout,
   onNavigateHome,
-  onSwitchRole,
   onUpdateShares,
   onUpdateUser,
   theme = 'dark'
@@ -938,21 +936,6 @@ export default function InvestorDashboard({
 
         {/* Rechterzijde: HAMBURGER MENU KNOP + SNELLE SYSTEEMACTIES */}
         <div className="flex items-center gap-2.5 flex-wrap">
-          {/* Wissel naar Admin */}
-          <button
-            type="button"
-            onClick={() => onSwitchRole('admin')}
-            className={`hidden sm:flex px-3 py-2.5 rounded-xl border text-xs font-semibold items-center gap-1.5 transition-colors cursor-pointer ${
-              theme === 'light'
-                ? 'bg-cyan-50 hover:bg-cyan-100 border-cyan-200 text-cyan-900'
-                : 'bg-cyan-500/10 hover:bg-cyan-500/20 border-cyan-500/30 text-cyan-300'
-            }`}
-            title="Wissel direct naar Admin weergave"
-          >
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Wissel naar Admin</span>
-          </button>
-
           {/* Uitloggen */}
           <button
             type="button"
@@ -1210,22 +1193,6 @@ export default function InvestorDashboard({
             <div className={`p-5 border-t space-y-2 ${
               theme === 'light' ? 'bg-sky-50/70 border-sky-200' : 'bg-slate-950/80 border-slate-800/80'
             }`}>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsHamburgerOpen(false);
-                  onSwitchRole('admin');
-                }}
-                className={`w-full py-2.5 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer ${
-                  theme === 'light'
-                    ? 'bg-cyan-50 hover:bg-cyan-100/90 border-cyan-300 text-cyan-950 shadow-sm'
-                    : 'bg-cyan-500/10 hover:bg-cyan-500/20 border-cyan-500/30 text-cyan-300'
-                }`}
-              >
-                <ShieldCheck className="w-4 h-4" />
-                <span>Wissel naar Admin Beheer</span>
-              </button>
-
               <button
                 type="button"
                 onClick={() => {

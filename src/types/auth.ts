@@ -44,6 +44,7 @@ export interface AuthUser {
   name: string;
   email: string;
   role: UserRole;
+  requestedShares?: number;
   sharesOwned: number;
   purchasePrice: number;
   currentPrice: number;

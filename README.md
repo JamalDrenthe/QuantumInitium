@@ -51,12 +51,8 @@ bun install
 ```
 
 Kopieer daarna `.env.example` naar `.env.local`. De app gebruikt Supabase Auth
-voor investor-login en registratie. De demo-account is:
-
-```text
-Email: investor@quantuminitium.com
-Wachtwoord: investor2027
-```
+voor investor-login en registratie. Demo-accountgegevens worden buiten de
+repository beheerd en mogen niet in publieke documentatie worden geplaatst.
 
 ### Development server
 
