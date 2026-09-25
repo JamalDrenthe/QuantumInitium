@@ -22,7 +22,7 @@ import { loadAccountForSession } from '../lib/accountStore';
 interface LoginPageProps {
   onLoginSuccess: (user: AuthUser) => void;
   onNavigateRegister: () => void;
-  onNavigateHome: (tab?: 'architecture' | '3d' | 'dossier') => void;
+  onNavigateHome: (tab?: '3d' | 'dossier' | 'simulator') => void;
 }
 
 export default function LoginPage({
@@ -133,7 +133,7 @@ export default function LoginPage({
         {/* Terug naar presentatie / Sluiten */}
         <div className="flex items-center justify-between gap-3 text-xs">
           <button
-            onClick={() => onNavigateHome('architecture')}
+            onClick={() => onNavigateHome('simulator')}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 transition-colors cursor-pointer"
           >
             <ArrowRight className="w-3.5 h-3.5 rotate-180 text-amber-400" />
