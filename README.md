@@ -12,7 +12,7 @@ Market-beursgang samen in één dashboard.
   groeiprojecties en IPO-roadmap.
 - Investeerdersdashboard met portefeuille-overzicht, waardering,
   transacties en participatie-informatie.
-- Admin-dashboard voor een demo-cap table, investeerdersregistratie en
+- Admin-dashboard voor cap-tablebeheer, investeerdersregistratie en
   aandeelhoudersinzichten.
 - Demo-authenticatie voor investeerders en administrators, inclusief
   registratieflow.
@@ -93,6 +93,6 @@ De applicatie is daarna beschikbaar op
 
 ## Status
 
-Dit project is een interactieve demonstratie- en presentatielaag. De
-authenticatie, cap table en financiële gegevens zijn lokaal als demo-data
+Dit project is een interactieve stakeholder- en presentatielaag. Supabase Auth
+verzorgt de echte accounttoegang; cap table en financiële gegevens zijn lokaal
 ingebouwd en vormen geen productie-backend.
