@@ -2146,7 +2146,7 @@ export function App() {
                 <p className={`text-xs leading-relaxed ${theme === 'light' ? 'text-sky-900/80' : 'text-slate-300'}`}>{activeSubholdingNode.desc}</p>
                 <div className={`mt-4 pt-4 border-t ${theme === 'light' ? 'border-sky-100' : 'border-slate-800'}`}>
                   <h5 className={`text-xs font-bold uppercase tracking-wider mb-3 ${theme === 'light' ? 'text-sky-900/60' : 'text-slate-400'}`}>
-                    Subholding Entiteiten & Strikte Risico Isolatie (Firewall)
+                    Subholding Entiteiten & Strikte Risico Isolatie
                   </h5>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {activeSubholdingNode.entities.map((e, idx) => (
