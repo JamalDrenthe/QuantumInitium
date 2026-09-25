@@ -1249,29 +1249,6 @@ export function App() {
           </div>
         </div>
 
-        {/* Mobile Quick Tab Bar (< md) - Alleen zichtbaar op algemene presentatie pagina's */}
-        {!['investor_dashboard', 'admin_dashboard', 'login', 'register'].includes(activeTab) && (
-          <div className="md:hidden mt-2.5 pt-2 border-t border-slate-800/80 grid grid-cols-2 gap-1.5 pb-1">
-            {navTabs.map((tab) => {
-              const isActive = activeTab === tab.id;
-              const IconComponent = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`min-h-9 min-w-0 px-2 py-1.5 rounded-xl text-[11px] font-semibold flex items-center justify-center gap-1 border transition-all cursor-pointer ${
-                    isActive
-                      ? tab.activeClass
-                      : 'text-slate-400 bg-slate-900/60 border-slate-800 hover:text-white'
-                  }`}
-                >
-                  <IconComponent className={`w-3.5 h-3.5 shrink-0 ${tab.iconColor}`} />
-                  <span className="min-w-0 truncate">{tab.shortLabel}</span>
-                </button>
-              );
-            })}
-          </div>
-        )}
       </header>
 
       {/* Main Workspace Layout */}
