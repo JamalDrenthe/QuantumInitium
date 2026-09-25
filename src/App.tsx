@@ -1108,6 +1108,23 @@ export function App() {
               </div>
             ) : (
               <div className="flex items-center gap-1.5 sm:gap-2">
+                <button
+                  onClick={() => setActiveTab('login')}
+                  className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    activeTab === 'login'
+                      ? theme === 'light'
+                        ? 'bg-amber-100 border-amber-300 text-amber-950 shadow-sm shadow-amber-500/10'
+                        : 'bg-amber-500/20 border-amber-400/50 text-amber-300 shadow-sm shadow-amber-500/20'
+                      : theme === 'light'
+                      ? 'bg-white border-sky-200 text-sky-950 hover:bg-sky-50 shadow-sm'
+                      : 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white hover:border-slate-700'
+                  }`}
+                  title={language === 'en' ? 'Sign In' : 'Inloggen'}
+                >
+                  <LogIn className="w-3.5 h-3.5 text-amber-400" />
+                  <span>{language === 'en' ? 'Sign In' : 'Login'}</span>
+                </button>
+
                 {/* REGISTREER KNOP VOLGENS OPDRACHT */}
                 <button
                   onClick={() => setActiveTab('register')}
