@@ -78,6 +78,7 @@ type InternalView = 'overview' | 'wallet' | 'koers' | 'history' | 'calculator' |
 interface StoredPortfolio {
   sharesOwned: number;
   cashBalance: number;
+  transactions?: ShareTransaction[];
 }
 
 function readStoredPortfolio(userId: string): StoredPortfolio | null {
@@ -93,7 +94,11 @@ function readStoredPortfolio(userId: string): StoredPortfolio | null {
     ) {
       return {
         sharesOwned: stored.sharesOwned,
-        cashBalance: stored.cashBalance
+        cashBalance: stored.cashBalance,
+        transactions: 'transactions' in stored
+          && Array.isArray(stored.transactions)
+          ? stored.transactions as ShareTransaction[]
+          : undefined
       };
     }
   } catch {
@@ -101,6 +106,14 @@ function readStoredPortfolio(userId: string): StoredPortfolio | null {
   }
 
   return null;
+}
+
+function writeStoredPortfolio(userId: string, portfolio: StoredPortfolio) {
+  try {
+    localStorage.setItem(`qi_portfolio_${userId}`, JSON.stringify(portfolio));
+  } catch {
+    // Local persistence is optional for the demo dashboard.
+  }
 }
 
 export default function InvestorDashboard({
@@ -133,25 +146,35 @@ export default function InvestorDashboard({
 
   // Financiële states
   const [transactions, setTransactions] = useState<ShareTransaction[]>(
-    initialUser.email === DEMO_INVESTOR.email ? INITIAL_TRANSACTIONS : []
+    storedPortfolio?.transactions
+      ?? (initialUser.email === DEMO_INVESTOR.email ? INITIAL_TRANSACTIONS : [])
   );
   const [cashBalance, setCashBalance] = useState<number>(
     storedPortfolio?.cashBalance ?? currentUser.cashBalance ?? 0
   );
 
   useEffect(() => {
-    try {
-      localStorage.setItem(
-        `qi_portfolio_${currentUser.id}`,
-        JSON.stringify({
-          sharesOwned: currentUser.sharesOwned,
-          cashBalance
-        })
-      );
-    } catch {
-      // Local persistence is optional for the demo dashboard.
-    }
-  }, [cashBalance, currentUser.id, currentUser.sharesOwned]);
+    const storageKey = `qi_portfolio_${initialUser.id}`;
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== storageKey || !event.newValue) {
+        return;
+      }
+
+      const stored = readStoredPortfolio(initialUser.id);
+      if (!stored) {
+        return;
+      }
+
+      setCurrentUser((user) => ({ ...user, sharesOwned: stored.sharesOwned }));
+      setCashBalance(stored.cashBalance);
+      if (stored.transactions) {
+        setTransactions(stored.transactions);
+      }
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, [initialUser.id]);
 
   // Wallet Storten / Opladen State
   const [depositAmount, setDepositAmount] = useState<number>(2500);
@@ -604,8 +627,13 @@ export default function InvestorDashboard({
     e.preventDefault();
     if (depositAmount <= 0) return;
 
-    const newCash = cashBalance + depositAmount;
+    const storedPortfolio = readStoredPortfolio(currentUser.id);
+    const baseShares = storedPortfolio?.sharesOwned ?? currentUser.sharesOwned;
+    const baseCash = storedPortfolio?.cashBalance ?? cashBalance;
+    const baseTransactions = storedPortfolio?.transactions ?? transactions;
+    const newCash = baseCash + depositAmount;
     setCashBalance(newCash);
+    setCurrentUser({ ...currentUser, sharesOwned: baseShares });
 
     const newTxn: ShareTransaction = {
       id: `DEP ${Math.floor(1000 + Math.random() * 9000)}`,
@@ -618,7 +646,13 @@ export default function InvestorDashboard({
       reference: `STORTING VIA ${depositMethod.toUpperCase()} (${selectedBank})`
     };
 
-    setTransactions([newTxn, ...transactions]);
+    const updatedTransactions = [newTxn, ...baseTransactions];
+    setTransactions(updatedTransactions);
+    writeStoredPortfolio(currentUser.id, {
+      sharesOwned: baseShares,
+      cashBalance: newCash,
+      transactions: updatedTransactions
+    });
     setPurchaseSuccessMsg(`Succesvol €${depositAmount.toLocaleString('nl-NL', { minimumFractionDigits: 2 })} opgeladen op uw werkkapitaal.`);
     setTimeout(() => setPurchaseSuccessMsg(null), 4500);
   };
@@ -627,15 +661,19 @@ export default function InvestorDashboard({
   const handleBuyFromWallet = (e: React.FormEvent) => {
     e.preventDefault();
     const totalCost = walletBuyShares * SHARE_PRICE_CURRENT;
+    const storedPortfolio = readStoredPortfolio(currentUser.id);
+    const baseShares = storedPortfolio?.sharesOwned ?? currentUser.sharesOwned;
+    const baseCash = storedPortfolio?.cashBalance ?? cashBalance;
+    const baseTransactions = storedPortfolio?.transactions ?? transactions;
 
-    if (cashBalance < totalCost) {
-      setPurchaseSuccessMsg(`Onvoldoende werkkapitaal (€${cashBalance.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}). Laad eerst extra saldo op via de Wallet.`);
+    if (baseCash < totalCost) {
+      setPurchaseSuccessMsg(`Onvoldoende werkkapitaal (€${baseCash.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}). Laad eerst extra saldo op via de Wallet.`);
       setTimeout(() => setPurchaseSuccessMsg(null), 4500);
       return;
     }
 
-    const updatedShares = currentUser.sharesOwned + walletBuyShares;
-    const updatedCash = cashBalance - totalCost;
+    const updatedShares = baseShares + walletBuyShares;
+    const updatedCash = baseCash - totalCost;
 
     setCashBalance(updatedCash);
     setCurrentUser({ ...currentUser, sharesOwned: updatedShares });
@@ -652,7 +690,13 @@ export default function InvestorDashboard({
       reference: 'WALLET AANKOOP SERIE A'
     };
 
-    setTransactions([newTxn, ...transactions]);
+    const updatedTransactions = [newTxn, ...baseTransactions];
+    setTransactions(updatedTransactions);
+    writeStoredPortfolio(currentUser.id, {
+      sharesOwned: updatedShares,
+      cashBalance: updatedCash,
+      transactions: updatedTransactions
+    });
     setPurchaseSuccessMsg(`Gefeliciteerd: ${walletBuyShares.toLocaleString('nl-NL')} aandelen direct aangekocht tegen €${SHARE_PRICE_CURRENT.toFixed(2)}.`);
     setTimeout(() => setPurchaseSuccessMsg(null), 4500);
   };
@@ -660,15 +704,19 @@ export default function InvestorDashboard({
   // Handler: Transfer Uitvoeren (Aandelen of Geld naar ander account)
   const handleExecuteTransfer = (e: React.FormEvent) => {
     e.preventDefault();
+    const storedPortfolio = readStoredPortfolio(currentUser.id);
+    const baseShares = storedPortfolio?.sharesOwned ?? currentUser.sharesOwned;
+    const baseCash = storedPortfolio?.cashBalance ?? cashBalance;
+    const baseTransactions = storedPortfolio?.transactions ?? transactions;
 
     if (transferType === 'shares') {
-      if (transferAmount > currentUser.sharesOwned) {
-        setPurchaseSuccessMsg(`U bezit slechts ${currentUser.sharesOwned.toLocaleString('nl-NL')} aandelen. Transfer kan niet worden voltooid.`);
+      if (transferAmount > baseShares) {
+        setPurchaseSuccessMsg(`U bezit slechts ${baseShares.toLocaleString('nl-NL')} aandelen. Transfer kan niet worden voltooid.`);
         setTimeout(() => setPurchaseSuccessMsg(null), 4000);
         return;
       }
 
-      const updatedShares = currentUser.sharesOwned - transferAmount;
+      const updatedShares = baseShares - transferAmount;
       setCurrentUser({ ...currentUser, sharesOwned: updatedShares });
       onUpdateShares(updatedShares);
 
@@ -684,16 +732,22 @@ export default function InvestorDashboard({
         recipient: transferRecipient
       };
 
-      setTransactions([newTxn, ...transactions]);
+      const updatedTransactions = [newTxn, ...baseTransactions];
+      setTransactions(updatedTransactions);
+      writeStoredPortfolio(currentUser.id, {
+        sharesOwned: updatedShares,
+        cashBalance: baseCash,
+        transactions: updatedTransactions
+      });
       setPurchaseSuccessMsg(`Succesvol ${transferAmount.toLocaleString('nl-NL')} aandelen overgedragen naar ${transferRecipient}.`);
     } else {
-      if (transferAmount > cashBalance) {
-        setPurchaseSuccessMsg(`Onvoldoende liquide saldo (€${cashBalance.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}).`);
+      if (transferAmount > baseCash) {
+        setPurchaseSuccessMsg(`Onvoldoende liquide saldo (€${baseCash.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}).`);
         setTimeout(() => setPurchaseSuccessMsg(null), 4000);
         return;
       }
 
-      const updatedCash = cashBalance - transferAmount;
+      const updatedCash = baseCash - transferAmount;
       setCashBalance(updatedCash);
 
       const newTxn: ShareTransaction = {
@@ -708,7 +762,13 @@ export default function InvestorDashboard({
         recipient: transferRecipient
       };
 
-      setTransactions([newTxn, ...transactions]);
+      const updatedTransactions = [newTxn, ...baseTransactions];
+      setTransactions(updatedTransactions);
+      writeStoredPortfolio(currentUser.id, {
+        sharesOwned: baseShares,
+        cashBalance: updatedCash,
+        transactions: updatedTransactions
+      });
       setPurchaseSuccessMsg(`Succesvol €${transferAmount.toLocaleString('nl-NL', { minimumFractionDigits: 2 })} overgeboekt naar ${transferRecipient}.`);
     }
 
