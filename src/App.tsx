@@ -982,7 +982,7 @@ export function App() {
 
   return (
     <div
-      className={`min-h-screen flex flex-col antialiased transition-colors duration-200 ${
+      className={`min-h-screen min-w-0 flex flex-col antialiased transition-colors duration-200 ${
         theme === 'light'
           ? 'bg-[#fafdff] text-[#133b5c] selection:bg-sky-200 selection:text-sky-900'
           : 'bg-[#05070d] text-slate-100 selection:bg-cyan-500 selection:text-black'
@@ -990,9 +990,9 @@ export function App() {
     >
       {/* Top Header conform zakelijke pitch esthetiek */}
       <header className="sticky top-0 z-50 glass-panel border-b border-slate-800 px-4 lg:px-7 py-3">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+        <div className="max-w-7xl mx-auto flex w-full flex-wrap items-center justify-between gap-3">
           {/* Left Area: Mobile Drawer Trigger / Desktop Sidebar Toggle + Brand */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex min-w-0 flex-1 items-center gap-3 md:flex-none">
             {/* Mobile Drawer Trigger */}
             <button
               id="mobile-menu-btn"
@@ -1006,7 +1006,7 @@ export function App() {
             {/* Brand Logo & Name */}
             <div
               onClick={() => setActiveTab('architecture')}
-              className="flex items-center gap-3 cursor-pointer group"
+              className="flex min-w-0 items-center gap-3 cursor-pointer group"
             >
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-400 via-yellow-500 to-blue-700 p-0.5 flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0 group-hover:shadow-amber-500/40 transition-all overflow-hidden">
                 <img
@@ -1016,9 +1016,9 @@ export function App() {
                   className="w-full h-full object-cover rounded-[10px]"
                 />
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="text-base lg:text-lg font-extrabold tracking-tight text-white flex items-center gap-1">
+                  <h1 className="max-w-full truncate text-base lg:text-lg font-extrabold tracking-tight text-white flex items-center gap-1">
                     QuantumInitium <span className="text-xs text-amber-400 font-mono font-bold">Ltd</span>
                   </h1>
                   <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30 font-mono">
@@ -1033,7 +1033,7 @@ export function App() {
           </div>
 
           {/* Right: Auth Buttons & Target Metrics & Toggles & Fullscreen Button */}
-          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+          <div className="flex w-full min-w-0 items-center justify-end gap-2 sm:gap-2.5 md:w-auto">
             {/* NL / EN Taal Toggle Knop */}
             <button
               onClick={toggleLanguage}
@@ -1201,7 +1201,7 @@ export function App() {
       </header>
 
       {/* Main Workspace Layout */}
-      <div className="flex-1 max-w-7xl w-full mx-auto flex overflow-hidden relative">
+      <div className="flex min-h-0 min-w-0 flex-1 max-w-7xl w-full mx-auto overflow-hidden relative">
         {/* Mobile Drawer Overlay */}
         {mobileMenuOpen && (
           <div
@@ -1965,7 +1965,7 @@ export function App() {
         )}
 
         {/* Main Workspace Body */}
-        <main className="flex-1 flex flex-col h-[calc(100vh-61px)] overflow-hidden bg-slate-950/40 relative">
+        <main className="flex min-h-0 min-w-0 flex-1 flex-col h-[calc(100vh-124px)] md:h-[calc(100vh-61px)] overflow-hidden bg-slate-950/40 relative">
           {/* TAB 1: VISUAL FLOW ARCHITECTURE MAP */}
           {activeTab === 'architecture' && (
             <div className="flex-1 overflow-y-auto p-5 lg:p-8 space-y-8">
