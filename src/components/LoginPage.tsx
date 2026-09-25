@@ -15,7 +15,8 @@ import {
   Sparkles,
   HelpCircle
 } from 'lucide-react';
-import { AuthUser, DEMO_INVESTOR, DEMO_ADMIN, SHARE_PRICE_CURRENT } from '../types/auth';
+import { AuthUser, DEMO_ADMIN, SHARE_PRICE_CURRENT } from '../types/auth';
+import { authUserFromSupabaseUser, supabase } from '../lib/supabase';
 
 interface LoginPageProps {
   onLoginSuccess: (user: AuthUser) => void;
@@ -46,50 +47,59 @@ export default function LoginPage({
     }
   };
 
-  const handleQuickDemoLogin = (role: 'investor' | 'admin') => {
+  const signInAsInvestor = async () => {
+    if (!supabase) {
+      setErrorMsg('Supabase is nog niet geconfigureerd.');
+      return;
+    }
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: 'investor@quantuminitium.com',
+      password: 'investor2027'
+    });
+
+    if (error || !data.user) {
+      setErrorMsg(error?.message || 'Inloggen is mislukt.');
+      return;
+    }
+
+    onLoginSuccess(authUserFromSupabaseUser(data.user));
+  };
+
+  const handleQuickDemoLogin = async (role: 'investor' | 'admin') => {
     if (role === 'investor') {
-      onLoginSuccess(DEMO_INVESTOR);
+      await signInAsInvestor();
     } else {
       onLoginSuccess(DEMO_ADMIN);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
 
     const cleanEmail = email.trim().toLowerCase();
-    if (cleanEmail === DEMO_INVESTOR.email.toLowerCase() && password === 'investor2027') {
-      onLoginSuccess(DEMO_INVESTOR);
-      return;
-    }
-
-    if (cleanEmail === DEMO_ADMIN.email.toLowerCase() && password === 'admin2027') {
+    if (selectedRole === 'admin' && cleanEmail === DEMO_ADMIN.email.toLowerCase() && password === 'admin2027') {
       onLoginSuccess(DEMO_ADMIN);
       return;
     }
 
-    // Fallback if someone tests with role
-    if (selectedRole === 'investor') {
-      const customInvestor: AuthUser = {
-        ...DEMO_INVESTOR,
-        email: cleanEmail,
-        name: cleanEmail.split('@')[0] || 'Investeerder'
-      };
-      onLoginSuccess(customInvestor);
+    if (selectedRole !== 'investor' || !supabase) {
+      setErrorMsg('Controleer uw inloggegevens.');
       return;
     }
 
-    if (selectedRole === 'admin') {
-      const customAdmin: AuthUser = {
-        ...DEMO_ADMIN,
-        email: cleanEmail
-      };
-      onLoginSuccess(customAdmin);
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: cleanEmail,
+      password
+    });
+
+    if (error || !data.user) {
+      setErrorMsg(error?.message || 'Controleer uw inloggegevens.');
       return;
     }
 
-    setErrorMsg('Controleer uw inloggegevens of gebruik de directe demo knoppen.');
+    onLoginSuccess(authUserFromSupabaseUser(data.user));
   };
 
   return (
@@ -191,7 +201,7 @@ export default function LoginPage({
                 <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
                 Directe 1 klik demo toegang:
               </span>
-              <span className="text-emerald-400 font-bold">Hardcoded accounts</span>
+              <span className="text-emerald-400 font-bold">Supabase Auth</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
