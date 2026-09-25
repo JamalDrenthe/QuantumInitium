@@ -36,6 +36,7 @@ import {
   Building,
   Globe,
   ArrowRight,
+  ExternalLink,
   Sliders,
   Network,
   Layers,
@@ -251,6 +252,7 @@ export default function InvestorDashboard({
     {
       id: 'ent_1',
       name: 'QuantumInitium Ltd',
+      website: 'https://quantuminitium.com',
       holdingKey: 'mother',
       holdingName: 'QuantumInitium Ltd (Moederholding Londen)',
       category: 'holding',
@@ -269,6 +271,7 @@ export default function InvestorDashboard({
     {
       id: 'ent_2',
       name: 'CRMos Ltd',
+      website: 'https://crmos.one',
       holdingKey: 'sub1',
       holdingName: 'Subholding 1: IP & Tech',
       category: 'tech',
@@ -287,6 +290,7 @@ export default function InvestorDashboard({
     {
       id: 'ent_3',
       name: 'Investbotiq Ltd',
+      website: 'https://investbotiq.com',
       holdingKey: 'sub1',
       holdingName: 'Subholding 1: IP & Tech',
       category: 'tech',
@@ -305,6 +309,7 @@ export default function InvestorDashboard({
     {
       id: 'ent_4',
       name: 'Xabi World Ltd',
+      website: 'https://xabi.world',
       holdingKey: 'sub2',
       holdingName: 'Subholding 2: Fintech & SABI Liquidity',
       category: 'fintech',
@@ -323,6 +328,7 @@ export default function InvestorDashboard({
     {
       id: 'ent_5',
       name: 'VVC Ltd',
+      website: 'https://vvc.works',
       holdingKey: 'sub3',
       holdingName: 'Subholding 3: Talent & Gateway',
       category: 'talent',
@@ -341,6 +347,7 @@ export default function InvestorDashboard({
     {
       id: 'ent_6',
       name: 'DJOBBA Ltd',
+      website: 'https://djobba.works',
       holdingKey: 'sub3',
       holdingName: 'Subholding 3: Talent & Gateway',
       category: 'talent',
@@ -359,6 +366,7 @@ export default function InvestorDashboard({
     {
       id: 'ent_7',
       name: 'Immigratiepunt Ltd',
+      website: 'https://immigratiepunt.nl',
       holdingKey: 'sub3',
       holdingName: 'Subholding 3: Talent & Gateway',
       category: 'talent',
@@ -377,6 +385,7 @@ export default function InvestorDashboard({
     {
       id: 'ent_8',
       name: 'Zheavenzy Ltd',
+      website: 'https://zheavenzy.one',
       holdingKey: 'sub3',
       holdingName: 'Subholding 3: Talent & Gateway',
       category: 'media',
@@ -395,6 +404,7 @@ export default function InvestorDashboard({
     {
       id: 'ent_9',
       name: 'Boostplug Ltd',
+      website: 'https://boostplug.com',
       holdingKey: 'sub4',
       holdingName: 'Subholding 4: Compute & Media',
       category: 'compute',
@@ -413,6 +423,7 @@ export default function InvestorDashboard({
     {
       id: 'ent_10',
       name: 'Logs.rent',
+      website: 'https://logs.rent',
       holdingKey: 'sub4',
       holdingName: 'Subholding 4: Compute & Media',
       category: 'compute',
@@ -431,6 +442,7 @@ export default function InvestorDashboard({
     {
       id: 'ent_11',
       name: 'Spontiva Ltd',
+      website: 'https://spontiva.nl',
       holdingKey: 'sub4',
       holdingName: 'Subholding 4: Compute & Media',
       category: 'compute',
@@ -449,6 +461,7 @@ export default function InvestorDashboard({
     {
       id: 'ent_12',
       name: 'WoningVry Ltd & Afterstudenthousing',
+      website: 'https://woningvry.nl',
       holdingKey: 'sub5',
       holdingName: 'Subholding 5: PropTech & Real Estate',
       category: 'proptech',
@@ -2700,7 +2713,16 @@ export default function InvestorDashboard({
                         </div>
                         <div className="flex justify-between text-slate-400">
                           <span>Endpoint:</span>
-                          <span className="text-slate-300 truncate max-w-[180px]">{ent.endpoint}</span>
+                          <a
+                            href={ent.website}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-cyan-300 hover:text-cyan-200 truncate max-w-[180px] inline-flex items-center gap-1"
+                            title={`Open ${ent.name}`}
+                          >
+                            <span className="truncate">{ent.website.replace(/^https?:\/\//, '')}</span>
+                            <ExternalLink className="w-3 h-3 shrink-0" />
+                          </a>
                         </div>
                         <div className="flex justify-between text-slate-400">
                           <span>Latency & Sync:</span>

@@ -15,10 +15,9 @@ import {
   Sparkles,
   HelpCircle
 } from 'lucide-react';
-import { AuthUser, DEMO_ADMIN, SHARE_PRICE_CURRENT } from '../types/auth';
-import { authUserFromSupabaseUser, supabase } from '../lib/supabase';
-
-type LoginRole = 'investor' | 'shareholder' | 'admin';
+import { AuthUser, DEMO_INVESTOR, DEMO_ADMIN, SHARE_PRICE_CURRENT } from '../types/auth';
+import { isDemoModeEnabled, isSupabaseConfigured, signInWithPassword } from '../lib/authStore';
+import { loadAccountForSession } from '../lib/accountStore';
 
 interface LoginPageProps {
   onLoginSuccess: (user: AuthUser) => void;
@@ -31,49 +30,38 @@ export default function LoginPage({
   onNavigateRegister,
   onNavigateHome
 }: LoginPageProps) {
-  const [selectedRole, setSelectedRole] = useState<LoginRole>('investor');
-  const [email, setEmail] = useState<string>('investor@quantuminitium.com');
-  const [password, setPassword] = useState<string>('investor2027');
+  const [selectedRole, setSelectedRole] = useState<'investor' | 'admin'>('investor');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const handleSelectRole = (role: LoginRole) => {
+  const handleSelectRole = (role: 'investor' | 'admin') => {
     setSelectedRole(role);
     setErrorMsg(null);
-    if (role === 'investor') {
-      setEmail('investor@quantuminitium.com');
-      setPassword('investor2027');
-    } else if (role === 'admin') {
-      setEmail('admin@quantuminitium.com');
-      setPassword('admin2027');
+    if (isDemoModeEnabled || !isSupabaseConfigured) {
+      if (role === 'investor') {
+        setEmail('investor@quantuminitium.com');
+        setPassword('investor2027');
+      } else {
+        setEmail('admin@quantuminitium.com');
+        setPassword('admin2027');
+      }
     } else {
       setEmail('');
       setPassword('');
     }
   };
 
-  const signInAsInvestor = async () => {
-    if (!supabase) {
-      setErrorMsg('Supabase is nog niet geconfigureerd.');
+  const handleQuickDemoLogin = (role: 'investor' | 'admin') => {
+    if (isSupabaseConfigured && !isDemoModeEnabled) {
+      setErrorMsg('Demo-login is uitgeschakeld. Gebruik uw Supabase Auth-account.');
       return;
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: 'investor@quantuminitium.com',
-      password: 'investor2027'
-    });
-
-    if (error || !data.user) {
-      setErrorMsg(error?.message || 'Inloggen is mislukt.');
-      return;
-    }
-
-    onLoginSuccess(authUserFromSupabaseUser(data.user));
-  };
-
-  const handleQuickDemoLogin = async (role: 'investor' | 'admin') => {
     if (role === 'investor') {
-      await signInAsInvestor();
+      onLoginSuccess(DEMO_INVESTOR);
     } else {
       onLoginSuccess(DEMO_ADMIN);
     }
@@ -82,36 +70,61 @@ export default function LoginPage({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
+    setIsSubmitting(true);
 
     const cleanEmail = email.trim().toLowerCase();
-    if (selectedRole === 'admin' && cleanEmail === DEMO_ADMIN.email.toLowerCase() && password === 'admin2027') {
+    if (isSupabaseConfigured && !isDemoModeEnabled) {
+      try {
+        const session = await signInWithPassword(cleanEmail, password);
+        const account = await loadAccountForSession(
+          { id: session.userId, email: session.email },
+          session.accessToken
+        );
+        onLoginSuccess(account);
+      } catch (error) {
+        setErrorMsg(error instanceof Error ? error.message : 'Inloggen mislukt.');
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
+    if (cleanEmail === DEMO_INVESTOR.email.toLowerCase() && password === 'investor2027') {
+      onLoginSuccess(DEMO_INVESTOR);
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (cleanEmail === DEMO_ADMIN.email.toLowerCase() && password === 'admin2027') {
       onLoginSuccess(DEMO_ADMIN);
+      setIsSubmitting(false);
       return;
     }
 
-    if (!supabase) {
-      setErrorMsg('Controleer uw inloggegevens.');
+    // Fallback if someone tests with role
+    if (selectedRole === 'investor') {
+      const customInvestor: AuthUser = {
+        ...DEMO_INVESTOR,
+        email: cleanEmail,
+        name: cleanEmail.split('@')[0] || 'Investeerder'
+      };
+      onLoginSuccess(customInvestor);
+      setIsSubmitting(false);
       return;
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: cleanEmail,
-      password
-    });
-
-    if (error || !data.user) {
-      setErrorMsg(error?.message || 'Controleer uw inloggegevens.');
+    if (selectedRole === 'admin') {
+      const customAdmin: AuthUser = {
+        ...DEMO_ADMIN,
+        email: cleanEmail
+      };
+      onLoginSuccess(customAdmin);
+      setIsSubmitting(false);
       return;
     }
 
-    const user = authUserFromSupabaseUser(data.user);
-    if (user.role !== selectedRole) {
-      setErrorMsg('Deze account hoort niet bij de geselecteerde profielrol.');
-      await supabase.auth.signOut();
-      return;
-    }
-
-    onLoginSuccess(user);
+    setErrorMsg('Controleer uw inloggegevens of gebruik de directe demo knoppen.');
+    setIsSubmitting(false);
   };
 
   return (
@@ -159,7 +172,7 @@ export default function LoginPage({
               <span className="text-amber-400 font-semibold">Live Demo Gereed</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 gap-3">
               {/* Knop voor Investeerder */}
               <button
                 type="button"
@@ -179,28 +192,6 @@ export default function LoginPage({
                 <div className="text-sm font-bold text-white">Investor Account</div>
                 <div className="text-[11px] text-slate-400 mt-0.5">
                   12.500 aandelen • €{SHARE_PRICE_CURRENT.toFixed(2)} koers
-                </div>
-              </button>
-
-              {/* Knop voor Share Holder */}
-              <button
-                type="button"
-                onClick={() => handleSelectRole('shareholder')}
-                className={`p-3.5 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
-                  selectedRole === 'shareholder'
-                    ? 'bg-emerald-500/20 border-emerald-500/60 shadow-lg shadow-emerald-500/20 text-white'
-                    : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                    Share Holder
-                  </span>
-                  <Award className="w-4 h-4 text-emerald-400" />
-                </div>
-                <div className="text-sm font-bold text-white">Share Holder Account</div>
-                <div className="text-[11px] text-slate-400 mt-0.5">
-                  Aandeelhoudersinzage zonder investor-workflows
                 </div>
               </button>
 
@@ -229,13 +220,14 @@ export default function LoginPage({
           </div>
 
           {/* Directe Snelle Demo Knoppen (1 klik inloggen) */}
+          {(isDemoModeEnabled || !isSupabaseConfigured) && (
           <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2 mb-6">
             <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
               <span className="flex items-center gap-1.5">
                 <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
                 Directe 1 klik demo toegang:
               </span>
-              <span className="text-emerald-400 font-bold">Supabase Auth</span>
+              <span className="text-emerald-400 font-bold">Hardcoded accounts</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -258,6 +250,7 @@ export default function LoginPage({
               </button>
             </div>
           </div>
+          )}
 
           {/* Formulier */}
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -290,7 +283,7 @@ export default function LoginPage({
                 <label className="block text-xs font-mono font-medium text-slate-300">
                   Wachtwoord
                 </label>
-                {selectedRole !== 'shareholder' && (
+                {(isDemoModeEnabled || !isSupabaseConfigured) && (
                   <span className="text-[11px] text-slate-500 font-mono">
                     Demo: {selectedRole === 'investor' ? 'investor2027' : 'admin2027'}
                   </span>
@@ -318,17 +311,10 @@ export default function LoginPage({
 
             <button
               type="submit"
-              className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
+              disabled={isSubmitting}
+              className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 disabled:opacity-60 disabled:cursor-wait text-slate-950 shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
-              <span>
-                Inloggen als {
-                  selectedRole === 'investor'
-                    ? 'Investeerder'
-                    : selectedRole === 'shareholder'
-                      ? 'Share Holder'
-                      : 'Admin'
-                }
-              </span>
+              <span>{isSubmitting ? 'Authenticatie controleren...' : `Inloggen als ${selectedRole === 'investor' ? 'Investeerder' : 'Admin'}`}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>

@@ -24,9 +24,13 @@ import {
   Calculator
 } from 'lucide-react';
 import { AuthUser, SHARE_PRICE_CURRENT, SHARE_PRICE_IPO_TARGET, TOTAL_SHARES_ISSUED } from '../types/auth';
+import InvestorDashboard from './InvestorDashboard';
 
 interface AdminDashboardProps {
   user: AuthUser;
+  managedAccounts: AuthUser[];
+  accountsLoading?: boolean;
+  onUpdateAccount: (updatedAccount: AuthUser) => void;
   onLogout: () => void;
   onNavigateHome: (tab?: 'architecture' | '3d' | 'dossier' | 'calculator' | 'simulator') => void;
   onSwitchRole: (targetRole: 'investor') => void;
@@ -47,6 +51,9 @@ interface InvestorRecord {
 
 export default function AdminDashboard({
   user,
+  managedAccounts,
+  accountsLoading = false,
+  onUpdateAccount,
   onLogout,
   onNavigateHome,
   onSwitchRole
@@ -54,6 +61,8 @@ export default function AdminDashboard({
   const [investorSearch, setInvestorSearch] = useState<string>('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'verified' | 'accredited'>('all');
   const [actionNotice, setActionNotice] = useState<string | null>(null);
+  const [accountRoleFilter, setAccountRoleFilter] = useState<'all' | 'investor' | 'shareholder'>('all');
+  const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
 
   const totalMarketCap = TOTAL_SHARES_ISSUED * SHARE_PRICE_CURRENT;
   const targetIpoMarketCap = TOTAL_SHARES_ISSUED * SHARE_PRICE_IPO_TARGET;
@@ -137,6 +146,16 @@ export default function AdminDashboard({
     return matchesSearch;
   });
 
+  const selectableAccounts = managedAccounts.filter((account) =>
+    accountRoleFilter === 'all' ? true : account.role === accountRoleFilter
+  );
+  const selectedAccount = managedAccounts.find((account) => account.id === selectedAccountId) || null;
+  const managedShares = managedAccounts.reduce((total, account) => total + account.sharesOwned, 0);
+  const managedValue = managedAccounts.reduce(
+    (total, account) => total + account.sharesOwned * account.currentPrice,
+    0
+  );
+
   const handleActionClick = (actionName: string) => {
     setActionNotice(`Directie actie '${actionName}' succesvol vastgelegd in het LSE audit logboek.`);
     setTimeout(() => {
@@ -212,6 +231,91 @@ export default function AdminDashboard({
           </button>
         </div>
       )}
+
+      <div className="glass-panel p-6 rounded-2xl border border-cyan-500/20 space-y-5">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+          <div>
+            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+              <Users className="w-5 h-5 text-cyan-400" />
+              Accounts beheren
+            </h3>
+            <p className="text-xs text-slate-400 max-w-2xl">
+              Kies een Investor of Shareholder om dezelfde dashboardkoppen te openen en accountgegevens te bewerken.
+              Zonder selectie blijft dit een totaaloverzicht.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {(['all', 'investor', 'shareholder'] as const).map((role) => (
+              <button
+                key={role}
+                onClick={() => setAccountRoleFilter(role)}
+                className={`px-3 py-1.5 rounded-lg border text-xs font-semibold transition-colors cursor-pointer ${
+                  accountRoleFilter === role
+                    ? 'border-cyan-400/60 bg-cyan-400/15 text-cyan-200'
+                    : 'border-slate-700 bg-slate-900 text-slate-400 hover:text-white'
+                }`}
+              >
+                {role === 'all' ? 'Alle accounts' : role === 'investor' ? 'Investors' : 'Shareholders'}
+              </button>
+            ))}
+            <select
+              value={selectedAccountId || ''}
+              onChange={(event) => setSelectedAccountId(event.target.value || null)}
+              className="min-w-56 rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-white focus:border-cyan-400 focus:outline-none"
+              aria-label="Account selecteren"
+            >
+              <option value="">Geen account geselecteerd</option>
+              {selectableAccounts.map((account) => (
+                <option key={account.id} value={account.id}>
+                  {account.name} — {account.role === 'investor' ? 'Investor' : 'Shareholder'}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {accountsLoading ? (
+          <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-6 text-sm text-slate-400">
+            Accounts worden geladen...
+          </div>
+        ) : selectedAccount ? (
+          <div className="rounded-xl border border-cyan-500/20 overflow-hidden">
+            <InvestorDashboard
+              key={selectedAccount.id}
+              user={selectedAccount}
+            onLogout={() => undefined}
+            onNavigateHome={() => undefined}
+            onUpdateShares={(newTotal) =>
+                onUpdateAccount({ ...selectedAccount, sharesOwned: newTotal })
+              }
+              onUpdateUser={onUpdateAccount}
+            />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
+              <p className="text-[11px] uppercase tracking-wider text-slate-500">Accounts</p>
+              <p className="mt-1 text-2xl font-bold text-white">{managedAccounts.length}</p>
+              <p className="text-xs text-slate-400">
+                {managedAccounts.filter((account) => account.role === 'investor').length} investors ·{' '}
+                {managedAccounts.filter((account) => account.role === 'shareholder').length} shareholders
+              </p>
+            </div>
+            <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
+              <p className="text-[11px] uppercase tracking-wider text-slate-500">Geaggregeerde aandelen</p>
+              <p className="mt-1 text-2xl font-bold text-cyan-300">{managedShares.toLocaleString('nl-NL')}</p>
+              <p className="text-xs text-slate-400">over de geselecteerde accountgroepen</p>
+            </div>
+            <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
+              <p className="text-[11px] uppercase tracking-wider text-slate-500">Geaggregeerde waarde</p>
+              <p className="mt-1 text-2xl font-bold text-emerald-300">
+                €{managedValue.toLocaleString('nl-NL', { maximumFractionDigits: 0 })}
+              </p>
+              <p className="text-xs text-slate-400">tegen actuele koers</p>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* METRICS OVERZICHT VOOR DIRECTIE & ADMINISTRATIE */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

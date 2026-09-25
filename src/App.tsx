@@ -1,5 +1,4 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import type { AuthChangeEvent } from '@supabase/supabase-js';
 import {
   Award,
   Menu,
@@ -54,7 +53,8 @@ import RegisterPage from './components/RegisterPage';
 import InvestorDashboard from './components/InvestorDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import { AuthUser, DEMO_INVESTOR, DEMO_ADMIN, SHARE_PRICE_CURRENT } from './types/auth';
-import { authUserFromSupabaseUser, supabase } from './lib/supabase';
+import { loadAccountForSession, loadManagedAccounts, saveManagedAccount } from './lib/accountStore';
+import { clearAuthSession, getCurrentAuthIdentity } from './lib/authStore';
 import { ecosystemData } from './data/ecosystem';
 import quantumInitiumLogo from './assets/images/quantum_initium_logo_1790097745176.jpg';
 
@@ -537,46 +537,9 @@ export function App() {
     'architecture' | 'simulator' | 'calculator' | 'dossier' | '3d' | 'login' | 'register' | 'investor_dashboard' | 'admin_dashboard'
   >('architecture');
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
-
-  useEffect(() => {
-    if (!supabase) {
-      return;
-    }
-
-    let mounted = true;
-    supabase.auth.getSession().then(({ data }) => {
-      if (mounted && data.session?.user) {
-        const user = authUserFromSupabaseUser(data.session.user);
-        setCurrentUser(user);
-        setActiveTab(user.role === 'admin' ? 'admin_dashboard' : 'investor_dashboard');
-      }
-    });
-
-    const { data: listener } = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session) => {
-      if (!mounted) {
-        return;
-      }
-
-      if (event === 'SIGNED_OUT' || !session?.user) {
-        setCurrentUser(null);
-        setActiveTab('architecture');
-        return;
-      }
-
-      if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
-        const user = authUserFromSupabaseUser(session.user);
-        setCurrentUser(user);
-        if (event === 'SIGNED_IN') {
-          setActiveTab(user.role === 'admin' ? 'admin_dashboard' : 'investor_dashboard');
-        }
-      }
-    });
-
-    return () => {
-      mounted = false;
-      listener.subscription.unsubscribe();
-    };
-  }, []);
+  const [managedAccounts, setManagedAccounts] = useState<AuthUser[]>([]);
+  const [accountsLoading, setAccountsLoading] = useState<boolean>(false);
+  const [accountSaveError, setAccountSaveError] = useState<string | null>(null);
 
   const handleLoginSuccess = (user: AuthUser) => {
     setCurrentUser(user);
@@ -587,25 +550,83 @@ export function App() {
     }
   };
 
-  const roleLabel = (role: AuthUser['role']) => {
-    if (role === 'admin') {
-      return 'Admin';
-    }
-
-    return role === 'shareholder'
-      ? 'Share Holder'
-      : language === 'en' ? 'Investor' : 'Investeerder';
-  };
-
   const handleRegisterSuccess = (user: AuthUser) => {
     setCurrentUser(user);
     setActiveTab('investor_dashboard');
   };
 
-  const handleLogout = async () => {
-    await supabase?.auth.signOut();
+  const handleLogout = () => {
+    void clearAuthSession();
     setCurrentUser(null);
     setActiveTab('architecture');
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+    void getCurrentAuthIdentity().then(async (identity) => {
+      if (!identity || !isMounted) {
+        return;
+      }
+      try {
+        const account = await loadAccountForSession(identity);
+        if (isMounted) {
+          handleLoginSuccess(account);
+        }
+      } catch {
+        void clearAuthSession();
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (currentUser?.role !== 'admin') {
+      return;
+    }
+
+    let isMounted = true;
+    setAccountsLoading(true);
+    loadManagedAccounts()
+      .then((accounts) => {
+        if (isMounted) {
+          setManagedAccounts(accounts);
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setAccountsLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [currentUser?.role]);
+
+  const handleManagedAccountUpdate = (updatedAccount: AuthUser) => {
+    setAccountSaveError(null);
+    void saveManagedAccount(updatedAccount)
+      .then(() => {
+        setManagedAccounts((accounts) => {
+          const exists = accounts.some((account) => account.id === updatedAccount.id);
+          return exists
+            ? accounts.map((account) => (account.id === updatedAccount.id ? updatedAccount : account))
+            : [...accounts, updatedAccount];
+        });
+      })
+      .catch((error: unknown) => {
+        setAccountSaveError(error instanceof Error ? error.message : 'Account opslaan mislukt.');
+      });
+  };
+
+  const handleCurrentUserUpdate = (updatedUser: AuthUser) => {
+    setCurrentUser(updatedUser);
+    void saveManagedAccount(updatedUser).catch((error: unknown) => {
+      setAccountSaveError(error instanceof Error ? error.message : 'Profiel opslaan mislukt.');
+    });
   };
 
   // Theme (Dark/Light) en Taal (NL/EN) state
@@ -1010,21 +1031,15 @@ export function App() {
             id: (currentUser.role === 'admin' ? 'admin_dashboard' : 'investor_dashboard') as any,
             label: currentUser.role === 'admin'
               ? (language === 'en' ? 'Executive Dashboard' : 'Admin Dashboard')
-              : currentUser.role === 'shareholder'
-                ? 'Share Holder Dashboard'
-                : (language === 'en' ? 'Investor Dashboard' : 'Investor Dashboard'),
+              : (language === 'en' ? 'Investor Dashboard' : 'Investor Dashboard'),
             shortLabel: 'Dashboard',
             description: currentUser.role === 'admin'
               ? (language === 'en' ? 'Executive governance, audits & investor control' : 'Bestuurlijk beheer, audits & aandeelhouderscontrole')
-              : currentUser.role === 'shareholder'
-                ? 'Share ownership, reports & shareholder access'
-                : (language === 'en' ? 'Share wallet, market quote, transfers & integration' : 'Aandelenwallet, koers, transfers & entiteitenintegratie'),
+              : (language === 'en' ? 'Share wallet, market quote, transfers & integration' : 'Aandelenwallet, koers, transfers & entiteitenintegratie'),
             icon: currentUser.role === 'admin' ? ShieldCheck : TrendingUp,
             badge: currentUser.role === 'admin'
               ? (language === 'en' ? 'Board' : 'Directie')
-              : currentUser.role === 'shareholder'
-                ? 'Ownership'
-                : (language === 'en' ? 'Portfolio' : 'Portefeuille'),
+              : (language === 'en' ? 'Portfolio' : 'Portefeuille'),
             badgeColor:
               currentUser.role === 'admin'
                 ? 'text-cyan-400 bg-cyan-500/10 border-cyan-500/25'
@@ -1032,12 +1047,8 @@ export function App() {
             activeClass:
               currentUser.role === 'admin'
                 ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 shadow-sm shadow-cyan-500/20'
-                : currentUser.role === 'shareholder'
-                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm shadow-emerald-500/20'
-                  : 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm shadow-amber-500/20',
-            iconColor: currentUser.role === 'admin'
-              ? 'text-cyan-400'
-              : currentUser.role === 'shareholder' ? 'text-emerald-400' : 'text-amber-400'
+                : 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm shadow-amber-500/20',
+            iconColor: currentUser.role === 'admin' ? 'text-cyan-400' : 'text-amber-400'
           }
         ]
       : [])
@@ -1168,7 +1179,9 @@ export function App() {
                       ? 'bg-sky-100 text-sky-800 font-semibold'
                       : 'bg-slate-800 text-slate-400'
                   }`}>
-                    {roleLabel(currentUser.role)}
+                    {currentUser.role === 'admin'
+                      ? (language === 'en' ? 'Admin' : 'Admin')
+                      : (language === 'en' ? 'Investor' : 'Investeerder')}
                   </span>
                 </button>
 
@@ -1238,7 +1251,7 @@ export function App() {
 
         {/* Mobile Horizontal Quick Tab Bar (< md) - Alleen zichtbaar op algemene presentatie pagina's */}
         {!['investor_dashboard', 'admin_dashboard', 'login', 'register'].includes(activeTab) && (
-          <div className="md:hidden mt-2.5 pt-2 border-t border-slate-800/80 overflow-x-auto no-scrollbar flex items-center gap-1.5">
+          <div className="md:hidden mt-2.5 pt-2 border-t border-slate-800/80 overflow-x-auto no-scrollbar flex items-center gap-1.5 pb-1 overscroll-x-contain">
             {navTabs.map((tab) => {
               const isActive = activeTab === tab.id;
               const IconComponent = tab.icon;
@@ -1246,7 +1259,7 @@ export function App() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 flex items-center gap-1.5 border transition-all cursor-pointer ${
+                    className={`min-h-9 px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 whitespace-nowrap flex items-center gap-1.5 border transition-all cursor-pointer ${
                     isActive
                       ? tab.activeClass
                       : 'text-slate-400 bg-slate-900/60 border-slate-800 hover:text-white'
@@ -1361,7 +1374,7 @@ export function App() {
                         ? 'bg-amber-100 text-amber-900 border-amber-300 font-semibold'
                         : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
                     }`}>
-                      {roleLabel(currentUser.role)}
+                      {currentUser.role === 'admin' ? 'Admin' : 'Investeerder'}
                     </span>
                   </div>
                   <div className="grid grid-cols-2 gap-2 pt-1">
@@ -2027,25 +2040,30 @@ export function App() {
 
         {/* Main Workspace Body */}
         <main className="flex min-h-0 min-w-0 flex-1 flex-col h-[calc(100vh-124px)] md:h-[calc(100vh-61px)] overflow-hidden bg-slate-950/40 relative">
+          {accountSaveError && (
+            <div className="absolute inset-x-3 top-3 z-50 rounded-xl border border-rose-500/40 bg-rose-950/90 px-4 py-3 text-xs text-rose-200 shadow-lg">
+              {accountSaveError}
+            </div>
+          )}
           {/* TAB 1: VISUAL FLOW ARCHITECTURE MAP */}
           {activeTab === 'architecture' && (
-            <div className="flex-1 overflow-y-auto p-5 lg:p-8 space-y-8">
-              <div className="glass-panel p-7 rounded-2xl border border-yellow-500/30 gold-glow flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-                <div className="space-y-2">
+            <div className="flex-1 min-w-0 overflow-y-auto p-3 sm:p-5 lg:p-8 space-y-6 sm:space-y-8">
+              <div className="glass-panel min-w-0 p-4 sm:p-7 rounded-2xl border border-yellow-500/30 gold-glow flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 sm:gap-6">
+                <div className="min-w-0 space-y-2">
                   <div className="flex items-center gap-2 text-yellow-400 font-mono text-xs font-bold uppercase tracking-widest">
                     <Network className="w-4 h-4" /> Strategische Architectuur
                   </div>
-                  <h2 className="text-2xl lg:text-3xl font-extrabold text-white tracking-tight leading-tight">
+                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight leading-tight break-words">
                     Vijf Gespecialiseerde Subholdings & Firewalling
                   </h2>
                   <p className="text-sm text-slate-300 max-w-3xl leading-relaxed">
                     Geconsolideerde holdingstructuur rondom <strong>QuantumInitium Ltd (Moederholding)</strong>. Strikte juridische entiteitsscheiding (firewalling) elimineert kruisbesmetting van passiva tussen sectoren.
                   </p>
                 </div>
-                <div className="flex items-center gap-2 bg-slate-900/90 p-4 rounded-xl border border-slate-800 text-xs shrink-0">
+                <div className="w-full lg:w-auto flex items-center gap-2 bg-slate-900/90 p-3 sm:p-4 rounded-xl border border-slate-800 text-xs shrink-0">
                   <div className="text-right">
                     <span className="text-[10px] text-slate-400 block font-mono tracking-wider">RISICO ISOLATIE</span>
-                    <span className="text-emerald-400 font-bold flex items-center gap-1.5 text-sm">
+                    <span className="text-emerald-400 font-bold flex items-center gap-1.5 text-xs sm:text-sm whitespace-nowrap">
                       <ShieldCheck className="w-4 h-4" /> 100% Gefirewalled
                     </span>
                   </div>
@@ -3759,15 +3777,15 @@ export function App() {
           {activeTab === 'investor_dashboard' && (
             <div className="flex-1 overflow-y-auto h-full w-full">
               <InvestorDashboard
-                key={currentUser?.id ?? 'investor-dashboard'}
                 user={currentUser && currentUser.role !== 'admin' ? currentUser : DEMO_INVESTOR}
                 onLogout={handleLogout}
                 onNavigateHome={(t) => setActiveTab(t || 'architecture')}
                 onUpdateShares={(newTotal) => {
                   if (currentUser) {
-                    setCurrentUser({ ...currentUser, sharesOwned: newTotal });
+                    handleCurrentUserUpdate({ ...currentUser, sharesOwned: newTotal });
                   }
                 }}
+                onUpdateUser={handleCurrentUserUpdate}
                 theme={theme}
               />
             </div>
@@ -3778,6 +3796,9 @@ export function App() {
             <div className="flex-1 overflow-y-auto h-full w-full">
               <AdminDashboard
                 user={currentUser && currentUser.role === 'admin' ? currentUser : DEMO_ADMIN}
+                managedAccounts={managedAccounts}
+                accountsLoading={accountsLoading}
+                onUpdateAccount={handleManagedAccountUpdate}
                 onLogout={handleLogout}
                 onNavigateHome={(t) => setActiveTab(t || 'architecture')}
                 onSwitchRole={() => {
