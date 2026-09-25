@@ -976,16 +976,6 @@ export function App() {
         <div className="max-w-7xl mx-auto flex w-full flex-wrap items-center justify-between gap-3">
           {/* Left Area: Mobile Drawer Trigger / Desktop Sidebar Toggle + Brand */}
           <div className="flex min-w-0 flex-1 items-center gap-3 md:flex-none">
-            {/* Mobile Drawer Trigger */}
-            <button
-              id="mobile-menu-btn"
-              onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 transition-all cursor-pointer"
-              title="Open hoofdmenu"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-
             {/* Brand Logo & Name */}
             <div
               onClick={() => setActiveTab('architecture')}
@@ -1015,8 +1005,18 @@ export function App() {
             </div>
           </div>
 
-          {/* Right: Auth Buttons & Target Metrics & Toggles & Fullscreen Button */}
+          {/* Right: Auth Buttons, Target Metrics & Toggles */}
           <div className="flex w-full min-w-0 flex-wrap items-center justify-start gap-2 sm:gap-2.5 md:w-auto md:flex-nowrap md:justify-end">
+            {/* Mobile Drawer Trigger */}
+            <button
+              id="mobile-menu-btn"
+              onClick={() => setMobileMenuOpen(true)}
+              className="md:hidden p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 transition-all cursor-pointer"
+              title="Open hoofdmenu"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+
             {/* NL / EN Taal Toggle Knop */}
             <button
               onClick={toggleLanguage}
