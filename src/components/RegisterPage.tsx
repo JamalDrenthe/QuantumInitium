@@ -14,7 +14,7 @@ import {
   Network,
   HelpCircle
 } from 'lucide-react';
-import { AuthUser, SHARE_PRICE_CURRENT } from '../types/auth';
+import { AuthUser, SHARE_PRICE_CURRENT, type UserRole } from '../types/auth';
 import { authUserFromSupabaseUser, supabase } from '../lib/supabase';
 
 interface RegisterPageProps {
@@ -28,6 +28,7 @@ export default function RegisterPage({
   onNavigateLogin,
   onNavigateHome
 }: RegisterPageProps) {
+  const [selectedRole, setSelectedRole] = useState<Exclude<UserRole, 'admin'>>('investor');
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -74,7 +75,7 @@ export default function RegisterPage({
       options: {
         data: {
           name: name.trim(),
-          role: 'investor',
+          role: selectedRole,
           desiredShares
         }
       }
@@ -127,10 +128,10 @@ export default function RegisterPage({
               <span>Nieuwe Participatie Registratie</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Investeerder Registratie
+              {selectedRole === 'investor' ? 'Investeerder Registratie' : 'Share Holder Registratie'}
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
-              Registreer direct uw participatie in QuantumInitium Ltd. Officiële aandelenkoers is vastgesteld op €{SHARE_PRICE_CURRENT.toFixed(2)}.
+              Kies of u als investeerder of als Share Holder toegang wilt aanvragen. Officiële aandelenkoers is vastgesteld op €{SHARE_PRICE_CURRENT.toFixed(2)}.
             </p>
           </div>
 
@@ -174,6 +175,43 @@ export default function RegisterPage({
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:border-amber-400 focus:outline-none transition-colors"
                 />
               </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setSelectedRole('investor')}
+                className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                  selectedRole === 'investor'
+                    ? 'bg-amber-500/15 border-amber-500/50 text-white'
+                    : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
+                }`}
+              >
+                <div className="flex items-center gap-2 text-sm font-bold">
+                  <TrendingUp className="w-4 h-4 text-amber-400" />
+                  Investeerder
+                </div>
+                <div className="text-[11px] text-slate-400 mt-1">
+                  Voor nieuwe investeringsaanvragen en portefeuillefuncties.
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedRole('shareholder')}
+                className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                  selectedRole === 'shareholder'
+                    ? 'bg-emerald-500/15 border-emerald-500/50 text-white'
+                    : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'
+                }`}
+              >
+                <div className="flex items-center gap-2 text-sm font-bold">
+                  <Award className="w-4 h-4 text-emerald-400" />
+                  Share Holder
+                </div>
+                <div className="text-[11px] text-slate-400 mt-1">
+                  Voor bestaande aandeelhouders die geen investor zijn.
+                </div>
+              </button>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

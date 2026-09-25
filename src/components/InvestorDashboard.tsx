@@ -1052,7 +1052,7 @@ export default function InvestorDashboard({
                   </div>
                   <div>
                     <h3 className={`text-sm font-bold ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>
-                      Investeerders Portaal
+                      {currentUser.role === 'shareholder' ? 'Share Holder Portaal' : 'Investeerders Portaal'}
                     </h3>
                     <p className={`text-[11px] font-mono ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
                       {currentUser.name} • {currentUser.certificateId}
