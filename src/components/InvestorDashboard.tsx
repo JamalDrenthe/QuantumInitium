@@ -75,6 +75,34 @@ interface InvestorDashboardProps {
 
 type InternalView = 'overview' | 'wallet' | 'koers' | 'history' | 'calculator' | 'certificate' | 'account' | 'integrations' | 'settings';
 
+interface StoredPortfolio {
+  sharesOwned: number;
+  cashBalance: number;
+}
+
+function readStoredPortfolio(userId: string): StoredPortfolio | null {
+  try {
+    const stored = JSON.parse(localStorage.getItem(`qi_portfolio_${userId}`) || 'null') as unknown;
+    if (
+      typeof stored === 'object'
+      && stored !== null
+      && 'sharesOwned' in stored
+      && 'cashBalance' in stored
+      && typeof stored.sharesOwned === 'number'
+      && typeof stored.cashBalance === 'number'
+    ) {
+      return {
+        sharesOwned: stored.sharesOwned,
+        cashBalance: stored.cashBalance
+      };
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
+}
+
 export default function InvestorDashboard({
   user: initialUser,
   onLogout,
@@ -83,8 +111,13 @@ export default function InvestorDashboard({
   onUpdateUser,
   theme = 'dark'
 }: InvestorDashboardProps) {
+  const storedPortfolio = readStoredPortfolio(initialUser.id);
+
   // Lokale kopie van de gebruiker voor directe CRUD updates
-  const [currentUser, setCurrentUser] = useState<AuthUser>(initialUser || DEMO_INVESTOR);
+  const [currentUser, setCurrentUser] = useState<AuthUser>({
+    ...initialUser,
+    sharesOwned: storedPortfolio?.sharesOwned ?? initialUser.sharesOwned
+  });
 
   // Actieve interne app tab / pagina
   const [internalView, setInternalView] = useState<InternalView>('overview');
@@ -99,8 +132,26 @@ export default function InvestorDashboard({
   const [purchaseSuccessMsg, setPurchaseSuccessMsg] = useState<string | null>(null);
 
   // Financiële states
-  const [transactions, setTransactions] = useState<ShareTransaction[]>(INITIAL_TRANSACTIONS);
-  const [cashBalance, setCashBalance] = useState<number>(currentUser.cashBalance || 18450);
+  const [transactions, setTransactions] = useState<ShareTransaction[]>(
+    initialUser.email === DEMO_INVESTOR.email ? INITIAL_TRANSACTIONS : []
+  );
+  const [cashBalance, setCashBalance] = useState<number>(
+    storedPortfolio?.cashBalance ?? currentUser.cashBalance ?? 0
+  );
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        `qi_portfolio_${currentUser.id}`,
+        JSON.stringify({
+          sharesOwned: currentUser.sharesOwned,
+          cashBalance
+        })
+      );
+    } catch {
+      // Local persistence is optional for the demo dashboard.
+    }
+  }, [cashBalance, currentUser.id, currentUser.sharesOwned]);
 
   // Wallet Storten / Opladen State
   const [depositAmount, setDepositAmount] = useState<number>(2500);
