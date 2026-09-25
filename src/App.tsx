@@ -1096,7 +1096,7 @@ export function App() {
           </div>
 
           {/* Right: Auth Buttons & Target Metrics & Toggles & Fullscreen Button */}
-          <div className="flex w-full min-w-0 items-center justify-end gap-2 sm:gap-2.5 md:w-auto">
+          <div className="flex w-full min-w-0 flex-wrap items-center justify-start gap-2 sm:gap-2.5 md:w-auto md:flex-nowrap md:justify-end">
             {/* NL / EN Taal Toggle Knop */}
             <button
               onClick={toggleLanguage}
