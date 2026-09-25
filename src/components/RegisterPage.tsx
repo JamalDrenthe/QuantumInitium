@@ -15,6 +15,13 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { AuthUser, SHARE_PRICE_CURRENT } from '../types/auth';
+import {
+  buildRegisteredInvestor,
+  isDemoModeEnabled,
+  isSupabaseConfigured,
+  signUpWithPassword
+} from '../lib/authStore';
+import { createManagedAccount } from '../lib/accountStore';
 
 interface RegisterPageProps {
   onRegisterSuccess: (user: AuthUser) => void;
@@ -34,53 +41,69 @@ export default function RegisterPage({
   const [desiredShares, setDesiredShares] = useState<number>(2500);
   const [agreedTerms, setAgreedTerms] = useState<boolean>(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const totalInvestment = desiredShares * SHARE_PRICE_CURRENT;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
+    setIsSubmitting(true);
 
     if (!name.trim()) {
       setErrorMsg('Vul alstublieft uw volledige naam in.');
+      setIsSubmitting(false);
       return;
     }
     if (!email.trim() || !email.includes('@')) {
       setErrorMsg('Vul een geldig emailadres in.');
+      setIsSubmitting(false);
       return;
     }
     if (password.length < 6) {
       setErrorMsg('Het wachtwoord dient minimaal 6 tekens te bevatten.');
+      setIsSubmitting(false);
       return;
     }
     if (password !== confirmPassword) {
       setErrorMsg('De wachtwoorden komen niet overeen.');
+      setIsSubmitting(false);
       return;
     }
     if (!agreedTerms) {
       setErrorMsg('U dient akkoord te gaan met de aandeelhoudersvoorwaarden.');
+      setIsSubmitting(false);
       return;
     }
 
-    const randomId = Math.floor(1000 + Math.random() * 9000);
-    const newUser: AuthUser = {
-      id: `inv_${Date.now()}`,
-      name: name.trim(),
-      email: email.trim().toLowerCase(),
-      role: 'investor',
-      sharesOwned: desiredShares,
-      purchasePrice: SHARE_PRICE_CURRENT,
-      currentPrice: SHARE_PRICE_CURRENT,
-      certificateId: `QI INV ${randomId} NL`,
-      joinDate: new Date().toLocaleDateString('nl-NL', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      }),
-      title: 'Geregistreerd Participatiehouder'
-    };
+    const cleanEmail = email.trim().toLowerCase();
+    if (isSupabaseConfigured && !isDemoModeEnabled) {
+      try {
+        const session = await signUpWithPassword(cleanEmail, password);
+        if (!session.accessToken) {
+          throw new Error(
+            'Supabase vereist eerst e-mailbevestiging. Schakel bevestiging uit of activeer het profiel via het adminproces.'
+          );
+        }
+        const newUser = buildRegisteredInvestor(session.userId, name.trim(), cleanEmail, desiredShares);
+        await createManagedAccount(newUser, session.userId, session.accessToken);
+        onRegisterSuccess(newUser);
+      } catch (error) {
+        setErrorMsg(error instanceof Error ? error.message : 'Registratie mislukt.');
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
 
+    const newUser = buildRegisteredInvestor(
+      `local_${Date.now()}`,
+      name.trim(),
+      cleanEmail,
+      desiredShares
+    );
     onRegisterSuccess(newUser);
+    setIsSubmitting(false);
   };
 
   return (
@@ -242,9 +265,10 @@ export default function RegisterPage({
 
             <button
               type="submit"
-              className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
+              disabled={isSubmitting}
+              className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 disabled:opacity-60 disabled:cursor-wait text-slate-950 shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
-              <span>Account Aanmaken & Naar Dashboard</span>
+              <span>{isSubmitting ? 'Account beveiligen...' : 'Account Aanmaken & Naar Dashboard'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>

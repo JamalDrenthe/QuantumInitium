@@ -10,7 +10,8 @@ Interactief portaal voor de holdingstructuur en strategische deelnemingen van Qu
 - Investeerdersdashboard met aandelenoverzicht, cap table-informatie, transacties, waarderingsscenario's en ROI-calculator.
 - Admin-dashboard voor accountselectie, Investor- en Shareholder-beheer, subholdingstatussen, auditacties en export van de cap table.
 - Investor-integraties met directe links naar de officiële bedrijfsdomeinen.
-- Demo-login voor investeerders en beheerders, inclusief registratieflow.
+- Supabase Auth-login en registratie met RLS-beveiligde accountdata.
+- Demo-login voor lokale ontwikkeling wanneer Supabase niet is geconfigureerd of expliciet is ingeschakeld.
 - Licht/donker thema en responsive navigatie voor desktop- en mobiele schermen.
 - Animaties, modals, notificaties en interactieve financiële visualisaties.
 
@@ -50,7 +51,9 @@ Maak indien nodig een lokale omgevingsconfiguratie:
 cp .env.example .env.local
 ```
 
-Vul voor persistente accountdata de Supabase-URL en publishable key in `.env.local` in. De SQL-migratie staat in `supabase/migrations/`; zonder deze variabelen gebruikt de demo automatisch lokale fallback-accounts.
+Vul voor persistente accountdata de Supabase-URL en publishable key in `.env.local` in. De SQL-migraties staan in `supabase/migrations/`. In een geconfigureerde omgeving gebruikt de applicatie Supabase Auth-access-tokens voor alle PostgREST-requests; RLS geeft alleen eigen accountdata vrij en laat accountupdates uitsluitend aan admins toe.
+
+Voor lokale demo's zonder Supabase kun je `VITE_ENABLE_DEMO_MODE="true"` instellen. Laat deze variabele in productie op `false` staan. Het admin-account moet in Supabase Auth bestaan met hetzelfde e-mailadres als het seeded adminrecord voordat het admin-dashboard beschikbaar is.
 
 Start daarna de ontwikkelserver:
 

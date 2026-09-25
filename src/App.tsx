@@ -53,7 +53,8 @@ import RegisterPage from './components/RegisterPage';
 import InvestorDashboard from './components/InvestorDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import { AuthUser, DEMO_INVESTOR, DEMO_ADMIN, SHARE_PRICE_CURRENT } from './types/auth';
-import { loadManagedAccounts, saveManagedAccount } from './lib/accountStore';
+import { loadAccountForSession, loadManagedAccounts, saveManagedAccount } from './lib/accountStore';
+import { clearAuthSession, getCurrentAuthIdentity } from './lib/authStore';
 import { ecosystemData } from './data/ecosystem';
 import quantumInitiumLogo from './assets/images/quantum_initium_logo_1790097745176.jpg';
 
@@ -554,9 +555,31 @@ export function App() {
   };
 
   const handleLogout = () => {
+    clearAuthSession();
     setCurrentUser(null);
     setActiveTab('architecture');
   };
+
+  useEffect(() => {
+    let isMounted = true;
+    void getCurrentAuthIdentity().then(async (identity) => {
+      if (!identity || !isMounted) {
+        return;
+      }
+      try {
+        const account = await loadAccountForSession(identity.email);
+        if (isMounted) {
+          handleLoginSuccess(account);
+        }
+      } catch {
+        clearAuthSession();
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (currentUser?.role !== 'admin') {
@@ -583,13 +606,16 @@ export function App() {
   }, [currentUser?.role]);
 
   const handleManagedAccountUpdate = (updatedAccount: AuthUser) => {
-    setManagedAccounts((accounts) => {
-      const exists = accounts.some((account) => account.id === updatedAccount.id);
-      return exists
-        ? accounts.map((account) => (account.id === updatedAccount.id ? updatedAccount : account))
-        : [...accounts, updatedAccount];
-    });
-    void saveManagedAccount(updatedAccount).catch(() => undefined);
+    void saveManagedAccount(updatedAccount)
+      .then(() => {
+        setManagedAccounts((accounts) => {
+          const exists = accounts.some((account) => account.id === updatedAccount.id);
+          return exists
+            ? accounts.map((account) => (account.id === updatedAccount.id ? updatedAccount : account))
+            : [...accounts, updatedAccount];
+        });
+      })
+      .catch(() => undefined);
   };
 
   // Theme (Dark/Light) en Taal (NL/EN) state

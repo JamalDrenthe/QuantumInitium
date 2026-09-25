@@ -1,10 +1,11 @@
 import { AuthUser, DEMO_INVESTOR, NotificationSettings } from '../types/auth';
+import { getAccessToken, isDemoModeEnabled, isSupabaseConfigured } from './authStore';
 
 interface AccountRow {
   id: string;
   name: string;
   email: string;
-  role: 'investor' | 'shareholder';
+  role: 'investor' | 'shareholder' | 'admin';
   shares_owned: number;
   purchase_price: number;
   current_price: number;
@@ -86,6 +87,12 @@ const supabaseConfig = {
   key: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined
 };
 
+const requestHeaders = (accessToken: string) => ({
+  apikey: supabaseConfig.key || '',
+  Authorization: `Bearer ${accessToken}`,
+  'Content-Type': 'application/json'
+});
+
 const mapRowToUser = (row: AccountRow): AuthUser => ({
   id: row.id,
   name: row.name,
@@ -136,33 +143,92 @@ const mapUserToRow = (user: AuthUser): Partial<AccountRow> => ({
   notifications: user.notifications
 });
 
-export const loadManagedAccounts = async (): Promise<AuthUser[]> => {
-  if (!supabaseConfig.url || !supabaseConfig.key) {
+export const loadManagedAccounts = async (accessToken = getAccessToken()): Promise<AuthUser[]> => {
+  if (!isSupabaseConfigured) {
     return fallbackAccounts;
+  }
+  if (!accessToken) {
+    return isDemoModeEnabled ? fallbackAccounts : [];
   }
 
   try {
-    const response = await fetch(`${supabaseConfig.url}/rest/v1/user_accounts?select=*&order=name.asc`, {
-      headers: {
-        apikey: supabaseConfig.key,
-        Authorization: `Bearer ${supabaseConfig.key}`
+    const response = await fetch(
+      `${supabaseConfig.url}/rest/v1/user_accounts?select=*&role=in.(investor,shareholder)&order=name.asc`,
+      {
+        headers: requestHeaders(accessToken)
       }
-    });
+    );
 
     if (!response.ok) {
-      return fallbackAccounts;
+      return [];
     }
 
     const rows = (await response.json()) as AccountRow[];
     return rows.map(mapRowToUser);
   } catch {
-    return fallbackAccounts;
+    return [];
   }
 };
 
-export const saveManagedAccount = async (user: AuthUser): Promise<void> => {
-  if (!supabaseConfig.url || !supabaseConfig.key) {
-    return;
+export const loadAccountForSession = async (
+  email: string,
+  accessToken = getAccessToken()
+): Promise<AuthUser> => {
+  if (!supabaseConfig.url || !supabaseConfig.key || !accessToken) {
+    throw new Error('Er is geen actieve Supabase-sessie.');
+  }
+
+  const response = await fetch(
+    `${supabaseConfig.url}/rest/v1/user_accounts?select=*&email=eq.${encodeURIComponent(email)}&limit=1`,
+    {
+      headers: requestHeaders(accessToken)
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('Accountgegevens konden niet worden geladen.');
+  }
+
+  const rows = (await response.json()) as AccountRow[];
+  if (!rows[0]) {
+    throw new Error('Er is nog geen QuantumInitium-account aan dit e-mailadres gekoppeld.');
+  }
+
+  return mapRowToUser(rows[0]);
+};
+
+export const createManagedAccount = async (
+  user: AuthUser,
+  authUserId: string,
+  accessToken = getAccessToken()
+): Promise<void> => {
+  if (!supabaseConfig.url || !supabaseConfig.key || !accessToken) {
+    throw new Error('Er is geen actieve Supabase-sessie.');
+  }
+
+  const response = await fetch(`${supabaseConfig.url}/rest/v1/user_accounts`, {
+    method: 'POST',
+    headers: {
+      ...requestHeaders(accessToken),
+      Prefer: 'return=minimal'
+    },
+    body: JSON.stringify({
+      ...mapUserToRow(user),
+      auth_user_id: authUserId
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error('Accountprofiel kon niet worden aangemaakt.');
+  }
+};
+
+export const saveManagedAccount = async (
+  user: AuthUser,
+  accessToken = getAccessToken()
+): Promise<void> => {
+  if (!supabaseConfig.url || !supabaseConfig.key || !accessToken) {
+    throw new Error('Er is geen actieve Supabase-sessie.');
   }
 
   const response = await fetch(
@@ -170,9 +236,7 @@ export const saveManagedAccount = async (user: AuthUser): Promise<void> => {
     {
       method: 'PATCH',
       headers: {
-        apikey: supabaseConfig.key,
-        Authorization: `Bearer ${supabaseConfig.key}`,
-        'Content-Type': 'application/json',
+        ...requestHeaders(accessToken),
         Prefer: 'return=minimal'
       },
       body: JSON.stringify(mapUserToRow(user))

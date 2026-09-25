@@ -16,6 +16,8 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { AuthUser, DEMO_INVESTOR, DEMO_ADMIN, SHARE_PRICE_CURRENT } from '../types/auth';
+import { isDemoModeEnabled, isSupabaseConfigured, signInWithPassword } from '../lib/authStore';
+import { loadAccountForSession } from '../lib/accountStore';
 
 interface LoginPageProps {
   onLoginSuccess: (user: AuthUser) => void;
@@ -33,6 +35,7 @@ export default function LoginPage({
   const [password, setPassword] = useState<string>('investor2027');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handleSelectRole = (role: 'investor' | 'admin') => {
     setSelectedRole(role);
@@ -47,6 +50,11 @@ export default function LoginPage({
   };
 
   const handleQuickDemoLogin = (role: 'investor' | 'admin') => {
+    if (isSupabaseConfigured && !isDemoModeEnabled) {
+      setErrorMsg('Demo-login is uitgeschakeld. Gebruik uw Supabase Auth-account.');
+      return;
+    }
+
     if (role === 'investor') {
       onLoginSuccess(DEMO_INVESTOR);
     } else {
@@ -54,18 +62,34 @@ export default function LoginPage({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
+    setIsSubmitting(true);
 
     const cleanEmail = email.trim().toLowerCase();
+    if (isSupabaseConfigured && !isDemoModeEnabled) {
+      try {
+        const session = await signInWithPassword(cleanEmail, password);
+        const account = await loadAccountForSession(session.email, session.accessToken);
+        onLoginSuccess(account);
+      } catch (error) {
+        setErrorMsg(error instanceof Error ? error.message : 'Inloggen mislukt.');
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
     if (cleanEmail === DEMO_INVESTOR.email.toLowerCase() && password === 'investor2027') {
       onLoginSuccess(DEMO_INVESTOR);
+      setIsSubmitting(false);
       return;
     }
 
     if (cleanEmail === DEMO_ADMIN.email.toLowerCase() && password === 'admin2027') {
       onLoginSuccess(DEMO_ADMIN);
+      setIsSubmitting(false);
       return;
     }
 
@@ -77,6 +101,7 @@ export default function LoginPage({
         name: cleanEmail.split('@')[0] || 'Investeerder'
       };
       onLoginSuccess(customInvestor);
+      setIsSubmitting(false);
       return;
     }
 
@@ -86,10 +111,12 @@ export default function LoginPage({
         email: cleanEmail
       };
       onLoginSuccess(customAdmin);
+      setIsSubmitting(false);
       return;
     }
 
     setErrorMsg('Controleer uw inloggegevens of gebruik de directe demo knoppen.');
+    setIsSubmitting(false);
   };
 
   return (
@@ -272,9 +299,10 @@ export default function LoginPage({
 
             <button
               type="submit"
-              className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
+              disabled={isSubmitting}
+              className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 disabled:opacity-60 disabled:cursor-wait text-slate-950 shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
-              <span>Inloggen als {selectedRole === 'investor' ? 'Investeerder' : 'Admin'}</span>
+              <span>{isSubmitting ? 'Authenticatie controleren...' : `Inloggen als ${selectedRole === 'investor' ? 'Investeerder' : 'Admin'}`}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
