@@ -13,7 +13,7 @@ export const supabase = isSupabaseConfigured
 
 export function authUserFromSupabaseUser(user: User): AuthUser {
   const isDemoInvestor = user.email?.toLowerCase() === DEMO_INVESTOR.email;
-  const metadataRole = user.app_metadata.role ?? user.user_metadata.role;
+  const metadataRole = user.app_metadata.role;
   const role: UserRole = metadataRole === 'admin'
     && user.app_metadata.role === 'admin'
     ? 'admin'
@@ -26,7 +26,9 @@ export function authUserFromSupabaseUser(user: User): AuthUser {
     : undefined;
   const name = typeof user.user_metadata.name === 'string'
     ? user.user_metadata.name
-    : isDemoInvestor ? DEMO_INVESTOR.name : 'Nieuwe investeerder';
+    : role === 'admin'
+      ? DEMO_ADMIN.name
+      : isDemoInvestor ? DEMO_INVESTOR.name : 'Nieuwe investeerder';
 
   if (isDemoInvestor) {
     return {
