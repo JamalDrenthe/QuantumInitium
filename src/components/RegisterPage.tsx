@@ -79,15 +79,19 @@ export default function RegisterPage({
     const cleanEmail = email.trim().toLowerCase();
     if (isSupabaseConfigured && !isDemoModeEnabled) {
       try {
-        const session = await signUpWithPassword(cleanEmail, password);
-        if (!session.accessToken) {
-          throw new Error(
-            'Supabase vereist eerst e-mailbevestiging. Schakel bevestiging uit of activeer het profiel via het adminproces.'
+        const session = await signUpWithPassword(cleanEmail, password, {
+          name: name.trim(),
+          requestedShares: desiredShares
+        });
+        const newUser = buildRegisteredInvestor(session.userId, name.trim(), cleanEmail, desiredShares);
+        if (session.accessToken) {
+          await createManagedAccount(newUser, session.userId, session.accessToken);
+          onRegisterSuccess(newUser);
+        } else {
+          setErrorMsg(
+            'Account aangemaakt. Bevestig eerst uw e-mailadres; daarna kan een beheerder uw profiel en aandelenaanvraag activeren.'
           );
         }
-        const newUser = buildRegisteredInvestor(session.userId, name.trim(), cleanEmail, desiredShares);
-        await createManagedAccount(newUser, session.userId, session.accessToken);
-        onRegisterSuccess(newUser);
       } catch (error) {
         setErrorMsg(error instanceof Error ? error.message : 'Registratie mislukt.');
       } finally {

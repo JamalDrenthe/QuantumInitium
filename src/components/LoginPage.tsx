@@ -31,8 +31,8 @@ export default function LoginPage({
   onNavigateHome
 }: LoginPageProps) {
   const [selectedRole, setSelectedRole] = useState<'investor' | 'admin'>('investor');
-  const [email, setEmail] = useState<string>('investor@quantuminitium.com');
-  const [password, setPassword] = useState<string>('investor2027');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -40,12 +40,17 @@ export default function LoginPage({
   const handleSelectRole = (role: 'investor' | 'admin') => {
     setSelectedRole(role);
     setErrorMsg(null);
-    if (role === 'investor') {
-      setEmail('investor@quantuminitium.com');
-      setPassword('investor2027');
+    if (isDemoModeEnabled || !isSupabaseConfigured) {
+      if (role === 'investor') {
+        setEmail('investor@quantuminitium.com');
+        setPassword('investor2027');
+      } else {
+        setEmail('admin@quantuminitium.com');
+        setPassword('admin2027');
+      }
     } else {
-      setEmail('admin@quantuminitium.com');
-      setPassword('admin2027');
+      setEmail('');
+      setPassword('');
     }
   };
 
@@ -71,7 +76,10 @@ export default function LoginPage({
     if (isSupabaseConfigured && !isDemoModeEnabled) {
       try {
         const session = await signInWithPassword(cleanEmail, password);
-        const account = await loadAccountForSession(session.email, session.accessToken);
+        const account = await loadAccountForSession(
+          { id: session.userId, email: session.email },
+          session.accessToken
+        );
         onLoginSuccess(account);
       } catch (error) {
         setErrorMsg(error instanceof Error ? error.message : 'Inloggen mislukt.');
@@ -212,6 +220,7 @@ export default function LoginPage({
           </div>
 
           {/* Directe Snelle Demo Knoppen (1 klik inloggen) */}
+          {(isDemoModeEnabled || !isSupabaseConfigured) && (
           <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2 mb-6">
             <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
               <span className="flex items-center gap-1.5">
@@ -241,6 +250,7 @@ export default function LoginPage({
               </button>
             </div>
           </div>
+          )}
 
           {/* Formulier */}
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -273,9 +283,11 @@ export default function LoginPage({
                 <label className="block text-xs font-mono font-medium text-slate-300">
                   Wachtwoord
                 </label>
-                <span className="text-[11px] text-slate-500 font-mono">
-                  Demo: {selectedRole === 'investor' ? 'investor2027' : 'admin2027'}
-                </span>
+                {(isDemoModeEnabled || !isSupabaseConfigured) && (
+                  <span className="text-[11px] text-slate-500 font-mono">
+                    Demo: {selectedRole === 'investor' ? 'investor2027' : 'admin2027'}
+                  </span>
+                )}
               </div>
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />

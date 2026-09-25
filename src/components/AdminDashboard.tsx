@@ -283,10 +283,9 @@ export default function AdminDashboard({
             <InvestorDashboard
               key={selectedAccount.id}
               user={selectedAccount}
-              onLogout={() => undefined}
-              onNavigateHome={() => undefined}
-              onSwitchRole={() => undefined}
-              onUpdateShares={(newTotal) =>
+            onLogout={() => undefined}
+            onNavigateHome={() => undefined}
+            onUpdateShares={(newTotal) =>
                 onUpdateAccount({ ...selectedAccount, sharesOwned: newTotal })
               }
               onUpdateUser={onUpdateAccount}

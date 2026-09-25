@@ -11,7 +11,9 @@ interface SupabaseAuthResponse {
 }
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined;
+const supabaseKey =
+  (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined) ||
+  (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined);
 const demoModeEnabled = import.meta.env.VITE_ENABLE_DEMO_MODE === 'true';
 const sessionStorageKey = 'qi_supabase_access_token';
 
@@ -45,7 +47,7 @@ const saveAccessToken = (accessToken: string): void => {
 export const signInWithPassword = async (
   email: string,
   password: string
-): Promise<{ accessToken: string; email: string }> => {
+): Promise<{ accessToken: string; userId: string; email: string }> => {
   if (!isSupabaseConfigured || !supabaseUrl) {
     throw new Error('Supabase Auth is niet geconfigureerd.');
   }
@@ -62,12 +64,13 @@ export const signInWithPassword = async (
   }
 
   saveAccessToken(data.access_token);
-  return { accessToken: data.access_token, email: data.user.email };
+  return { accessToken: data.access_token, userId: data.user.id, email: data.user.email };
 };
 
 export const signUpWithPassword = async (
   email: string,
-  password: string
+  password: string,
+  metadata?: { name: string; requestedShares: number }
 ): Promise<{ accessToken: string | null; userId: string }> => {
   if (!isSupabaseConfigured || !supabaseUrl) {
     throw new Error('Supabase Auth is niet geconfigureerd.');
@@ -76,7 +79,13 @@ export const signUpWithPassword = async (
   const response = await fetch(`${supabaseUrl}/auth/v1/signup`, {
     method: 'POST',
     headers: authHeaders,
-    body: JSON.stringify({ email, password })
+    body: JSON.stringify({
+      email,
+      password,
+      data: metadata
+        ? { name: metadata.name, role: 'investor', requestedShares: metadata.requestedShares }
+        : undefined
+    })
   });
   const data = (await response.json()) as SupabaseAuthResponse;
 
@@ -91,7 +100,18 @@ export const signUpWithPassword = async (
   return { accessToken: data.access_token || null, userId: data.user.id };
 };
 
-export const clearAuthSession = (): void => {
+export const clearAuthSession = async (): Promise<void> => {
+  const accessToken = getAccessToken();
+  if (accessToken && supabaseUrl && supabaseKey) {
+    await fetch(`${supabaseUrl}/auth/v1/logout`, {
+      method: 'POST',
+      headers: {
+        ...authHeaders,
+        Authorization: `Bearer ${accessToken}`
+      }
+    }).catch(() => undefined);
+  }
+
   try {
     sessionStorage.removeItem(sessionStorageKey);
   } catch {
@@ -113,7 +133,7 @@ export const getCurrentAuthIdentity = async (
     }
   });
   if (!response.ok) {
-    clearAuthSession();
+    await clearAuthSession();
     return null;
   }
 
@@ -131,7 +151,8 @@ export const buildRegisteredInvestor = (
   name,
   email,
   role: 'investor',
-  sharesOwned: desiredShares,
+  requestedShares: desiredShares,
+  sharesOwned: 0,
   purchasePrice: 8.2,
   currentPrice: 8.2,
   certificateId: `QI INV ${Math.floor(1000 + Math.random() * 9000)} NL`,

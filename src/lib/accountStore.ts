@@ -26,6 +26,8 @@ interface AccountRow {
   notifications: NotificationSettings;
 }
 
+const demoAccountsStorageKey = 'qi_demo_accounts';
+
 const fallbackAccounts: AuthUser[] = [
   DEMO_INVESTOR,
   {
@@ -84,7 +86,22 @@ const fallbackAccounts: AuthUser[] = [
 
 const supabaseConfig = {
   url: import.meta.env.VITE_SUPABASE_URL as string | undefined,
-  key: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined
+  key:
+    (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined) ||
+    (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined)
+};
+
+const readDemoAccounts = (): AuthUser[] => {
+  try {
+    const stored = localStorage.getItem(demoAccountsStorageKey);
+    return stored ? (JSON.parse(stored) as AuthUser[]) : fallbackAccounts;
+  } catch {
+    return fallbackAccounts;
+  }
+};
+
+const writeDemoAccounts = (accounts: AuthUser[]): void => {
+  localStorage.setItem(demoAccountsStorageKey, JSON.stringify(accounts));
 };
 
 const requestHeaders = (accessToken: string) => ({
@@ -144,11 +161,11 @@ const mapUserToRow = (user: AuthUser): Partial<AccountRow> => ({
 });
 
 export const loadManagedAccounts = async (accessToken = getAccessToken()): Promise<AuthUser[]> => {
-  if (!isSupabaseConfigured) {
-    return fallbackAccounts;
+  if (!isSupabaseConfigured || (isDemoModeEnabled && !accessToken)) {
+    return readDemoAccounts();
   }
   if (!accessToken) {
-    return isDemoModeEnabled ? fallbackAccounts : [];
+    return isDemoModeEnabled ? readDemoAccounts() : [];
   }
 
   try {
@@ -171,7 +188,7 @@ export const loadManagedAccounts = async (accessToken = getAccessToken()): Promi
 };
 
 export const loadAccountForSession = async (
-  email: string,
+  identity: { id: string; email: string },
   accessToken = getAccessToken()
 ): Promise<AuthUser> => {
   if (!supabaseConfig.url || !supabaseConfig.key || !accessToken) {
@@ -179,7 +196,7 @@ export const loadAccountForSession = async (
   }
 
   const response = await fetch(
-    `${supabaseConfig.url}/rest/v1/user_accounts?select=*&email=eq.${encodeURIComponent(email)}&limit=1`,
+    `${supabaseConfig.url}/rest/v1/user_accounts?select=*&auth_user_id=eq.${encodeURIComponent(identity.id)}&limit=1`,
     {
       headers: requestHeaders(accessToken)
     }
@@ -227,6 +244,15 @@ export const saveManagedAccount = async (
   user: AuthUser,
   accessToken = getAccessToken()
 ): Promise<void> => {
+  if (!isSupabaseConfigured || (isDemoModeEnabled && !accessToken)) {
+    const accounts = readDemoAccounts();
+    const nextAccounts = accounts.some((account) => account.id === user.id)
+      ? accounts.map((account) => (account.id === user.id ? user : account))
+      : [...accounts, user];
+    writeDemoAccounts(nextAccounts);
+    return;
+  }
+
   if (!supabaseConfig.url || !supabaseConfig.key || !accessToken) {
     throw new Error('Er is geen actieve Supabase-sessie.');
   }

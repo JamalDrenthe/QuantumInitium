@@ -69,7 +69,6 @@ interface InvestorDashboardProps {
   user: AuthUser;
   onLogout: () => void;
   onNavigateHome: (tab?: 'architecture' | '3d' | 'dossier' | 'calculator' | 'simulator') => void;
-  onSwitchRole: (targetRole: 'admin') => void;
   onUpdateShares: (newTotal: number) => void;
   onUpdateUser?: (updated: AuthUser) => void;
   theme?: 'dark' | 'light';
@@ -77,17 +76,62 @@ interface InvestorDashboardProps {
 
 type InternalView = 'overview' | 'wallet' | 'koers' | 'history' | 'calculator' | 'certificate' | 'account' | 'integrations' | 'settings';
 
+interface StoredPortfolio {
+  sharesOwned: number;
+  cashBalance: number;
+  transactions?: ShareTransaction[];
+}
+
+function readStoredPortfolio(userId: string): StoredPortfolio | null {
+  try {
+    const stored = JSON.parse(localStorage.getItem(`qi_portfolio_${userId}`) || 'null') as unknown;
+    if (
+      typeof stored === 'object'
+      && stored !== null
+      && 'sharesOwned' in stored
+      && 'cashBalance' in stored
+      && typeof stored.sharesOwned === 'number'
+      && typeof stored.cashBalance === 'number'
+    ) {
+      return {
+        sharesOwned: stored.sharesOwned,
+        cashBalance: stored.cashBalance,
+        transactions: 'transactions' in stored
+          && Array.isArray(stored.transactions)
+          ? stored.transactions as ShareTransaction[]
+          : undefined
+      };
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
+}
+
+function writeStoredPortfolio(userId: string, portfolio: StoredPortfolio) {
+  try {
+    localStorage.setItem(`qi_portfolio_${userId}`, JSON.stringify(portfolio));
+  } catch {
+    // Local persistence is optional for the demo dashboard.
+  }
+}
+
 export default function InvestorDashboard({
   user: initialUser,
   onLogout,
   onNavigateHome,
-  onSwitchRole,
   onUpdateShares,
   onUpdateUser,
   theme = 'dark'
 }: InvestorDashboardProps) {
+  const storedPortfolio = readStoredPortfolio(initialUser.id);
+
   // Lokale kopie van de gebruiker voor directe CRUD updates
-  const [currentUser, setCurrentUser] = useState<AuthUser>(initialUser || DEMO_INVESTOR);
+  const [currentUser, setCurrentUser] = useState<AuthUser>({
+    ...initialUser,
+    sharesOwned: storedPortfolio?.sharesOwned ?? initialUser.sharesOwned
+  });
 
   // Actieve interne app tab / pagina
   const [internalView, setInternalView] = useState<InternalView>('overview');
@@ -102,8 +146,37 @@ export default function InvestorDashboard({
   const [purchaseSuccessMsg, setPurchaseSuccessMsg] = useState<string | null>(null);
 
   // Financiële states
-  const [transactions, setTransactions] = useState<ShareTransaction[]>(INITIAL_TRANSACTIONS);
-  const [cashBalance, setCashBalance] = useState<number>(currentUser.cashBalance || 18450);
+  const [transactions, setTransactions] = useState<ShareTransaction[]>(
+    storedPortfolio?.transactions
+      ?? (initialUser.email === DEMO_INVESTOR.email ? INITIAL_TRANSACTIONS : [])
+  );
+  const [cashBalance, setCashBalance] = useState<number>(
+    storedPortfolio?.cashBalance ?? currentUser.cashBalance ?? 0
+  );
+  const canUseInvestorWorkflows = currentUser.role === 'investor';
+
+  useEffect(() => {
+    const storageKey = `qi_portfolio_${initialUser.id}`;
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== storageKey || !event.newValue) {
+        return;
+      }
+
+      const stored = readStoredPortfolio(initialUser.id);
+      if (!stored) {
+        return;
+      }
+
+      setCurrentUser((user) => ({ ...user, sharesOwned: stored.sharesOwned }));
+      setCashBalance(stored.cashBalance);
+      if (stored.transactions) {
+        setTransactions(stored.transactions);
+      }
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, [initialUser.id]);
 
   // Wallet Storten / Opladen State
   const [depositAmount, setDepositAmount] = useState<number>(2500);
@@ -566,10 +639,16 @@ export default function InvestorDashboard({
   // Handler: Saldo Opladen / Storten
   const handleDepositCash = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!canUseInvestorWorkflows) return;
     if (depositAmount <= 0) return;
 
-    const newCash = cashBalance + depositAmount;
+    const storedPortfolio = readStoredPortfolio(currentUser.id);
+    const baseShares = storedPortfolio?.sharesOwned ?? currentUser.sharesOwned;
+    const baseCash = storedPortfolio?.cashBalance ?? cashBalance;
+    const baseTransactions = storedPortfolio?.transactions ?? transactions;
+    const newCash = baseCash + depositAmount;
     setCashBalance(newCash);
+    setCurrentUser({ ...currentUser, sharesOwned: baseShares });
 
     const newTxn: ShareTransaction = {
       id: `DEP ${Math.floor(1000 + Math.random() * 9000)}`,
@@ -582,7 +661,13 @@ export default function InvestorDashboard({
       reference: `STORTING VIA ${depositMethod.toUpperCase()} (${selectedBank})`
     };
 
-    setTransactions([newTxn, ...transactions]);
+    const updatedTransactions = [newTxn, ...baseTransactions];
+    setTransactions(updatedTransactions);
+    writeStoredPortfolio(currentUser.id, {
+      sharesOwned: baseShares,
+      cashBalance: newCash,
+      transactions: updatedTransactions
+    });
     setPurchaseSuccessMsg(`Succesvol €${depositAmount.toLocaleString('nl-NL', { minimumFractionDigits: 2 })} opgeladen op uw werkkapitaal.`);
     setTimeout(() => setPurchaseSuccessMsg(null), 4500);
   };
@@ -590,16 +675,21 @@ export default function InvestorDashboard({
   // Handler: Aandelen Kopen vanuit Wallet Saldo
   const handleBuyFromWallet = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!canUseInvestorWorkflows) return;
     const totalCost = walletBuyShares * SHARE_PRICE_CURRENT;
+    const storedPortfolio = readStoredPortfolio(currentUser.id);
+    const baseShares = storedPortfolio?.sharesOwned ?? currentUser.sharesOwned;
+    const baseCash = storedPortfolio?.cashBalance ?? cashBalance;
+    const baseTransactions = storedPortfolio?.transactions ?? transactions;
 
-    if (cashBalance < totalCost) {
-      setPurchaseSuccessMsg(`Onvoldoende werkkapitaal (€${cashBalance.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}). Laad eerst extra saldo op via de Wallet.`);
+    if (baseCash < totalCost) {
+      setPurchaseSuccessMsg(`Onvoldoende werkkapitaal (€${baseCash.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}). Laad eerst extra saldo op via de Wallet.`);
       setTimeout(() => setPurchaseSuccessMsg(null), 4500);
       return;
     }
 
-    const updatedShares = currentUser.sharesOwned + walletBuyShares;
-    const updatedCash = cashBalance - totalCost;
+    const updatedShares = baseShares + walletBuyShares;
+    const updatedCash = baseCash - totalCost;
 
     setCashBalance(updatedCash);
     setCurrentUser({ ...currentUser, sharesOwned: updatedShares });
@@ -616,7 +706,13 @@ export default function InvestorDashboard({
       reference: 'WALLET AANKOOP SERIE A'
     };
 
-    setTransactions([newTxn, ...transactions]);
+    const updatedTransactions = [newTxn, ...baseTransactions];
+    setTransactions(updatedTransactions);
+    writeStoredPortfolio(currentUser.id, {
+      sharesOwned: updatedShares,
+      cashBalance: updatedCash,
+      transactions: updatedTransactions
+    });
     setPurchaseSuccessMsg(`Gefeliciteerd: ${walletBuyShares.toLocaleString('nl-NL')} aandelen direct aangekocht tegen €${SHARE_PRICE_CURRENT.toFixed(2)}.`);
     setTimeout(() => setPurchaseSuccessMsg(null), 4500);
   };
@@ -624,15 +720,20 @@ export default function InvestorDashboard({
   // Handler: Transfer Uitvoeren (Aandelen of Geld naar ander account)
   const handleExecuteTransfer = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!canUseInvestorWorkflows) return;
+    const storedPortfolio = readStoredPortfolio(currentUser.id);
+    const baseShares = storedPortfolio?.sharesOwned ?? currentUser.sharesOwned;
+    const baseCash = storedPortfolio?.cashBalance ?? cashBalance;
+    const baseTransactions = storedPortfolio?.transactions ?? transactions;
 
     if (transferType === 'shares') {
-      if (transferAmount > currentUser.sharesOwned) {
-        setPurchaseSuccessMsg(`U bezit slechts ${currentUser.sharesOwned.toLocaleString('nl-NL')} aandelen. Transfer kan niet worden voltooid.`);
+      if (transferAmount > baseShares) {
+        setPurchaseSuccessMsg(`U bezit slechts ${baseShares.toLocaleString('nl-NL')} aandelen. Transfer kan niet worden voltooid.`);
         setTimeout(() => setPurchaseSuccessMsg(null), 4000);
         return;
       }
 
-      const updatedShares = currentUser.sharesOwned - transferAmount;
+      const updatedShares = baseShares - transferAmount;
       setCurrentUser({ ...currentUser, sharesOwned: updatedShares });
       onUpdateShares(updatedShares);
 
@@ -648,16 +749,22 @@ export default function InvestorDashboard({
         recipient: transferRecipient
       };
 
-      setTransactions([newTxn, ...transactions]);
+      const updatedTransactions = [newTxn, ...baseTransactions];
+      setTransactions(updatedTransactions);
+      writeStoredPortfolio(currentUser.id, {
+        sharesOwned: updatedShares,
+        cashBalance: baseCash,
+        transactions: updatedTransactions
+      });
       setPurchaseSuccessMsg(`Succesvol ${transferAmount.toLocaleString('nl-NL')} aandelen overgedragen naar ${transferRecipient}.`);
     } else {
-      if (transferAmount > cashBalance) {
-        setPurchaseSuccessMsg(`Onvoldoende liquide saldo (€${cashBalance.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}).`);
+      if (transferAmount > baseCash) {
+        setPurchaseSuccessMsg(`Onvoldoende liquide saldo (€${baseCash.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}).`);
         setTimeout(() => setPurchaseSuccessMsg(null), 4000);
         return;
       }
 
-      const updatedCash = cashBalance - transferAmount;
+      const updatedCash = baseCash - transferAmount;
       setCashBalance(updatedCash);
 
       const newTxn: ShareTransaction = {
@@ -672,7 +779,13 @@ export default function InvestorDashboard({
         recipient: transferRecipient
       };
 
-      setTransactions([newTxn, ...transactions]);
+      const updatedTransactions = [newTxn, ...baseTransactions];
+      setTransactions(updatedTransactions);
+      writeStoredPortfolio(currentUser.id, {
+        sharesOwned: baseShares,
+        cashBalance: updatedCash,
+        transactions: updatedTransactions
+      });
       setPurchaseSuccessMsg(`Succesvol €${transferAmount.toLocaleString('nl-NL', { minimumFractionDigits: 2 })} overgeboekt naar ${transferRecipient}.`);
     }
 
@@ -801,7 +914,10 @@ export default function InvestorDashboard({
     }
   ];
 
-  const currentMenuItem = menuItems.find(m => m.id === internalView) || menuItems[0];
+  const visibleMenuItems = canUseInvestorWorkflows
+    ? menuItems
+    : menuItems.filter(({ id }) => ['overview', 'koers', 'history', 'certificate', 'account', 'settings'].includes(id));
+  const currentMenuItem = visibleMenuItems.find(m => m.id === internalView) || visibleMenuItems[0];
   const CurrentIcon = currentMenuItem.icon;
 
   // Koers grafiek data generator op basis van timeframe
@@ -951,21 +1067,6 @@ export default function InvestorDashboard({
 
         {/* Rechterzijde: HAMBURGER MENU KNOP + SNELLE SYSTEEMACTIES */}
         <div className="flex items-center gap-2.5 flex-wrap">
-          {/* Wissel naar Admin */}
-          <button
-            type="button"
-            onClick={() => onSwitchRole('admin')}
-            className={`hidden sm:flex px-3 py-2.5 rounded-xl border text-xs font-semibold items-center gap-1.5 transition-colors cursor-pointer ${
-              theme === 'light'
-                ? 'bg-cyan-50 hover:bg-cyan-100 border-cyan-200 text-cyan-900'
-                : 'bg-cyan-500/10 hover:bg-cyan-500/20 border-cyan-500/30 text-cyan-300'
-            }`}
-            title="Wissel direct naar Admin weergave"
-          >
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Wissel naar Admin</span>
-          </button>
-
           {/* Uitloggen */}
           <button
             type="button"
@@ -1031,7 +1132,7 @@ export default function InvestorDashboard({
                   </div>
                   <div>
                     <h3 className={`text-sm font-bold ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>
-                      Investeerders Portaal
+                      {currentUser.role === 'shareholder' ? 'Share Holder Portaal' : 'Investeerders Portaal'}
                     </h3>
                     <p className={`text-[11px] font-mono ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
                       {currentUser.name} • {currentUser.certificateId}
@@ -1168,7 +1269,7 @@ export default function InvestorDashboard({
                   </div>
 
                   <div className="space-y-1">
-                    {menuItems.map((item) => {
+                    {visibleMenuItems.map((item) => {
                       const Icon = item.icon;
                       const isSelected = internalView === item.id;
                       return (
@@ -1223,22 +1324,6 @@ export default function InvestorDashboard({
             <div className={`p-5 border-t space-y-2 ${
               theme === 'light' ? 'bg-sky-50/70 border-sky-200' : 'bg-slate-950/80 border-slate-800/80'
             }`}>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsHamburgerOpen(false);
-                  onSwitchRole('admin');
-                }}
-                className={`w-full py-2.5 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer ${
-                  theme === 'light'
-                    ? 'bg-cyan-50 hover:bg-cyan-100/90 border-cyan-300 text-cyan-950 shadow-sm'
-                    : 'bg-cyan-500/10 hover:bg-cyan-500/20 border-cyan-500/30 text-cyan-300'
-                }`}
-              >
-                <ShieldCheck className="w-4 h-4" />
-                <span>Wissel naar Admin Beheer</span>
-              </button>
-
               <button
                 type="button"
                 onClick={() => {
@@ -1414,23 +1499,26 @@ export default function InvestorDashboard({
                   €{cashBalance.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>
-              <button
-                type="button"
-                onClick={() => setInternalView('wallet')}
-                className="px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition-colors cursor-pointer"
-              >
-                Naar Wallet
-              </button>
+              {canUseInvestorWorkflows && (
+                <button
+                  type="button"
+                  onClick={() => setInternalView('wallet')}
+                  className="px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition-colors cursor-pointer"
+                >
+                  Naar Wallet
+                </button>
+              )}
             </div>
           </div>
 
           {/* SNELKOPPELINGEN NAAR BELANGRIJKE MODULES */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <button
-              type="button"
-              onClick={() => setInternalView('wallet')}
-              className="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-emerald-500/50 text-left transition-all group cursor-pointer"
-            >
+            {canUseInvestorWorkflows && (
+              <button
+                type="button"
+                onClick={() => setInternalView('wallet')}
+                className="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-emerald-500/50 text-left transition-all group cursor-pointer"
+              >
               <div className="flex items-center justify-between mb-3">
                 <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:scale-110 transition-transform">
                   <Wallet className="w-5 h-5" />
@@ -1439,7 +1527,8 @@ export default function InvestorDashboard({
               </div>
               <h4 className="text-sm font-bold text-white mb-1">Wallet & Saldo Opladen</h4>
               <p className="text-xs text-slate-400">Bekijk uw aandelen saldo, stort werkkapitaal of verstuur aandelen.</p>
-            </button>
+              </button>
+            )}
 
             <button
               type="button"
@@ -1456,11 +1545,12 @@ export default function InvestorDashboard({
               <p className="text-xs text-slate-400">Bekijk de historische koers en tranches per uur, dag, week en jaar.</p>
             </button>
 
-            <button
-              type="button"
-              onClick={() => setShowTransferModal(true)}
-              className="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-amber-500/50 text-left transition-all group cursor-pointer"
-            >
+            {canUseInvestorWorkflows && (
+              <button
+                type="button"
+                onClick={() => setShowTransferModal(true)}
+                className="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-amber-500/50 text-left transition-all group cursor-pointer"
+              >
               <div className="flex items-center justify-between mb-3">
                 <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 group-hover:scale-110 transition-transform">
                   <Send className="w-5 h-5" />
@@ -1469,7 +1559,8 @@ export default function InvestorDashboard({
               </div>
               <h4 className="text-sm font-bold text-white mb-1">Directe Aandelen Transfer</h4>
               <p className="text-xs text-slate-400">Draag direct aandelen of werkkapitaal over aan een ander account.</p>
-            </button>
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -1477,7 +1568,7 @@ export default function InvestorDashboard({
       {/* ========================================================================= */}
       {/* 2. TAB: WALLET (SALDO, OPLADEN, AANDELEN VERSTUREN & BIJKOPEN)             */}
       {/* ========================================================================= */}
-      {internalView === 'wallet' && (
+      {internalView === 'wallet' && canUseInvestorWorkflows && (
         <div className="space-y-6">
           {/* WALLET SALDO OVERZICHT */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -2833,7 +2924,7 @@ export default function InvestorDashboard({
       {/* ========================================================================= */}
       {/* MODAL: TRANSFER (AANDELEN OF WANDELEND GELD OVERBOEKEN)                   */}
       {/* ========================================================================= */}
-      {showTransferModal && (
+      {showTransferModal && canUseInvestorWorkflows && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200">
           <div className="glass-panel w-full max-w-lg p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl space-y-6 relative">
             <div className="flex justify-between items-start pb-4 border-b border-slate-800">

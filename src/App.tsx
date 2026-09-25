@@ -539,6 +539,7 @@ export function App() {
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [managedAccounts, setManagedAccounts] = useState<AuthUser[]>([]);
   const [accountsLoading, setAccountsLoading] = useState<boolean>(false);
+  const [accountSaveError, setAccountSaveError] = useState<string | null>(null);
 
   const handleLoginSuccess = (user: AuthUser) => {
     setCurrentUser(user);
@@ -555,7 +556,7 @@ export function App() {
   };
 
   const handleLogout = () => {
-    clearAuthSession();
+    void clearAuthSession();
     setCurrentUser(null);
     setActiveTab('architecture');
   };
@@ -567,12 +568,12 @@ export function App() {
         return;
       }
       try {
-        const account = await loadAccountForSession(identity.email);
+        const account = await loadAccountForSession(identity);
         if (isMounted) {
           handleLoginSuccess(account);
         }
       } catch {
-        clearAuthSession();
+        void clearAuthSession();
       }
     });
 
@@ -606,6 +607,7 @@ export function App() {
   }, [currentUser?.role]);
 
   const handleManagedAccountUpdate = (updatedAccount: AuthUser) => {
+    setAccountSaveError(null);
     void saveManagedAccount(updatedAccount)
       .then(() => {
         setManagedAccounts((accounts) => {
@@ -615,7 +617,16 @@ export function App() {
             : [...accounts, updatedAccount];
         });
       })
-      .catch(() => undefined);
+      .catch((error: unknown) => {
+        setAccountSaveError(error instanceof Error ? error.message : 'Account opslaan mislukt.');
+      });
+  };
+
+  const handleCurrentUserUpdate = (updatedUser: AuthUser) => {
+    setCurrentUser(updatedUser);
+    void saveManagedAccount(updatedUser).catch((error: unknown) => {
+      setAccountSaveError(error instanceof Error ? error.message : 'Profiel opslaan mislukt.');
+    });
   };
 
   // Theme (Dark/Light) en Taal (NL/EN) state
@@ -1240,7 +1251,7 @@ export function App() {
 
         {/* Mobile Horizontal Quick Tab Bar (< md) - Alleen zichtbaar op algemene presentatie pagina's */}
         {!['investor_dashboard', 'admin_dashboard', 'login', 'register'].includes(activeTab) && (
-          <div className="md:hidden mt-2.5 pt-2 border-t border-slate-800/80 overflow-x-auto no-scrollbar flex items-center gap-1.5">
+          <div className="md:hidden mt-2.5 pt-2 border-t border-slate-800/80 overflow-x-auto no-scrollbar flex items-center gap-1.5 pb-1 overscroll-x-contain">
             {navTabs.map((tab) => {
               const isActive = activeTab === tab.id;
               const IconComponent = tab.icon;
@@ -1248,7 +1259,7 @@ export function App() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 flex items-center gap-1.5 border transition-all cursor-pointer ${
+                    className={`min-h-9 px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 whitespace-nowrap flex items-center gap-1.5 border transition-all cursor-pointer ${
                     isActive
                       ? tab.activeClass
                       : 'text-slate-400 bg-slate-900/60 border-slate-800 hover:text-white'
@@ -2029,25 +2040,30 @@ export function App() {
 
         {/* Main Workspace Body */}
         <main className="flex min-h-0 min-w-0 flex-1 flex-col h-[calc(100vh-124px)] md:h-[calc(100vh-61px)] overflow-hidden bg-slate-950/40 relative">
+          {accountSaveError && (
+            <div className="absolute inset-x-3 top-3 z-50 rounded-xl border border-rose-500/40 bg-rose-950/90 px-4 py-3 text-xs text-rose-200 shadow-lg">
+              {accountSaveError}
+            </div>
+          )}
           {/* TAB 1: VISUAL FLOW ARCHITECTURE MAP */}
           {activeTab === 'architecture' && (
-            <div className="flex-1 overflow-y-auto p-5 lg:p-8 space-y-8">
-              <div className="glass-panel p-7 rounded-2xl border border-yellow-500/30 gold-glow flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-                <div className="space-y-2">
+            <div className="flex-1 min-w-0 overflow-y-auto p-3 sm:p-5 lg:p-8 space-y-6 sm:space-y-8">
+              <div className="glass-panel min-w-0 p-4 sm:p-7 rounded-2xl border border-yellow-500/30 gold-glow flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 sm:gap-6">
+                <div className="min-w-0 space-y-2">
                   <div className="flex items-center gap-2 text-yellow-400 font-mono text-xs font-bold uppercase tracking-widest">
                     <Network className="w-4 h-4" /> Strategische Architectuur
                   </div>
-                  <h2 className="text-2xl lg:text-3xl font-extrabold text-white tracking-tight leading-tight">
+                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight leading-tight break-words">
                     Vijf Gespecialiseerde Subholdings & Firewalling
                   </h2>
                   <p className="text-sm text-slate-300 max-w-3xl leading-relaxed">
                     Geconsolideerde holdingstructuur rondom <strong>QuantumInitium Ltd (Moederholding)</strong>. Strikte juridische entiteitsscheiding (firewalling) elimineert kruisbesmetting van passiva tussen sectoren.
                   </p>
                 </div>
-                <div className="flex items-center gap-2 bg-slate-900/90 p-4 rounded-xl border border-slate-800 text-xs shrink-0">
+                <div className="w-full lg:w-auto flex items-center gap-2 bg-slate-900/90 p-3 sm:p-4 rounded-xl border border-slate-800 text-xs shrink-0">
                   <div className="text-right">
                     <span className="text-[10px] text-slate-400 block font-mono tracking-wider">RISICO ISOLATIE</span>
-                    <span className="text-emerald-400 font-bold flex items-center gap-1.5 text-sm">
+                    <span className="text-emerald-400 font-bold flex items-center gap-1.5 text-xs sm:text-sm whitespace-nowrap">
                       <ShieldCheck className="w-4 h-4" /> 100% Gefirewalled
                     </span>
                   </div>
@@ -3764,15 +3780,12 @@ export function App() {
                 user={currentUser && currentUser.role !== 'admin' ? currentUser : DEMO_INVESTOR}
                 onLogout={handleLogout}
                 onNavigateHome={(t) => setActiveTab(t || 'architecture')}
-                onSwitchRole={() => {
-                  setCurrentUser(DEMO_ADMIN);
-                  setActiveTab('admin_dashboard');
-                }}
                 onUpdateShares={(newTotal) => {
                   if (currentUser) {
-                    setCurrentUser({ ...currentUser, sharesOwned: newTotal });
+                    handleCurrentUserUpdate({ ...currentUser, sharesOwned: newTotal });
                   }
                 }}
+                onUpdateUser={handleCurrentUserUpdate}
                 theme={theme}
               />
             </div>
