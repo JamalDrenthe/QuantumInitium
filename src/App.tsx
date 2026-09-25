@@ -961,26 +961,26 @@ export function App() {
   const navTabs = [
     {
       id: 'architecture' as const,
-      label: language === 'en' ? 'Flow Architecture' : 'Flow Architectuur',
+      label: language === 'en' ? 'Architecture' : 'Architectuur',
       shortLabel: language === 'en' ? 'Architecture' : 'Architectuur',
       description: language === 'en'
         ? '5 Ring-fenced Subholdings & legal capital routing flow'
         : '5 Ring-fenced Subholdings & juridische kapitaalstromen',
       icon: Network,
-      badge: language === 'en' ? '5 Hold.' : '5 Hold.',
+      badge: language === 'en' ? '12 Ent.' : '12 Ent.',
       badgeColor: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/25',
       activeClass: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 shadow-sm shadow-cyan-500/20',
       iconColor: 'text-cyan-400'
     },
     {
       id: 'simulator' as const,
-      label: language === 'en' ? 'Investbotiq Execution Engine' : 'Investbotiq Executie Engine',
-      shortLabel: 'IQ Bot',
+      label: 'IQ Bot / Agent',
+      shortLabel: 'IQ Bot / Agent',
       description: language === 'en'
         ? 'Real-time agentic execution engine & high-tech talent broker'
         : 'Real-time autonome executiemotor & high-tech talent broker',
       icon: Bot,
-      badge: 'Live',
+      badge: 'Sim',
       pulse: true,
       badgeColor: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/25',
       activeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm shadow-emerald-500/20',
@@ -1014,13 +1014,13 @@ export function App() {
     },
     {
       id: '3d' as const,
-      label: language === 'en' ? 'Visual Ecosystem' : 'Visueel Ecosysteem',
-      shortLabel: language === 'en' ? 'Visual' : 'Visueel',
+      label: language === 'en' ? 'Ecosystem' : 'Ecosysteem',
+      shortLabel: language === 'en' ? 'Ecosystem' : 'Ecosysteem',
       description: language === 'en'
         ? 'Interactive WebGL 3D spatial orbit visualization'
         : 'Interactieve WebGL 3D ruimtelijke ecosysteem visualisatie',
       icon: Layers,
-      badge: 'WebGL',
+      badge: '3D',
       badgeColor: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/25',
       activeClass: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/40 shadow-sm shadow-yellow-500/20',
       iconColor: 'text-yellow-400'
