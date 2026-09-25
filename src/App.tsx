@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import type { AuthChangeEvent } from '@supabase/supabase-js';
 import {
   Award,
   Menu,
@@ -550,17 +551,22 @@ export function App() {
       }
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: listener } = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session) => {
       if (!mounted) {
         return;
       }
 
-      if (session?.user) {
-        setCurrentUser(authUserFromSupabaseUser(session.user));
-        setActiveTab('investor_dashboard');
-      } else {
+      if (event === 'SIGNED_OUT' || !session?.user) {
         setCurrentUser(null);
         setActiveTab('architecture');
+        return;
+      }
+
+      if (event === 'SIGNED_IN' || event === 'USER_UPDATED') {
+        setCurrentUser(authUserFromSupabaseUser(session.user));
+        if (event === 'SIGNED_IN') {
+          setActiveTab('investor_dashboard');
+        }
       }
     });
 
