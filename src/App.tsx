@@ -51,8 +51,13 @@ import RegisterPage from './components/RegisterPage';
 import InvestorDashboard from './components/InvestorDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import { AuthUser, DEMO_INVESTOR, DEMO_ADMIN, SHARE_PRICE_CURRENT } from './types/auth';
-import { loadAccountForSession, loadManagedAccounts, saveManagedAccount } from './lib/accountStore';
-import { clearAuthSession, getCurrentAuthIdentity } from './lib/authStore';
+import { createManagedAccount, loadAccountForSession, loadManagedAccounts, saveManagedAccount } from './lib/accountStore';
+import {
+  buildRegisteredInvestor,
+  clearAuthSession,
+  consumeOAuthIntent,
+  getCurrentAuthIdentity
+} from './lib/authStore';
 import { ecosystemData } from './data/ecosystem';
 import quantumInitiumLogo from './assets/images/quantum_initium_logo_1790097745176.jpg';
 
@@ -551,12 +556,30 @@ export function App() {
       if (!identity || !isMounted) {
         return;
       }
+      const oauthIntent = consumeOAuthIntent();
       try {
         const account = await loadAccountForSession(identity);
         if (isMounted) {
           handleLoginSuccess(account);
         }
       } catch {
+        if (oauthIntent === 'register') {
+          try {
+            const newUser = buildRegisteredInvestor(
+              identity.id,
+              identity.name || identity.email.split('@')[0] || 'Investeerder',
+              identity.email,
+              2500
+            );
+            await createManagedAccount(newUser, identity.id);
+            if (isMounted) {
+              handleLoginSuccess(newUser);
+            }
+            return;
+          } catch {
+            // Fall through to session cleanup when the profile cannot be created.
+          }
+        }
         void clearAuthSession();
       }
     });

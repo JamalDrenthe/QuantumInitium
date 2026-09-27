@@ -22,6 +22,7 @@ import {
   signUpWithPassword
 } from '../lib/authStore';
 import { createManagedAccount } from '../lib/accountStore';
+import OAuthButtons from './OAuthButtons';
 
 interface RegisterPageProps {
   onRegisterSuccess: (user: AuthUser) => void;
@@ -145,6 +146,14 @@ export default function RegisterPage({
               Registreer direct uw participatie in QuantumInitium Ltd. Officiële aandelenkoers is vastgesteld op €{SHARE_PRICE_CURRENT.toFixed(2)}.
             </p>
           </div>
+
+          {isSupabaseConfigured && !isDemoModeEnabled && (
+            <OAuthButtons
+              intent="register"
+              onError={(message) => setErrorMsg(message || null)}
+              disabled={isSubmitting}
+            />
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {errorMsg && (
