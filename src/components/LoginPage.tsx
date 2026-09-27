@@ -18,6 +18,7 @@ import {
 import { AuthUser, DEMO_INVESTOR, DEMO_ADMIN, SHARE_PRICE_CURRENT } from '../types/auth';
 import { isDemoModeEnabled, isSupabaseConfigured, signInWithPassword } from '../lib/authStore';
 import { loadAccountForSession } from '../lib/accountStore';
+import OAuthButtons from './OAuthButtons';
 
 interface LoginPageProps {
   onLoginSuccess: (user: AuthUser) => void;
@@ -250,6 +251,14 @@ export default function LoginPage({
               </button>
             </div>
           </div>
+          )}
+
+          {isSupabaseConfigured && !isDemoModeEnabled && (
+            <OAuthButtons
+              intent="login"
+              onError={(message) => setErrorMsg(message || null)}
+              disabled={isSubmitting}
+            />
           )}
 
           {/* Formulier */}

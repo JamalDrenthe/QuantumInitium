@@ -1,14 +1,21 @@
+import { createClient } from '@supabase/supabase-js';
 import { AuthUser } from '../types/auth';
 
 interface SupabaseAuthResponse {
   access_token?: string;
-  user?: {
-    id: string;
-    email?: string;
-  };
+  user?: SupabaseUser;
   error_description?: string;
   msg?: string;
 }
+
+interface SupabaseUser {
+  id: string;
+  email?: string;
+  user_metadata?: Record<string, unknown>;
+}
+
+export type OAuthProvider = 'google' | 'linkedin_oidc' | 'facebook';
+export type OAuthIntent = 'login' | 'register';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const supabaseKey =
@@ -16,9 +23,20 @@ const supabaseKey =
   (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined);
 const demoModeEnabled = import.meta.env.VITE_ENABLE_DEMO_MODE === 'true';
 const sessionStorageKey = 'qi_supabase_access_token';
+const oauthIntentStorageKey = 'qi_oauth_intent';
 
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseKey);
 export const isDemoModeEnabled = demoModeEnabled || !isSupabaseConfigured;
+const supabaseClient =
+  supabaseUrl && supabaseKey
+    ? createClient(supabaseUrl, supabaseKey, {
+        auth: {
+          autoRefreshToken: false,
+          detectSessionInUrl: true,
+          persistSession: false
+        }
+      })
+    : null;
 
 const authHeaders = {
   apikey: supabaseKey || '',
@@ -41,6 +59,45 @@ const saveAccessToken = (accessToken: string): void => {
     sessionStorage.setItem(sessionStorageKey, accessToken);
   } catch {
     // Private browsing modes may block session storage; the in-memory flow still works.
+  }
+};
+
+const saveOAuthIntent = (intent: OAuthIntent): void => {
+  try {
+    sessionStorage.setItem(oauthIntentStorageKey, intent);
+  } catch {
+    // Ignore storage failures; the OAuth flow still works without intent recovery.
+  }
+};
+
+export const consumeOAuthIntent = (): OAuthIntent => {
+  try {
+    const intent = sessionStorage.getItem(oauthIntentStorageKey);
+    sessionStorage.removeItem(oauthIntentStorageKey);
+    return intent === 'register' ? 'register' : 'login';
+  } catch {
+    return 'login';
+  }
+};
+
+export const signInWithOAuth = async (
+  provider: OAuthProvider,
+  intent: OAuthIntent
+): Promise<void> => {
+  if (!supabaseClient) {
+    throw new Error('Supabase Auth is niet geconfigureerd.');
+  }
+
+  saveOAuthIntent(intent);
+  const { error } = await supabaseClient.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo: `${window.location.origin}${window.location.pathname}`
+    }
+  });
+
+  if (error) {
+    throw new Error(error.message);
   }
 };
 
@@ -121,15 +178,28 @@ export const clearAuthSession = async (): Promise<void> => {
 
 export const getCurrentAuthIdentity = async (
   accessToken = getAccessToken()
-): Promise<{ id: string; email: string } | null> => {
-  if (!isSupabaseConfigured || !supabaseUrl || !accessToken) {
+): Promise<{ id: string; email: string; name?: string } | null> => {
+  let resolvedAccessToken = accessToken;
+  let oauthUser: SupabaseUser | undefined;
+
+  if (!resolvedAccessToken && supabaseClient) {
+    const { data } = await supabaseClient.auth.getSession();
+    if (data.session?.access_token) {
+      resolvedAccessToken = data.session.access_token;
+      oauthUser = data.session.user;
+      saveAccessToken(resolvedAccessToken);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }
+
+  if (!isSupabaseConfigured || !supabaseUrl || !resolvedAccessToken) {
     return null;
   }
 
   const response = await fetch(`${supabaseUrl}/auth/v1/user`, {
     headers: {
       ...authHeaders,
-      Authorization: `Bearer ${accessToken}`
+      Authorization: `Bearer ${resolvedAccessToken}`
     }
   });
   if (!response.ok) {
@@ -138,7 +208,24 @@ export const getCurrentAuthIdentity = async (
   }
 
   const data = (await response.json()) as SupabaseAuthResponse;
-  return data.user?.email ? { id: data.user.id, email: data.user.email } : null;
+  const user = data.user || oauthUser;
+  if (!user?.email) {
+    return null;
+  }
+
+  const metadata = user.user_metadata;
+  const metadataName =
+    typeof metadata?.full_name === 'string'
+      ? metadata.full_name
+      : typeof metadata?.name === 'string'
+        ? metadata.name
+        : undefined;
+
+  return {
+    id: user.id,
+    email: user.email,
+    ...(metadataName ? { name: metadataName } : {})
+  };
 };
 
 export const buildRegisteredInvestor = (
