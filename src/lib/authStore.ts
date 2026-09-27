@@ -207,8 +207,8 @@ export const getCurrentAuthIdentity = async (
     return null;
   }
 
-  const data = (await response.json()) as SupabaseAuthResponse;
-  const user = data.user || oauthUser;
+  const data = (await response.json()) as SupabaseUser | SupabaseAuthResponse;
+  const user = 'id' in data ? data : data.user || oauthUser;
   if (!user?.email) {
     return null;
   }
