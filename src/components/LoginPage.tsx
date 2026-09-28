@@ -170,7 +170,9 @@ export default function LoginPage({
           <div className="space-y-3 mb-6">
             <div className="flex items-center justify-between text-xs font-mono text-slate-400">
               <span>Kies uw gewenste profielrol:</span>
-              <span className="text-amber-400 font-semibold">Live Demo Gereed</span>
+              <span className="text-amber-400 font-semibold">
+                {isDemoModeEnabled || !isSupabaseConfigured ? 'Live Demo Gereed' : 'Productie-authenticatie'}
+              </span>
             </div>
 
             <div className="grid grid-cols-2 gap-3">

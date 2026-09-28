@@ -145,6 +145,9 @@ export default function RegisterPage({
             <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
               Registreer direct uw participatie in QuantumInitium Ltd. Officiële aandelenkoers is vastgesteld op €{SHARE_PRICE_CURRENT.toFixed(2)}.
             </p>
+            <p className="text-[11px] text-slate-500 max-w-md mx-auto">
+              Kies hieronder voor snelle registratie met Google, LinkedIn of Facebook, of gebruik het formulier voor e-mailregistratie.
+            </p>
           </div>
 
           {isSupabaseConfigured && !isDemoModeEnabled && (
