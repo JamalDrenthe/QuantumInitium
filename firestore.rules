@@ -1,0 +1,74 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && request.auth.token.get('admin', false) == true;
+    }
+
+    function validNewAccount(accountUid) {
+      let data = request.resource.data;
+      return signedIn()
+        && accountUid == request.auth.uid
+        && data.keys().hasOnly([
+          'id', 'authUserId', 'name', 'email', 'role', 'requestedShares',
+          'sharesOwned', 'purchasePrice', 'currentPrice', 'certificateId',
+          'joinDate', 'walletAddress', 'title', 'cashBalance', 'phone',
+          'address', 'postalCode', 'city', 'country', 'iban', 'taxId',
+          'authorizedPersons', 'notifications', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasAll([
+          'id', 'authUserId', 'name', 'email', 'role', 'sharesOwned',
+          'purchasePrice', 'currentPrice', 'certificateId', 'joinDate',
+          'cashBalance', 'authorizedPersons', 'notifications', 'createdAt',
+          'updatedAt'
+        ])
+        && data.authUserId == request.auth.uid
+        && data.email == request.auth.token.email
+        && data.role == 'investor'
+        && data.sharesOwned == 0
+        && data.purchasePrice == 8.2
+        && data.currentPrice == 8.2
+        && data.cashBalance == 0
+        && data.name is string
+        && data.name.size() > 0
+        && data.authorizedPersons is list
+        && data.notifications is map
+        && data.createdAt == request.time
+        && data.updatedAt == request.time;
+    }
+
+    function ownerProfileUpdate() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return signedIn()
+        && resource.data.authUserId == request.auth.uid
+        && request.resource.data.authUserId == resource.data.authUserId
+        && request.resource.data.email == resource.data.email
+        && request.resource.data.updatedAt == request.time
+        && changed.hasOnly([
+          'name', 'phone', 'address', 'postalCode', 'city', 'country',
+          'iban', 'taxId', 'authorizedPersons', 'notifications', 'updatedAt'
+        ]);
+    }
+
+    match /user_accounts/{accountUid} {
+      allow get: if isAdmin() || (
+        signedIn()
+        && accountUid == request.auth.uid
+        && resource.data.authUserId == request.auth.uid
+      );
+      allow list: if isAdmin();
+      allow create: if validNewAccount(accountUid);
+      allow update: if (
+        isAdmin()
+        && request.resource.data.authUserId == resource.data.authUserId
+      ) || ownerProfileUpdate();
+      allow delete: if isAdmin();
+    }
+  }
+}

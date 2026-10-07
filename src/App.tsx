@@ -56,7 +56,9 @@ import {
   buildRegisteredInvestor,
   clearAuthSession,
   consumeOAuthIntent,
-  getCurrentAuthIdentity
+  getCurrentAuthIdentity,
+  isDemoModeEnabled,
+  isFirebaseConfigured
 } from './lib/authStore';
 import { ecosystemData } from './data/ecosystem';
 import { AmountPrivacyProvider, PrivateAmount, maskAmounts } from './lib/amountPrivacy';
@@ -561,6 +563,8 @@ export function App() {
   };
 
   useEffect(() => {
+    if (isDemoModeEnabled || !isFirebaseConfigured) return;
+
     let isMounted = true;
     void getCurrentAuthIdentity().then(async (identity) => {
       if (!identity || !isMounted) {
@@ -592,6 +596,11 @@ export function App() {
         }
         void clearAuthSession();
       }
+    }).catch((error: unknown) => {
+      if (isMounted) {
+        setAccountSaveError(error instanceof Error ? error.message : 'Firebase-sessie herstellen is mislukt.');
+        void clearAuthSession().catch(() => undefined);
+      }
     });
 
     return () => {
@@ -610,6 +619,11 @@ export function App() {
       .then((accounts) => {
         if (isMounted) {
           setManagedAccounts(accounts);
+        }
+      })
+      .catch((error: unknown) => {
+        if (isMounted) {
+          setAccountSaveError(error instanceof Error ? error.message : 'Accounts laden mislukt.');
         }
       })
       .finally(() => {
@@ -3699,12 +3713,11 @@ export function App() {
             <div className="flex-1 overflow-y-auto h-full w-full">
               <InvestorDashboard
                 user={currentUser && currentUser.role !== 'admin' ? currentUser : DEMO_INVESTOR}
+                emailEditable={isDemoModeEnabled}
                 onLogout={handleLogout}
                 onNavigateHome={(t) => setActiveTab(t || 'architecture')}
                 onUpdateShares={(newTotal) => {
-                  if (currentUser) {
-                    handleCurrentUserUpdate({ ...currentUser, sharesOwned: newTotal });
-                  }
+                  if (currentUser) setCurrentUser({ ...currentUser, sharesOwned: newTotal });
                 }}
                 onUpdateUser={handleCurrentUserUpdate}
                 theme={theme}
@@ -3719,6 +3732,7 @@ export function App() {
                 user={currentUser && currentUser.role === 'admin' ? currentUser : DEMO_ADMIN}
                 managedAccounts={managedAccounts}
                 accountsLoading={accountsLoading}
+                emailEditable={isDemoModeEnabled}
                 onUpdateAccount={handleManagedAccountUpdate}
                 onLogout={handleLogout}
                 onNavigateHome={(t) => setActiveTab(t || 'architecture')}

@@ -18,7 +18,7 @@ import { AuthUser, SHARE_PRICE_CURRENT } from '../types/auth';
 import {
   buildRegisteredInvestor,
   isDemoModeEnabled,
-  isSupabaseConfigured,
+  isFirebaseConfigured,
   signUpWithPassword
 } from '../lib/authStore';
 import { createManagedAccount } from '../lib/accountStore';
@@ -78,21 +78,14 @@ export default function RegisterPage({
     }
 
     const cleanEmail = email.trim().toLowerCase();
-    if (isSupabaseConfigured && !isDemoModeEnabled) {
+    if (isFirebaseConfigured && !isDemoModeEnabled) {
       try {
         const session = await signUpWithPassword(cleanEmail, password, {
           name: name.trim(),
-          requestedShares: desiredShares
         });
-        const newUser = buildRegisteredInvestor(session.userId, name.trim(), cleanEmail, desiredShares);
-        if (session.accessToken) {
-          await createManagedAccount(newUser, session.userId, session.accessToken);
-          onRegisterSuccess(newUser);
-        } else {
-          setErrorMsg(
-            'Account aangemaakt. Bevestig eerst uw e-mailadres; daarna kan een beheerder uw profiel en aandelenaanvraag activeren.'
-          );
-        }
+        const newUser = buildRegisteredInvestor(session.id, name.trim(), cleanEmail, desiredShares);
+        await createManagedAccount(newUser, session.id);
+        onRegisterSuccess(newUser);
       } catch (error) {
         setErrorMsg(error instanceof Error ? error.message : 'Registratie mislukt.');
       } finally {
@@ -150,7 +143,7 @@ export default function RegisterPage({
             </p>
           </div>
 
-          {isSupabaseConfigured && !isDemoModeEnabled && (
+          {isFirebaseConfigured && !isDemoModeEnabled && (
             <OAuthButtons
               intent="register"
               onError={(message) => setErrorMsg(message || null)}

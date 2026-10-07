@@ -71,6 +71,7 @@ interface InvestorDashboardProps {
   onNavigateHome: (tab?: 'architecture' | '3d' | 'dossier' | 'calculator' | 'simulator') => void;
   onUpdateShares: (newTotal: number) => void;
   onUpdateUser?: (updated: AuthUser) => void;
+  emailEditable?: boolean;
   theme?: 'dark' | 'light';
 }
 
@@ -123,6 +124,7 @@ export default function InvestorDashboard({
   onNavigateHome,
   onUpdateShares,
   onUpdateUser,
+  emailEditable = false,
   theme = 'dark'
 }: InvestorDashboardProps) {
   const storedPortfolio = readStoredPortfolio(initialUser.id);
@@ -2276,6 +2278,7 @@ export default function InvestorDashboard({
                     type="email"
                     value={accountFormData.email}
                     onChange={(e) => setAccountFormData({ ...accountFormData, email: e.target.value })}
+                    readOnly={!emailEditable}
                     className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-xs focus:border-indigo-400 focus:outline-none"
                     required
                   />
