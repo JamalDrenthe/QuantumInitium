@@ -10,8 +10,9 @@ Interactief portaal voor de holdingstructuur en strategische deelnemingen van Qu
 - Investeerdersdashboard met aandelenoverzicht, cap table-informatie, transacties, waarderingsscenario's en ROI-calculator.
 - Admin-dashboard voor accountselectie, Investor- en Shareholder-beheer, subholdingstatussen, auditacties en export van de cap table.
 - Investor-integraties met directe links naar de officiële bedrijfsdomeinen.
-- Supabase Auth-login en registratie met RLS-beveiligde accountdata.
-- Demo-login voor lokale ontwikkeling wanneer Supabase niet is geconfigureerd of expliciet is ingeschakeld.
+- Firebase Authentication voor login en registratie met Firestore-profielen.
+- Beveiligde accountregels; alleen een server-uitgegeven Firebase custom claim geeft adminrechten.
+- Demo-login voor lokale ontwikkeling wanneer Firebase niet is geconfigureerd of expliciet is ingeschakeld.
 - Licht/donker thema en responsive navigatie voor desktop- en mobiele schermen.
 - Animaties, modals, notificaties en interactieve financiële visualisaties.
 
@@ -24,7 +25,7 @@ Interactief portaal voor de holdingstructuur en strategische deelnemingen van Qu
 - Lucide React voor iconen
 - Motion voor animaties
 - Express en `tsx` voor ondersteunende server- en runtime-scripts
-- Bun-lockfile voor reproduceerbare dependency-installatie
+- Firebase Web SDK voor Authentication en Cloud Firestore
 
 ## Lokaal starten
 
@@ -51,9 +52,15 @@ Maak indien nodig een lokale omgevingsconfiguratie:
 cp .env.example .env.local
 ```
 
-Vul voor persistente accountdata de Supabase-URL en publishable key in `.env.local` in. De SQL-migraties staan in `supabase/migrations/`. In een geconfigureerde omgeving gebruikt de applicatie Supabase Auth-access-tokens voor alle PostgREST-requests; RLS geeft alleen eigen accountdata vrij en laat accountupdates uitsluitend aan admins toe.
+Vul de Firebase-webappconfiguratie in `.env.local` in. `.firebaserc` wijst standaard naar `quantum-initium-dev`; controleer dit doel voordat je Firebase-instellingen of regels publiceert. Schakel in Firebase Authentication minimaal e-mail/wachtwoord in voordat live registratie werkt. OAuth-knoppen werken pas nadat de overeenkomstige providers in Firebase zijn ingesteld; LinkedIn gebruikt de OIDC-provider-ID `oidc.linkedin`.
 
-Voor lokale demo's zonder Supabase kun je `VITE_ENABLE_DEMO_MODE="true"` instellen. Laat deze variabele in productie op `false` staan. Het admin-account moet in Supabase Auth bestaan met hetzelfde e-mailadres als het seeded adminrecord voordat het admin-dashboard beschikbaar is.
+Accountprofielen worden opgeslagen in `user_accounts/{Firebase UID}`. Eigenaren kunnen alleen hun profielvelden lezen en aanpassen; de hele accountlijst en beheermutaties vereisen de server-side Firebase custom claim `admin: true`. Ken die claim alleen toe vanuit een vertrouwde Admin SDK-omgeving. De `role`-waarde in Firestore verleent zelf geen adminrechten.
+
+Voor lokale demo's kun je `VITE_ENABLE_DEMO_MODE="true"` instellen. Zonder Firebase-configuratie start de app automatisch in demo-modus. Demo-aanmeldingen en profieldata blijven lokaal; gesimuleerde aandelen- en cashflow-mutaties worden niet als echte transacties naar Firestore geschreven.
+
+Voer `npm run test:rules` uit om de Firestore-toegangsregels tegen de lokale Emulator te testen.
+
+De historische SQL-bestanden in `supabase/migrations/` blijven als schemareferentie staan. Er is nog geen Supabase-data naar Firebase overgezet: de bronprojectdatabase was inactief en niet uitleesbaar. Herstel en export van die bron zijn een aparte stap; zet geen bestaande records over voordat ze zijn gecontroleerd en aan Firebase-gebruikers gekoppeld.
 
 Start daarna de ontwikkelserver:
 
@@ -89,7 +96,8 @@ De applicatie is vervolgens beschikbaar op `http://localhost:3000`.
 ├── index.html              # HTML-entrypoint en metadata
 ├── metadata.json           # Projectnaam en projectbeschrijving
 ├── package.json            # Dependencies en scripts
-├── supabase/migrations/    # Schema en seeddata voor accountbeheer
+├── firestore.rules        # Development Firestore-toegangsregels
+├── supabase/migrations/   # Historische schemareferentie, niet actief gebruikt
 ├── tsconfig.json           # TypeScript-configuratie
 └── vite.config.ts          # Vite-configuratie
 ```

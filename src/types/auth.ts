@@ -41,6 +41,7 @@ export interface NotificationSettings {
 
 export interface AuthUser {
   id: string;
+  authUserId?: string;
   name: string;
   email: string;
   role: UserRole;
@@ -60,7 +61,6 @@ export interface AuthUser {
   country?: string;
   iban?: string;
   taxId?: string;
-  pinCode?: string;
   authorizedPersons?: AuthorizedPerson[];
   notifications?: NotificationSettings;
 }
@@ -132,7 +132,6 @@ export const DEMO_INVESTOR: AuthUser = {
   country: 'Nederland',
   iban: 'NL91 ABNA 0412 8891 00',
   taxId: 'NL884291882B01',
-  pinCode: '4821',
   authorizedPersons: [
     {
       id: 'AP 1',

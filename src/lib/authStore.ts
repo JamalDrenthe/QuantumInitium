@@ -1,252 +1,141 @@
-import { createClient } from '@supabase/supabase-js';
-import { AuthUser } from '../types/auth';
-
-interface SupabaseAuthResponse {
-  access_token?: string;
-  user?: SupabaseUser;
-  error_description?: string;
-  msg?: string;
-}
-
-interface SupabaseUser {
-  id: string;
-  email?: string;
-  user_metadata?: Record<string, unknown>;
-}
+import {
+  browserSessionPersistence,
+  createUserWithEmailAndPassword,
+  FacebookAuthProvider,
+  getRedirectResult,
+  GoogleAuthProvider,
+  OAuthProvider as FirebaseOAuthProvider,
+  onAuthStateChanged,
+  setPersistence,
+  signInWithEmailAndPassword,
+  signInWithRedirect,
+  signOut,
+  updateProfile,
+  type User
+} from 'firebase/auth';
+import { AuthUser, SHARE_PRICE_CURRENT } from '../types/auth';
+import { firebaseAuth, isFirebaseConfigured } from './firebase';
 
 export type OAuthProvider = 'google' | 'linkedin_oidc' | 'facebook';
 export type OAuthIntent = 'login' | 'register';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const supabaseKey =
-  (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined) ||
-  (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined);
-const demoModeEnabled = import.meta.env.VITE_ENABLE_DEMO_MODE === 'true';
-const sessionStorageKey = 'qi_supabase_access_token';
-const oauthIntentStorageKey = 'qi_oauth_intent';
+const OAUTH_INTENT_STORAGE_KEY = 'qi_auth_oauth_intent';
 
-export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseKey);
-export const isDemoModeEnabled = demoModeEnabled || !isSupabaseConfigured;
-const supabaseClient =
-  supabaseUrl && supabaseKey
-    ? createClient(supabaseUrl, supabaseKey, {
-        auth: {
-          autoRefreshToken: false,
-          detectSessionInUrl: true,
-          persistSession: false
-        }
-      })
-    : null;
+export const isDemoModeEnabled =
+  import.meta.env.VITE_ENABLE_DEMO_MODE === 'true' || !isFirebaseConfigured;
 
-const authHeaders = {
-  apikey: supabaseKey || '',
-  'Content-Type': 'application/json'
-};
+export { isFirebaseConfigured };
 
-const getAuthError = (response: SupabaseAuthResponse): string =>
-  response.error_description || response.msg || 'Authenticatie mislukt.';
-
-export const getAccessToken = (): string | null => {
-  try {
-    return sessionStorage.getItem(sessionStorageKey);
-  } catch {
-    return null;
+function requireFirebaseAuth() {
+  if (!firebaseAuth) {
+    throw new Error('Firebase Authentication is niet geconfigureerd.');
   }
-};
+  return firebaseAuth;
+}
 
-const saveAccessToken = (accessToken: string): void => {
-  try {
-    sessionStorage.setItem(sessionStorageKey, accessToken);
-  } catch {
-    // Private browsing modes may block session storage; the in-memory flow still works.
+function toIdentity(user: User) {
+  if (!user.email) {
+    throw new Error('Het Firebase-account bevat geen e-mailadres.');
   }
-};
+  return {
+    id: user.uid,
+    email: user.email,
+    name: user.displayName ?? undefined
+  };
+}
 
-const saveOAuthIntent = (intent: OAuthIntent): void => {
-  try {
-    sessionStorage.setItem(oauthIntentStorageKey, intent);
-  } catch {
-    // Ignore storage failures; the OAuth flow still works without intent recovery.
-  }
-};
-
-export const consumeOAuthIntent = (): OAuthIntent => {
-  try {
-    const intent = sessionStorage.getItem(oauthIntentStorageKey);
-    sessionStorage.removeItem(oauthIntentStorageKey);
-    return intent === 'register' ? 'register' : 'login';
-  } catch {
-    return 'login';
-  }
-};
-
-export const signInWithOAuth = async (
-  provider: OAuthProvider,
-  intent: OAuthIntent
-): Promise<void> => {
-  if (!supabaseClient) {
-    throw new Error('Supabase Auth is niet geconfigureerd.');
-  }
-
-  saveOAuthIntent(intent);
-  const { error } = await supabaseClient.auth.signInWithOAuth({
-    provider,
-    options: {
-      redirectTo: `${window.location.origin}${window.location.pathname}`
-    }
+export const getCurrentAuthIdentity = async () => {
+  const auth = requireFirebaseAuth();
+  const redirectResult = await getRedirectResult(auth);
+  const user = redirectResult?.user ?? auth.currentUser ?? await new Promise<User | null>((resolve) => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      unsubscribe();
+      resolve(currentUser);
+    }, () => {
+      unsubscribe();
+      resolve(null);
+    });
   });
 
-  if (error) {
-    throw new Error(error.message);
+  if (!user) return null;
+
+  if (redirectResult) {
+    window.history.replaceState(null, document.title, window.location.pathname);
   }
+
+  return toIdentity(user);
 };
 
-export const signInWithPassword = async (
-  email: string,
-  password: string
-): Promise<{ accessToken: string; userId: string; email: string }> => {
-  if (!isSupabaseConfigured || !supabaseUrl) {
-    throw new Error('Supabase Auth is niet geconfigureerd.');
-  }
-
-  const response = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
-    method: 'POST',
-    headers: authHeaders,
-    body: JSON.stringify({ email, password })
-  });
-  const data = (await response.json()) as SupabaseAuthResponse;
-
-  if (!response.ok || !data.access_token || !data.user?.email) {
-    throw new Error(getAuthError(data));
-  }
-
-  saveAccessToken(data.access_token);
-  return { accessToken: data.access_token, userId: data.user.id, email: data.user.email };
+export const signInWithPassword = async (email: string, password: string) => {
+  const auth = requireFirebaseAuth();
+  await setPersistence(auth, browserSessionPersistence);
+  const credential = await signInWithEmailAndPassword(auth, email, password);
+  return toIdentity(credential.user);
 };
 
 export const signUpWithPassword = async (
   email: string,
   password: string,
-  metadata?: { name: string; requestedShares: number }
-): Promise<{ accessToken: string | null; userId: string }> => {
-  if (!isSupabaseConfigured || !supabaseUrl) {
-    throw new Error('Supabase Auth is niet geconfigureerd.');
-  }
-
-  const response = await fetch(`${supabaseUrl}/auth/v1/signup`, {
-    method: 'POST',
-    headers: authHeaders,
-    body: JSON.stringify({
-      email,
-      password,
-      data: metadata
-        ? { name: metadata.name, role: 'investor', requestedShares: metadata.requestedShares }
-        : undefined
-    })
-  });
-  const data = (await response.json()) as SupabaseAuthResponse;
-
-  if (!response.ok || !data.user?.id) {
-    throw new Error(getAuthError(data));
-  }
-
-  if (data.access_token) {
-    saveAccessToken(data.access_token);
-  }
-
-  return { accessToken: data.access_token || null, userId: data.user.id };
+  profile: { name: string }
+) => {
+  const auth = requireFirebaseAuth();
+  await setPersistence(auth, browserSessionPersistence);
+  const credential = await createUserWithEmailAndPassword(auth, email, password);
+  await updateProfile(credential.user, { displayName: profile.name });
+  return toIdentity(credential.user);
 };
 
-export const clearAuthSession = async (): Promise<void> => {
-  const accessToken = getAccessToken();
-  if (accessToken && supabaseUrl && supabaseKey) {
-    await fetch(`${supabaseUrl}/auth/v1/logout`, {
-      method: 'POST',
-      headers: {
-        ...authHeaders,
-        Authorization: `Bearer ${accessToken}`
-      }
-    }).catch(() => undefined);
-  }
+export const signInWithOAuth = async (provider: OAuthProvider, intent: OAuthIntent) => {
+  const auth = requireFirebaseAuth();
+  await setPersistence(auth, browserSessionPersistence);
+  sessionStorage.setItem(OAUTH_INTENT_STORAGE_KEY, intent);
 
-  try {
-    sessionStorage.removeItem(sessionStorageKey);
-  } catch {
-    // Ignore storage cleanup failures during logout.
-  }
+  const authProvider = provider === 'google'
+    ? new GoogleAuthProvider()
+    : provider === 'facebook'
+      ? new FacebookAuthProvider()
+      : new FirebaseOAuthProvider('oidc.linkedin');
+
+  authProvider.setCustomParameters({ prompt: 'select_account' });
+  await signInWithRedirect(auth, authProvider);
 };
 
-export const getCurrentAuthIdentity = async (
-  accessToken = getAccessToken()
-): Promise<{ id: string; email: string; name?: string } | null> => {
-  let resolvedAccessToken = accessToken;
-  let oauthUser: SupabaseUser | undefined;
+export const consumeOAuthIntent = (): OAuthIntent | null => {
+  const intent = sessionStorage.getItem(OAUTH_INTENT_STORAGE_KEY);
+  sessionStorage.removeItem(OAUTH_INTENT_STORAGE_KEY);
+  return intent === 'login' || intent === 'register' ? intent : null;
+};
 
-  if (!resolvedAccessToken && supabaseClient) {
-    const { data } = await supabaseClient.auth.getSession();
-    if (data.session?.access_token) {
-      resolvedAccessToken = data.session.access_token;
-      oauthUser = data.session.user;
-      saveAccessToken(resolvedAccessToken);
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-  }
-
-  if (!isSupabaseConfigured || !supabaseUrl || !resolvedAccessToken) {
-    return null;
-  }
-
-  const response = await fetch(`${supabaseUrl}/auth/v1/user`, {
-    headers: {
-      ...authHeaders,
-      Authorization: `Bearer ${resolvedAccessToken}`
-    }
-  });
-  if (!response.ok) {
-    await clearAuthSession();
-    return null;
-  }
-
-  const data = (await response.json()) as SupabaseUser | SupabaseAuthResponse;
-  const user = 'id' in data ? data : data.user || oauthUser;
-  if (!user?.email) {
-    return null;
-  }
-
-  const metadata = user.user_metadata;
-  const metadataName =
-    typeof metadata?.full_name === 'string'
-      ? metadata.full_name
-      : typeof metadata?.name === 'string'
-        ? metadata.name
-        : undefined;
-
-  return {
-    id: user.id,
-    email: user.email,
-    ...(metadataName ? { name: metadataName } : {})
-  };
+export const clearAuthSession = async () => {
+  if (!firebaseAuth) return;
+  await signOut(firebaseAuth);
 };
 
 export const buildRegisteredInvestor = (
   userId: string,
   name: string,
   email: string,
-  desiredShares: number
+  requestedShares = 0
 ): AuthUser => ({
   id: `inv_${userId}`,
+  authUserId: userId,
   name,
   email,
   role: 'investor',
-  requestedShares: desiredShares,
+  requestedShares,
   sharesOwned: 0,
-  purchasePrice: 8.2,
-  currentPrice: 8.2,
-  certificateId: `QI INV ${Math.floor(1000 + Math.random() * 9000)} NL`,
-  joinDate: new Date().toLocaleDateString('nl-NL', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  }),
-  title: 'Geregistreerd Participatiehouder'
+  purchasePrice: SHARE_PRICE_CURRENT,
+  currentPrice: SHARE_PRICE_CURRENT,
+  certificateId: `QI-${userId.slice(0, 8).toUpperCase()}`,
+  joinDate: new Date().toISOString().slice(0, 10),
+  cashBalance: 0,
+  authorizedPersons: [],
+  notifications: {
+    emailTransactions: true,
+    emailDividends: true,
+    emailReports: true,
+    priceAlerts: true,
+    twoFactorEnabled: false,
+    smsAlerts: false
+  }
 });

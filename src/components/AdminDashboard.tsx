@@ -30,6 +30,7 @@ interface AdminDashboardProps {
   user: AuthUser;
   managedAccounts: AuthUser[];
   accountsLoading?: boolean;
+  emailEditable?: boolean;
   onUpdateAccount: (updatedAccount: AuthUser) => void;
   onLogout: () => void;
   onNavigateHome: (tab?: 'architecture' | '3d' | 'dossier' | 'calculator' | 'simulator') => void;
@@ -53,6 +54,7 @@ export default function AdminDashboard({
   user,
   managedAccounts,
   accountsLoading = false,
+  emailEditable = false,
   onUpdateAccount,
   onLogout,
   onNavigateHome,
@@ -283,6 +285,7 @@ export default function AdminDashboard({
             <InvestorDashboard
               key={selectedAccount.id}
               user={selectedAccount}
+              emailEditable={emailEditable}
             onLogout={() => undefined}
             onNavigateHome={() => undefined}
             onUpdateShares={(newTotal) =>

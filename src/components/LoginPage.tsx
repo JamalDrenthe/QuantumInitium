@@ -16,7 +16,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { AuthUser, DEMO_INVESTOR, DEMO_ADMIN, SHARE_PRICE_CURRENT } from '../types/auth';
-import { isDemoModeEnabled, isSupabaseConfigured, signInWithPassword } from '../lib/authStore';
+import { isDemoModeEnabled, isFirebaseConfigured, signInWithPassword } from '../lib/authStore';
 import { loadAccountForSession } from '../lib/accountStore';
 import OAuthButtons from './OAuthButtons';
 
@@ -41,7 +41,7 @@ export default function LoginPage({
   const handleSelectRole = (role: 'investor' | 'admin') => {
     setSelectedRole(role);
     setErrorMsg(null);
-    if (isDemoModeEnabled || !isSupabaseConfigured) {
+    if (isDemoModeEnabled || !isFirebaseConfigured) {
       if (role === 'investor') {
         setEmail('investor@quantuminitium.com');
         setPassword('investor2027');
@@ -56,8 +56,8 @@ export default function LoginPage({
   };
 
   const handleQuickDemoLogin = (role: 'investor' | 'admin') => {
-    if (isSupabaseConfigured && !isDemoModeEnabled) {
-      setErrorMsg('Demo-login is uitgeschakeld. Gebruik uw Supabase Auth-account.');
+    if (isFirebaseConfigured && !isDemoModeEnabled) {
+      setErrorMsg('Demo-login is uitgeschakeld. Gebruik uw Firebase-account.');
       return;
     }
 
@@ -74,12 +74,11 @@ export default function LoginPage({
     setIsSubmitting(true);
 
     const cleanEmail = email.trim().toLowerCase();
-    if (isSupabaseConfigured && !isDemoModeEnabled) {
+    if (isFirebaseConfigured && !isDemoModeEnabled) {
       try {
         const session = await signInWithPassword(cleanEmail, password);
         const account = await loadAccountForSession(
-          { id: session.userId, email: session.email },
-          session.accessToken
+          { id: session.id, email: session.email }
         );
         onLoginSuccess(account);
       } catch (error) {
@@ -171,7 +170,7 @@ export default function LoginPage({
             <div className="flex items-center justify-between text-xs font-mono text-slate-400">
               <span>Kies uw gewenste profielrol:</span>
               <span className="text-amber-400 font-semibold">
-                {isDemoModeEnabled || !isSupabaseConfigured ? 'Live Demo Gereed' : 'Productie-authenticatie'}
+                {isDemoModeEnabled || !isFirebaseConfigured ? 'Live Demo Gereed' : 'Firebase-authenticatie'}
               </span>
             </div>
 
@@ -223,7 +222,7 @@ export default function LoginPage({
           </div>
 
           {/* Directe Snelle Demo Knoppen (1 klik inloggen) */}
-          {(isDemoModeEnabled || !isSupabaseConfigured) && (
+          {(isDemoModeEnabled || !isFirebaseConfigured) && (
           <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2 mb-6">
             <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
               <span className="flex items-center gap-1.5">
@@ -255,7 +254,7 @@ export default function LoginPage({
           </div>
           )}
 
-          {isSupabaseConfigured && !isDemoModeEnabled && (
+          {isFirebaseConfigured && !isDemoModeEnabled && (
             <OAuthButtons
               intent="login"
               onError={(message) => setErrorMsg(message || null)}
@@ -294,7 +293,7 @@ export default function LoginPage({
                 <label className="block text-xs font-mono font-medium text-slate-300">
                   Wachtwoord
                 </label>
-                {(isDemoModeEnabled || !isSupabaseConfigured) && (
+                {(isDemoModeEnabled || !isFirebaseConfigured) && (
                   <span className="text-[11px] text-slate-500 font-mono">
                     Demo: {selectedRole === 'investor' ? 'investor2027' : 'admin2027'}
                   </span>
