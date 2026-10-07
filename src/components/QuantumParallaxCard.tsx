@@ -457,7 +457,7 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
 
                 <div className="text-right">
                   <div className="text-[8px] font-mono uppercase tracking-wider text-slate-400">
-                    LSE MAIN: QI.NL
+                    QI.NL
                   </div>
                   <div className="text-[10px] font-mono font-bold" style={{ color: edition.themeStyle.accentColor }}>
                     {shares.toLocaleString('nl-NL')} AANDELEN
@@ -883,7 +883,7 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
         </div>
 
         <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-          <span>LSE Custody Vault: </span>
+          <span>Custody Vault: </span>
           <strong className="text-amber-400">QI-VAULT-LONDON-88</strong>
         </div>
       </div>

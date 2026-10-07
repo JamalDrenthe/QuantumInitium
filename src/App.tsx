@@ -59,6 +59,7 @@ import {
   getCurrentAuthIdentity
 } from './lib/authStore';
 import { ecosystemData } from './data/ecosystem';
+import { AmountPrivacyProvider, PrivateAmount, maskAmounts } from './lib/amountPrivacy';
 import quantumInitiumLogo from './assets/images/quantum_initium_logo_1790097745176.jpg';
 
 interface EntityItem {
@@ -200,7 +201,7 @@ interface SubholdingNode {
 const subholdingMatrix: Record<string, SubholdingNode> = {
   mother: {
     title: 'QuantumInitium Ltd',
-    desc: 'Centrale holding direct verantwoordelijk voor de overall kapitaalallocatie, geconsolideerde IFRS verslaglegging, intellectueel eigendom en LSE Main Market beursgang.',
+    desc: 'Centrale holding direct verantwoordelijk voor de overall kapitaalallocatie, geconsolideerde IFRS verslaglegging, intellectueel eigendom en beursgangsvoorbereiding.',
     entities: [
       {
         name: 'QuantumInitium Ltd',
@@ -290,7 +291,7 @@ const subholdingMatrix: Record<string, SubholdingNode> = {
       {
         name: 'WoningVry Ltd',
         type: 'PropTech & Living',
-        role: 'Geautomatiseerde verhuur LongStay (€750 per maand) en BnB (€375 per maand).'
+        role: 'Geautomatiseerde verhuur LongStay en BnB short stay.'
       },
       {
         name: 'Afterstudenthousing Ltd',
@@ -306,11 +307,11 @@ const chapterList = [
   { num: 2, tag: '02', title: 'ORGANISATIE', desc: '5 Subholdings & 12 Entiteiten' },
   { num: 3, tag: '03', title: 'TECHNOLOGIE', desc: 'Investbotiq AI Executie Engine' },
   { num: 4, tag: '04', title: 'INTEGRATIE', desc: 'Operationele Synergie Matrix' },
-  { num: 5, tag: '05', title: 'REKENMODEL', desc: 'Gauss Model (€2.625 Motor)' },
-  { num: 6, tag: '06', title: 'GROEI', desc: 'Schaalbaarheid 2026 tot 2029' },
+  { num: 5, tag: '05', title: 'REKENMODEL', desc: 'Gauss Rekenmodel' },
+  { num: 6, tag: '06', title: 'GROEI', desc: 'Schaalbaarheid en groeiprojecties' },
   { num: 7, tag: '07', title: 'LIQUIDITEIT', desc: 'Time Gap Cashflow & Xabi World' },
-  { num: 8, tag: '08', title: 'KAPITAALMARKT', desc: 'LSE Beursgang & Cap Table' },
-  { num: 9, tag: '09', title: 'ALLOCATIE', desc: 'Kapitaalallocatie (€22M)' },
+  { num: 8, tag: '08', title: 'KAPITAALMARKT', desc: 'Beursgang & Cap Table' },
+  { num: 9, tag: '09', title: 'ALLOCATIE', desc: 'Kapitaalallocatie' },
   { num: 10, tag: '10', title: 'TOEZICHT', desc: 'Governance & Substance' }
 ];
 
@@ -375,7 +376,7 @@ export const subholdingCardsData: SubholdingCardData[] = [
     title: 'QuantumInitium Ltd',
     subTitle: 'Centrale Moederholding & Directie',
     sector: 'Top Holding & Governance',
-    desc: 'Centrale moederholding direct verantwoordelijk voor de overall kapitaalallocatie, IP beheer, geconsolideerde IFRS verslaglegging en LSE Main Market beursgang.',
+    desc: 'Centrale moederholding direct verantwoordelijk voor de overall kapitaalallocatie, IP beheer, geconsolideerde IFRS verslaglegging en beursgangsvoorbereiding.',
     colorHex: '#ffd700',
     textColor: 'text-amber-400',
     badgeClass: 'text-amber-400 bg-amber-500/10 border-amber-500/30',
@@ -385,7 +386,7 @@ export const subholdingCardsData: SubholdingCardData[] = [
     iconName: 'Crown',
     entitiesCount: 1,
     entityNames: ['QuantumInitium Ltd'],
-    focus: 'Overkoepelend toezicht, M&A strategie, kapitaalallocatie en LSE beursgang',
+    focus: 'Overkoepelend toezicht, M&A strategie, kapitaalallocatie en beursgang',
     firewall: '100% juridische en financiële scheiding van operationele risicos',
     substance: 'Fysiek hoofdkantoor Londen, twee UK resident bestuurders, 3 RvC commissarissen',
     model: 'Holdingstructuur, geconsolideerde deelnemingen en dividendinkomsten'
@@ -498,7 +499,7 @@ export const subholdingCardsData: SubholdingCardData[] = [
     focus: 'Geautomatiseerde woonverhuur, expat doorstroom en hospitality optimalisatie',
     firewall: 'Vastgoed passiva en huurovereenkomsten 100% afgeschermd van de tech modules',
     substance: 'PropTech software met gecontracteerde vastgoedeenheden en residentiële exploitatie',
-    model: 'Maandelijkse huurstromen (LongStay €750 per maand, BnB €375 per maand)'
+    model: 'Maandelijkse huurstromen uit LongStay en BnB verhuur'
   }
 ];
 
@@ -526,9 +527,18 @@ export function App() {
     'architecture' | 'simulator' | 'calculator' | 'dossier' | '3d' | 'login' | 'register' | 'investor_dashboard' | 'admin_dashboard'
   >('architecture');
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const [amountsVisible, setAmountsVisible] = useState<boolean>(false);
   const [managedAccounts, setManagedAccounts] = useState<AuthUser[]>([]);
   const [accountsLoading, setAccountsLoading] = useState<boolean>(false);
   const [accountSaveError, setAccountSaveError] = useState<string | null>(null);
+
+  const toggleAmounts = () => {
+    if (!currentUser) {
+      setActiveTab('login');
+      return;
+    }
+    setAmountsVisible((v) => !v);
+  };
 
   const handleLoginSuccess = (user: AuthUser) => {
     setCurrentUser(user);
@@ -793,7 +803,7 @@ export function App() {
       newLogs.push(
         `[${timestamp}] [XABI WORLD] B2B API payment split rules activated.`,
         `[${timestamp}] [CRMOS] Automated ATS recruitment pipeline linked with DJOBBA.`,
-        `[${timestamp}] [INVESTBOTIQ] All 4 output components active (€ 2.625 per maand yield).`
+        `[${timestamp}] [INVESTBOTIQ] All 4 output components active.`
       );
     }
 
@@ -936,8 +946,8 @@ export function App() {
       label: 'Dossier',
       shortLabel: language === 'en' ? 'Dossier' : 'Dossier',
       description: language === 'en'
-        ? '10 Detailed chapters of the official LSE Main Market prospectus'
-        : '10 Uitgebreide hoofdstukken van het officiële LSE beursprospectus',
+        ? '10 Detailed chapters of the institutional dossier'
+        : '10 Uitgebreide hoofdstukken van het institutionele dossier',
       icon: BookOpen,
       badge: language === 'en' ? '10 Ch.' : '10 Ch.',
       badgeColor: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/25',
@@ -987,6 +997,7 @@ export function App() {
   ];
 
   return (
+    <AmountPrivacyProvider amountsVisible={amountsVisible} toggleAmounts={toggleAmounts}>
     <div
       className={`min-h-screen min-w-0 flex flex-col antialiased transition-colors duration-200 ${
         theme === 'light'
@@ -1018,7 +1029,7 @@ export function App() {
                     QuantumInitium <span className="text-xs text-amber-400 font-mono font-bold">Ltd</span>
                   </h1>
                   <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30 font-mono">
-                    <Award className="w-3 h-3 mr-1" /> LSE Prospectus
+                    <Award className="w-3 h-3 mr-1" /> Investeerdersportaal
                   </span>
                 </div>
                 <p className="text-xs text-slate-400 hidden lg:block leading-tight mt-0.5">
@@ -1039,6 +1050,27 @@ export function App() {
               title="Open hoofdmenu"
             >
               <Menu className="w-5 h-5" />
+            </button>
+
+            {/* Bedragen Zichtbaarheid Toggle */}
+            <button
+              onClick={toggleAmounts}
+              className={`p-2 sm:px-2.5 sm:py-1.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer text-xs shadow-sm border shrink-0 ${
+                theme === 'light'
+                  ? 'bg-sky-50 hover:bg-sky-100 border-sky-200 text-sky-900'
+                  : 'bg-slate-900/90 hover:bg-slate-800 border-slate-800 hover:border-cyan-500/40 text-slate-300 hover:text-cyan-300'
+              }`}
+              title={
+                amountsVisible
+                  ? (language === 'nl' ? 'Verberg bedragen' : 'Hide amounts')
+                  : (language === 'nl' ? 'Toon bedragen (login vereist)' : 'Show amounts (login required)')
+              }
+            >
+              {amountsVisible ? (
+                <Eye className="w-4 h-4 text-cyan-400" />
+              ) : (
+                <EyeOff className="w-4 h-4 text-slate-400" />
+              )}
             </button>
 
             {/* Licht / Donker Modus Toggle Knop */}
@@ -1170,9 +1202,11 @@ export function App() {
 
             <div className="text-right hidden xl:block">
               <span className="text-slate-500 block text-[9px] font-mono tracking-wider uppercase">
-                {language === 'en' ? 'TARGET IPO' : 'BEOOGDE IPO'}
+                HOLDING
               </span>
-              <span className="text-amber-400 font-mono font-bold text-xs">Medio 2027 • €82M</span>
+              <span className="text-amber-400 font-mono font-bold text-xs">
+                <PrivateAmount value="€ •••" />
+              </span>
             </div>
           </div>
         </div>
@@ -1214,7 +1248,7 @@ export function App() {
               </a>
               <div>
                 <div className={`font-extrabold text-sm ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>QuantumInitium Ltd</div>
-                <div className={`text-[10px] font-mono ${theme === 'light' ? 'text-amber-700 font-semibold' : 'text-amber-400'}`}>LSE Main Market Prospectus</div>
+                <div className={`text-[10px] font-mono ${theme === 'light' ? 'text-amber-700 font-semibold' : 'text-amber-400'}`}>Investeerdersportaal</div>
               </div>
             </div>
             <button
@@ -1417,9 +1451,10 @@ export function App() {
               <span className="font-mono text-[11px] text-emerald-400 font-semibold flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5" /> UK Substance Verified
               </span>
-              <span className="text-slate-400 font-mono text-[11px]">Medio 2027</span>
+              <span className="text-slate-400 font-mono text-[11px]">
+                <PrivateAmount value="IPO waardering" />
+              </span>
             </div>
-            <div className="text-[11px] text-slate-400">Beoogde IPO Waardering: € 82.000.000</div>
           </div>
         </div>
 
@@ -1435,7 +1470,7 @@ export function App() {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                    LSE v2.4
+                    v2.4
                   </span>
                   <button
                     onClick={() => setSidebarOpen(false)}
@@ -1579,7 +1614,7 @@ export function App() {
                             : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
                         }`}
                       >
-                        €82M IPO
+                        <PrivateAmount value="IPO" />
                       </span>
                     </div>
                     <p className={`text-[11px] leading-tight ${theme === 'light' ? 'text-amber-950/80' : 'text-slate-300'}`}>
@@ -1840,7 +1875,7 @@ export function App() {
                         </span>
                       </div>
                       <p className="text-[11px] text-slate-400 leading-snug line-clamp-2">
-                        {item.role}
+                        {amountsVisible ? item.role : maskAmounts(item.role ?? '')}
                       </p>
                       <div className="pt-1 flex items-center justify-between text-[10px] text-slate-500">
                         <span className="truncate max-w-[140px]">{item.holdingName.split(':')[0]}</span>
@@ -1874,7 +1909,9 @@ export function App() {
               <span className="flex items-center gap-1.5 font-mono text-[11px] text-emerald-400 font-semibold">
                 <ShieldCheck className="w-3.5 h-3.5" /> UK Substance
               </span>
-              <span className="font-mono text-slate-400 text-[11px]">LSE Beursrijp</span>
+              <span className="font-mono text-slate-400 text-[11px]">
+                <PrivateAmount value="Beursrijp" />
+              </span>
             </div>
           </aside>
         ) : (
@@ -2020,7 +2057,7 @@ export function App() {
                         QuantumInitium Ltd
                       </div>
                       <p className={`text-[11px] mt-1 ${theme === 'light' ? 'text-amber-900/80' : 'text-slate-300'}`}>
-                        Overkoepelende kapitaalallocatie, IP beheer, M&A en LSE governance
+                        Overkoepelende kapitaalallocatie, IP beheer, M&A en governance
                       </p>
                     </div>
                   </div>
@@ -2196,7 +2233,7 @@ export function App() {
                             {e.type}
                           </span>
                         </div>
-                        <p className={`text-[11px] ${theme === 'light' ? 'text-sky-900/70' : 'text-slate-400'}`}>{e.role}</p>
+                        <p className={`text-[11px] ${theme === 'light' ? 'text-sky-900/70' : 'text-slate-400'}`}>{amountsVisible ? e.role : maskAmounts(e.role ?? '')}</p>
                       </div>
                     ))}
                   </div>
@@ -2267,7 +2304,9 @@ export function App() {
                     <h3 className="text-sm font-bold text-white flex items-center gap-2 tracking-tight">
                       <Network className="w-4 h-4 text-amber-400" /> Autonoom Verdeelde Executie Sporen
                     </h3>
-                    <span className="text-xs font-mono text-amber-400 font-bold">€ 2.625 Output / mnd</span>
+                    <span className="text-xs font-mono text-amber-400 font-bold">
+                      <PrivateAmount value="€ 2.625 Output / mnd" />
+                    </span>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -2297,7 +2336,7 @@ export function App() {
                         Initieert 5 GPU nodes rekenkracht; gegenereerde capaciteit voedt exclusief accountmarktplaats Logs.rent.
                       </p>
                       <div className="pt-2 border-t border-slate-800 text-xs font-mono text-cyan-300 font-bold">
-                        € 1.500 / mnd (GPU + Stream)
+                        <PrivateAmount value="€ 1.500 / mnd (GPU + Stream)" />
                       </div>
                     </div>
 
@@ -2312,7 +2351,7 @@ export function App() {
                         Start geautomatiseerde workflows voor bezetting van huurwoningen, met doorstroom naar Afterstudenthousing Ltd.
                       </p>
                       <div className="pt-2 border-t border-slate-800 text-xs font-mono text-emerald-300 font-bold">
-                        € 1.125 / mnd (LongStay + BnB)
+                        <PrivateAmount value="€ 1.125 / mnd (LongStay + BnB)" />
                       </div>
                     </div>
                   </div>
@@ -2340,7 +2379,7 @@ export function App() {
                               : 'text-slate-300'
                           }
                         >
-                          {log}
+                          {amountsVisible ? log : maskAmounts(log ?? '')}
                         </div>
                       ))}
                     </div>
@@ -2359,7 +2398,7 @@ export function App() {
                 </div>
                 <h2 className="text-2xl lg:text-3xl font-extrabold text-white tracking-tight leading-tight">De Reeks van Gauss Simulator</h2>
                 <p className="text-sm text-slate-300 max-w-3xl leading-relaxed">
-                  Formule: <span className="font-mono text-amber-400 font-bold">n × (n + 1) / 2</span>. Over 12 maanden genereert één actief lid <strong>78 cumulatieve maandcycli</strong> (12 × 13 / 2 = 78), wat neerkomt op exact <strong>€ 204.750 jaaromzet per lid</strong>.
+                  Formule: <span className="font-mono text-amber-400 font-bold">n × (n + 1) / 2</span>. Over 12 maanden genereert één actief lid <strong>78 cumulatieve maandcycli</strong> (12 × 13 / 2 = 78), wat neerkomt op exact <strong><PrivateAmount value="€ 204.750 jaaromzet per lid" /></strong>.
                 </p>
               </div>
 
@@ -2368,28 +2407,28 @@ export function App() {
                 <div className="glass-card p-5 rounded-xl border-l-4 border-l-cyan-500 space-y-1.5">
                   <span className="text-[10px] font-mono uppercase text-cyan-400 font-bold tracking-wider">COMPUTE (GPU)</span>
                   <div className="font-bold text-white text-sm">Boostplug Mining</div>
-                  <div className="text-2xl font-black text-cyan-400 font-mono">€ 1.000 / mnd</div>
+                  <div className="text-2xl font-black text-cyan-400 font-mono"><PrivateAmount value="€ 1.000 / mnd" /></div>
                   <p className="text-xs text-slate-400 leading-normal">Inzet van 5 GPU nodes voor AI inferentie.</p>
                 </div>
 
                 <div className="glass-card p-5 rounded-xl border-l-4 border-l-emerald-500 space-y-1.5">
                   <span className="text-[10px] font-mono uppercase text-emerald-400 font-bold tracking-wider">COMPUTE (STREAM)</span>
                   <div className="font-bold text-white text-sm">Boostplug Stream Point</div>
-                  <div className="text-2xl font-black text-emerald-400 font-mono">€ 500 / mnd</div>
+                  <div className="text-2xl font-black text-emerald-400 font-mono"><PrivateAmount value="€ 500 / mnd" /></div>
                   <p className="text-xs text-slate-400 leading-normal">Datastroom & bandbreedte monetarisering.</p>
                 </div>
 
                 <div className="glass-card p-5 rounded-xl border-l-4 border-l-amber-500 space-y-1.5">
                   <span className="text-[10px] font-mono uppercase text-amber-400 font-bold tracking-wider">VASTGOED (LONG)</span>
                   <div className="font-bold text-white text-sm">WoningVry LongStay</div>
-                  <div className="text-2xl font-black text-amber-400 font-mono">€ 750 / mnd</div>
+                  <div className="text-2xl font-black text-amber-400 font-mono"><PrivateAmount value="€ 750 / mnd" /></div>
                   <p className="text-xs text-slate-400 leading-normal">Structurele huisvesting IT professionals.</p>
                 </div>
 
                 <div className="glass-card p-5 rounded-xl border-l-4 border-l-yellow-400 space-y-1.5">
                   <span className="text-[10px] font-mono uppercase text-yellow-400 font-bold tracking-wider">VASTGOED (SHORT)</span>
                   <div className="font-bold text-white text-sm">WoningVry BnB</div>
-                  <div className="text-2xl font-black text-yellow-400 font-mono">€ 375 / mnd</div>
+                  <div className="text-2xl font-black text-yellow-400 font-mono"><PrivateAmount value="€ 375 / mnd" /></div>
                   <p className="text-xs text-slate-400 leading-normal">Short stay dynamische dagtarieven.</p>
                 </div>
               </div>
@@ -2461,21 +2500,21 @@ export function App() {
                     <div className="bg-slate-900/90 p-5 rounded-xl border border-slate-800">
                       <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">GECONSOLIDEERDE OMZET</span>
                       <div className="text-2xl lg:text-3xl font-black text-emerald-400 font-mono mt-1 tracking-tight">
-                        € {totalRevenue.toLocaleString('nl-NL')}
+                        <PrivateAmount value={`€ ${totalRevenue.toLocaleString('nl-NL')}`} />
                       </div>
                       <div className="text-[11px] text-slate-400 mt-1">Jaarbasis via Gauss</div>
                     </div>
                     <div className="bg-slate-900/90 p-5 rounded-xl border border-slate-800">
                       <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">BEOOGDE WAARDERING (4.0x)</span>
                       <div className="text-2xl lg:text-3xl font-black text-amber-400 font-mono mt-1 tracking-tight">
-                        € {valuation.toLocaleString('nl-NL')}
+                        <PrivateAmount value={`€ ${valuation.toLocaleString('nl-NL')}`} />
                       </div>
-                      <div className="text-[11px] text-slate-400 mt-1">Marktkapitalisatie op LSE</div>
+                      <div className="text-[11px] text-slate-400 mt-1">Beoogde marktkapitalisatie</div>
                     </div>
                     <div className="bg-slate-900/90 p-5 rounded-xl border border-slate-800">
                       <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">KOERS PER AANDEEL</span>
                       <div className="text-2xl lg:text-3xl font-black text-cyan-400 font-mono mt-1 tracking-tight">
-                        € {sharePrice.toFixed(2).replace('.', ',')}
+                        <PrivateAmount value={`€ ${sharePrice.toFixed(2).replace('.', ',')}`} />
                       </div>
                       <div className="text-[11px] text-slate-400 mt-1">Introductiekoers IPO</div>
                     </div>
@@ -2964,7 +3003,7 @@ export function App() {
                         {selectedEntityData.entity.name}
                       </h3>
                       <h4 className={`panel-subtitle text-sm font-semibold mt-1 ${theme === 'light' ? 'text-amber-800' : 'text-amber-300'}`}>
-                        {selectedEntityData.entity.role}
+                        {amountsVisible ? selectedEntityData.entity.role : maskAmounts(selectedEntityData.entity.role ?? '')}
                       </h4>
                     </div>
 
@@ -2980,7 +3019,7 @@ export function App() {
                         Operationele Beschrijving
                       </span>
                       <p className={`text-xs leading-relaxed ${theme === 'light' ? 'text-sky-900/85' : 'text-slate-300'}`}>
-                        {selectedEntityData.entity.desc}
+                        {amountsVisible ? selectedEntityData.entity.desc : maskAmounts(selectedEntityData.entity.desc ?? '')}
                       </p>
                     </div>
 
@@ -2999,7 +3038,7 @@ export function App() {
                         <p className={`text-xs font-mono leading-relaxed ${
                           theme === 'light' ? 'text-emerald-950 font-semibold' : 'text-emerald-200'
                         }`}>
-                          {selectedEntityData.entity.financialContribution}
+                          {amountsVisible ? selectedEntityData.entity.financialContribution : maskAmounts(selectedEntityData.entity.financialContribution ?? '')}
                         </p>
                       </div>
                     )}
@@ -3048,7 +3087,7 @@ export function App() {
                         </div>
                         {selectedEntityData.entity.synergyEffect && (
                           <p className={`text-[11px] mt-1 leading-relaxed ${theme === 'light' ? 'text-sky-900/80' : 'text-slate-300'}`}>
-                            {selectedEntityData.entity.synergyEffect}
+                            {amountsVisible ? selectedEntityData.entity.synergyEffect : maskAmounts(selectedEntityData.entity.synergyEffect ?? '')}
                           </p>
                         )}
                       </div>
@@ -3151,7 +3190,7 @@ export function App() {
                                 <span className={`text-[10px] font-normal block truncate ${
                                   theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'
                                 }`}>
-                                  {e.role}
+                                  {amountsVisible ? e.role : maskAmounts(e.role ?? '')}
                                 </span>
                               </div>
                               <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border shrink-0 ${
@@ -3342,7 +3381,7 @@ export function App() {
                           </div>
                           <div className={`pt-2 border-t ${theme === 'light' ? 'border-sky-100' : 'border-slate-800/60'}`}>
                             <span className={`text-[10px] font-mono uppercase block mb-0.5 ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Verdienmodel</span>
-                            <span className={theme === 'light' ? 'text-sky-950' : 'text-slate-200'}>{currentSubCard.model}</span>
+                            <span className={theme === 'light' ? 'text-sky-950' : 'text-slate-200'}>{amountsVisible ? currentSubCard.model : maskAmounts(currentSubCard.model ?? '')}</span>
                           </div>
                           <div className={`pt-2 border-t ${theme === 'light' ? 'border-sky-100' : 'border-slate-800/60'}`}>
                             <span className={`text-[10px] font-mono uppercase block mb-0.5 ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Juridische Risico Isolatie</span>
@@ -3732,6 +3771,7 @@ export function App() {
         </main>
       </div>
     </div>
+    </AmountPrivacyProvider>
   );
 }
 

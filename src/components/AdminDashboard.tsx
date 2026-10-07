@@ -157,7 +157,7 @@ export default function AdminDashboard({
   );
 
   const handleActionClick = (actionName: string) => {
-    setActionNotice(`Directie actie '${actionName}' succesvol vastgelegd in het LSE audit logboek.`);
+    setActionNotice(`Directie actie '${actionName}' succesvol vastgelegd in het audit logboek.`);
     setTimeout(() => {
       setActionNotice(null);
     }, 4500);
@@ -360,7 +360,7 @@ export default function AdminDashboard({
 
         <div className="glass-panel p-5 rounded-2xl border border-slate-800 space-y-2 relative overflow-hidden">
           <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-            <span>Beoogde IPO Waardering (2027)</span>
+            <span>Beoogde IPO Waardering</span>
             <Sparkles className="w-4 h-4 text-purple-400" />
           </div>
           <div className="text-2xl sm:text-3xl font-extrabold text-purple-300 font-mono">
