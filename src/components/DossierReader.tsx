@@ -37,12 +37,14 @@ import {
   kapitaalallocatieNettoBeursopbrengst,
   institutioneleVierPijlers
 } from '../data/institutionalPitch';
+import { PrivateAmount, useAmountPrivacy } from '../lib/amountPrivacy';
 
 interface DossierReaderProps {
   currentChapter: number;
 }
 
 export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) => {
+  const { mask } = useAmountPrivacy();
   return (
     <div className="px-6 md:px-[120px] py-10 space-y-10 max-w-7xl mx-auto">
       {/* HOOFDSTUK 01: EXECUTIEF */}
@@ -80,16 +82,16 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
             </div>
             <div className="glass-card p-6 rounded-2xl border-l-4 border-l-amber-500 space-y-2">
               <span className="text-xs text-slate-400 font-mono font-semibold uppercase tracking-wider">JAAR 1 TARGET</span>
-              <div className="text-3xl font-black text-amber-400 font-mono tracking-tight">€ 20,4M</div>
+              <div className="text-3xl font-black text-amber-400 font-mono tracking-tight"><PrivateAmount value="€ 20,4M" /></div>
               <p className="text-xs text-slate-400 leading-relaxed pt-1">
                 Gebaseerd op 100 actieve leden en de Reeks van Gauss (78 cumulatieve cycli).
               </p>
             </div>
             <div className="glass-card p-6 rounded-2xl border-l-4 border-l-yellow-400 space-y-2">
               <span className="text-xs text-slate-400 font-mono font-semibold uppercase tracking-wider">WAARDERING</span>
-              <div className="text-3xl font-black text-yellow-400 font-mono tracking-tight">€ 82M</div>
+              <div className="text-3xl font-black text-yellow-400 font-mono tracking-tight"><PrivateAmount value="€ 82M" /></div>
               <p className="text-xs text-slate-400 leading-relaxed pt-1">
-                LSE Main Market IPO target medio 2027 op basis van 4,0x omzet multiple.
+                Beoogde beursgang op basis van 4,0x omzet multiple.
               </p>
             </div>
           </div>
@@ -121,8 +123,8 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
                 <strong className="text-white text-base">Londen, Verenigd Koninkrijk</strong>
               </div>
               <div className="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-1">
-                <span className="text-slate-500 block text-[11px] uppercase font-mono tracking-wider">Beoogde Beurs</span>
-                <strong className="text-amber-400 text-base">London Stock Exchange (Main Market)</strong>
+                <span className="text-slate-500 block text-[11px] uppercase font-mono tracking-wider">Beoogde Notering</span>
+                <strong className="text-amber-400 text-base">Internationale Hoofdbeurs</strong>
               </div>
               <div className="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-1">
                 <span className="text-slate-500 block text-[11px] uppercase font-mono tracking-wider">Governance Code</span>
@@ -189,7 +191,7 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
               <span className="text-[11px] font-mono text-indigo-400 font-bold tracking-wider">SUBHOLDING 05 • REAL ESTATE & OPERATIONS</span>
               <h4 className="font-bold text-white text-base tracking-tight">WoningVry Ltd & Afterstudenthousing Ltd</h4>
               <p className="text-sm text-slate-400 leading-relaxed">
-                PropTech huisvesting: LongStay verhuur (€750 per maand) en short stay BnB verhuur (€375 per maand) voor IT professionals en doorstromers.
+                PropTech huisvesting: LongStay verhuur (<PrivateAmount value="€750" /> per maand) en short stay BnB verhuur (<PrivateAmount value="€375" /> per maand) voor IT professionals en doorstromers.
               </p>
               <div className="text-xs font-mono text-indigo-300 pt-1">Belang: 100% eigendom via Moederholding</div>
             </div>
@@ -293,26 +295,26 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
               <Bookmark className="w-3.5 h-3.5" /> HOOFDSTUK 05 • REKENMODEL
             </div>
             <h2 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-white leading-tight">
-              Het Gauss Model (€ 2.625 Motor)
+              Het Gauss Rekenmodel
             </h2>
             <p className="text-sm lg:text-base text-slate-300 max-w-3xl leading-relaxed">
-              Cumulatieve maandopbouw: 12 maanden × € 2.625 × (12 × 13 / 2 = 78 cycli) = € 204.750 bruto omzet per actief lid per jaar.
+              Cumulatieve maandopbouw: 12 maanden × <PrivateAmount value="€ 2.625" /> × (12 × 13 / 2 = 78 cycli) = <PrivateAmount value="€ 204.750" /> bruto omzet per actief lid per jaar.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="glass-card p-6 rounded-2xl border-l-4 border-l-cyan-500 space-y-3">
               <span className="text-xs font-bold text-cyan-400 uppercase font-mono tracking-wider">COMPUTE TAK</span>
-              <div className="text-2xl font-black text-white font-mono tracking-tight">€ 1.500 per maand</div>
+              <div className="text-2xl font-black text-white font-mono tracking-tight"><PrivateAmount value="€ 1.500 per maand" /></div>
               <p className="text-sm text-slate-400 leading-relaxed">
-                GPU Mining (€1.000) via Boostplug 5 node cluster + Stream Point Mining (€500) via bandbreedte monetarisering.
+                GPU Mining (<PrivateAmount value="€1.000" />) via Boostplug 5 node cluster + Stream Point Mining (<PrivateAmount value="€500" />) via bandbreedte monetarisering.
               </p>
             </div>
             <div className="glass-card p-6 rounded-2xl border-l-4 border-l-emerald-500 space-y-3">
               <span className="text-xs font-bold text-emerald-400 uppercase font-mono tracking-wider">VASTGOED TAK</span>
-              <div className="text-2xl font-black text-white font-mono tracking-tight">€ 1.125 per maand</div>
+              <div className="text-2xl font-black text-white font-mono tracking-tight"><PrivateAmount value="€ 1.125 per maand" /></div>
               <p className="text-sm text-slate-400 leading-relaxed">
-                WoningVry LongStay (€750) residentiële huur + WoningVry BnB (€375) short stay bezettingsvergoeding.
+                WoningVry LongStay (<PrivateAmount value="€750" />) residentiële huur + WoningVry BnB (<PrivateAmount value="€375" />) short stay bezettingsvergoeding.
               </p>
             </div>
           </div>
@@ -327,7 +329,7 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
                 Voor n = 12 maanden geldt: 12 × 13 / 2 = <strong>78 cumulatieve cycli</strong>
               </div>
               <div className="text-emerald-400 font-bold text-base pt-1">
-                78 cycli × € 2.625 per cyclus = € 204.750 jaarbasis per lid
+                78 cycli × <PrivateAmount value="€ 2.625" /> per cyclus = <PrivateAmount value="€ 204.750" /> jaarbasis per lid
               </div>
             </div>
           </div>
@@ -342,7 +344,7 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
               <Bookmark className="w-3.5 h-3.5" /> HOOFDSTUK 06 • GROEI
             </div>
             <h2 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-white leading-tight">
-              Schaalbaarheid 2026 tot 2029
+              Schaalbaarheid en Groeiprojecties
             </h2>
             <p className="text-sm lg:text-base text-slate-300 max-w-3xl leading-relaxed">
               Gecontroleerde capaciteitsschaling richting 9.150 leden.
@@ -354,15 +356,15 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
               <span className="text-xs font-mono text-cyan-400 font-bold uppercase tracking-wider">JAAR 1 (LAUNCH)</span>
               <div className="text-3xl font-black text-white font-mono my-2 tracking-tight">100 Leden</div>
               <div className="text-sm text-slate-300">
-                7.800 Cycli • <strong className="text-cyan-400 font-mono">€ 20,4M Omzet</strong>
+                7.800 Cycli • <strong className="text-cyan-400 font-mono"><PrivateAmount value="€ 20,4M Omzet" /></strong>
               </div>
-              <div className="text-xs text-slate-400">Beursbasis LSE Introductie</div>
+              <div className="text-xs text-slate-400">Basis beursintroductie</div>
             </div>
             <div className="glass-card p-6 rounded-2xl border-t-4 border-t-emerald-500 text-center space-y-3">
               <span className="text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider">JAAR 2 (SCHAAL)</span>
               <div className="text-3xl font-black text-white font-mono my-2 tracking-tight">6.000 Leden</div>
               <div className="text-sm text-slate-300">
-                468.000 Cycli • <strong className="text-emerald-400 font-mono">€ 1,22B Omzet</strong>
+                468.000 Cycli • <strong className="text-emerald-400 font-mono"><PrivateAmount value="€ 1,22B Omzet" /></strong>
               </div>
               <div className="text-xs text-slate-400">Europese Hub Expansie</div>
             </div>
@@ -370,7 +372,7 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
               <span className="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider">JAAR 3 (MAX CAP)</span>
               <div className="text-3xl font-black text-white font-mono my-2 tracking-tight">9.150 Leden</div>
               <div className="text-sm text-slate-300">
-                713.700 Cycli • <strong className="text-amber-400 font-mono">€ 1,87B Omzet</strong>
+                713.700 Cycli • <strong className="text-amber-400 font-mono"><PrivateAmount value="€ 1,87B Omzet" /></strong>
               </div>
               <div className="text-xs text-slate-400">Volledige Infrastructuur Capaciteit</div>
             </div>
@@ -406,7 +408,7 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
                   </div>
                   <h5 className="font-bold text-white text-sm tracking-tight">{step.titel}</h5>
                   <div className="text-xs font-mono text-amber-300 font-semibold">{step.entiteiten}</div>
-                  <p className="text-xs text-slate-400 leading-relaxed">{step.mechanisme}</p>
+                  <p className="text-xs text-slate-400 leading-relaxed">{mask(step.mechanisme)}</p>
                 </div>
               ))}
             </div>
@@ -422,10 +424,10 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
               <Bookmark className="w-3.5 h-3.5" /> HOOFDSTUK 08 • KAPITAALMARKT
             </div>
             <h2 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-white leading-tight">
-              LSE Main Market IPO & Cap Table
+              Beursgang & Cap Table
             </h2>
             <p className="text-sm lg:text-base text-slate-300 max-w-3xl leading-relaxed">
-              Beoogde beursgang medio 2027 op de London Stock Exchange met 10.000.000 geplaatste aandelen en €82M startwaardering.
+              Beoogde beursgang met 10.000.000 geplaatste aandelen en <PrivateAmount value="€82M" /> startwaardering.
             </p>
           </div>
 
@@ -439,11 +441,11 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
                 </div>
                 <div className="flex justify-between py-1.5 border-b border-slate-800/80">
                   <span className="text-slate-400">Introductiekoers IPO:</span>
-                  <span className="font-mono font-bold text-emerald-400">€ 8,19</span>
+                  <span className="font-mono font-bold text-emerald-400"><PrivateAmount value="€ 8,19" /></span>
                 </div>
                 <div className="flex justify-between py-1.5 border-b border-slate-800/80">
-                  <span className="text-slate-400">Startkapitalisatie (LSE):</span>
-                  <span className="font-mono font-bold text-amber-400">€ 81.900.000</span>
+                  <span className="text-slate-400">Startkapitalisatie:</span>
+                  <span className="font-mono font-bold text-amber-400"><PrivateAmount value="€ 81.900.000" /></span>
                 </div>
                 <div className="flex justify-between py-1.5">
                   <span className="text-slate-400">Vrije Verhandelbaarheid (Free Float):</span>
@@ -456,16 +458,16 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
               <h4 className="text-xs font-bold text-amber-400 uppercase font-mono tracking-wider">Tijdlijn Naar Beursnotering</h4>
               <div className="space-y-3 text-sm">
                 <div className="flex items-start gap-2.5">
-                  <span className="font-mono text-cyan-400 font-bold text-xs shrink-0 pt-0.5">Q1 2026:</span>
+                  <span className="font-mono text-cyan-400 font-bold text-xs shrink-0 pt-0.5">Fase 1:</span>
                   <span className="text-slate-300 leading-relaxed">Audited IFRS openingsbalans & UK substance verankering</span>
                 </div>
                 <div className="flex items-start gap-2.5">
-                  <span className="font-mono text-cyan-400 font-bold text-xs shrink-0 pt-0.5">Q4 2026:</span>
-                  <span className="text-slate-300 leading-relaxed">Indienen concept prospectus bij Financial Conduct Authority (FCA)</span>
+                  <span className="font-mono text-cyan-400 font-bold text-xs shrink-0 pt-0.5">Fase 2:</span>
+                  <span className="text-slate-300 leading-relaxed">Indienen concept prospectus bij de beurstoezichthouder</span>
                 </div>
                 <div className="flex items-start gap-2.5">
-                  <span className="font-mono text-amber-400 font-bold text-xs shrink-0 pt-0.5">Medio 2027:</span>
-                  <span className="text-slate-300 leading-relaxed">Officiële notering London Stock Exchange Main Market</span>
+                  <span className="font-mono text-amber-400 font-bold text-xs shrink-0 pt-0.5">Fase 3:</span>
+                  <span className="text-slate-300 leading-relaxed">Officiële notering op de internationale hoofdbeurs</span>
                 </div>
               </div>
             </div>
@@ -481,7 +483,7 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
               <Bookmark className="w-3.5 h-3.5" /> HOOFDSTUK 09 • ALLOCATIE
             </div>
             <h2 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-white leading-tight">
-              Kapitaalallocatie (€22M Netto Beursopbrengst)
+              Kapitaalallocatie (<PrivateAmount value="€22M" /> Netto Beursopbrengst)
             </h2>
             <p className="text-sm lg:text-base text-slate-300 max-w-3xl leading-relaxed">
               Strategische verdeling van de opbrengsten ter versnelling van de viercomponentenmotor.
@@ -493,7 +495,7 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
               <div key={idx} className="bg-slate-900/90 p-5 rounded-2xl border border-slate-800 space-y-2">
                 <span className="text-cyan-400 font-bold font-mono text-base">{item.percentage}</span>
                 <div className="text-white text-sm font-bold tracking-tight">{item.doel}</div>
-                <p className="text-xs text-slate-400 leading-relaxed">{item.toelichting}</p>
+                <p className="text-xs text-slate-400 leading-relaxed">{mask(item.toelichting)}</p>
               </div>
             ))}
           </div>
@@ -523,12 +525,12 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
                 </span>
                 <h4 className="font-bold text-white text-sm tracking-tight">{pillar.titel}</h4>
                 <div className="text-xs font-mono text-cyan-400 font-semibold">{pillar.ondertitel}</div>
-                <p className="text-xs text-slate-400 leading-relaxed">{pillar.inhoud}</p>
+                <p className="text-xs text-slate-400 leading-relaxed">{mask(pillar.inhoud)}</p>
                 <div className="pt-3 border-t border-slate-800/80 text-xs text-slate-400 space-y-2">
                   {pillar.garanties.map((g, gIdx) => (
                     <div key={gIdx} className="flex items-start gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0 mt-1.5"></span>
-                      <span className="leading-relaxed">{g}</span>
+                      <span className="leading-relaxed">{mask(g)}</span>
                     </div>
                   ))}
                 </div>

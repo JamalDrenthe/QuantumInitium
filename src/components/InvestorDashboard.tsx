@@ -999,11 +999,11 @@ export default function InvestorDashboard({
           high: '€8,20',
           volume: '6.200.000 aandelen',
           points: [
-            { label: 'Q1 2024', price: 2.50 },
-            { label: 'Q2 2024', price: 3.80 },
-            { label: 'Q3 2024', price: 4.90 },
-            { label: 'Q4 2024', price: 6.40 },
-            { label: 'Q1 2025', price: 8.20 }
+            { label: 'Kwartaal 1', price: 2.50 },
+            { label: 'Kwartaal 2', price: 3.80 },
+            { label: 'Kwartaal 3', price: 4.90 },
+            { label: 'Kwartaal 4', price: 6.40 },
+            { label: 'Referentie', price: 8.20 }
           ]
         };
       case 'MAX':
@@ -1019,8 +1019,8 @@ export default function InvestorDashboard({
             { label: 'Pre Seed', price: 2.50 },
             { label: 'Seed', price: 4.20 },
             { label: 'Serie A (Heden)', price: 8.20 },
-            { label: 'Tranche B (2026)', price: 12.50 },
-            { label: 'LSE IPO (2027)', price: 14.50 }
+            { label: 'Tranche B', price: 12.50 },
+            { label: 'IPO', price: 14.50 }
           ]
         };
     }
@@ -1444,10 +1444,10 @@ export default function InvestorDashboard({
               </div>
             </div>
 
-            {/* Kaart 4: Beoogde IPO Waarde medio 2027 */}
+            {/* Kaart 4: Beoogde IPO Waarde */}
             <div className="glass-panel p-5 rounded-2xl border border-slate-800 space-y-2 relative overflow-hidden">
               <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-                <span>Beoogde IPO Waarde (2027)</span>
+                <span>Beoogde IPO Waarde</span>
                 <Sparkles className="w-4 h-4 text-purple-400" />
               </div>
               <div className="text-2xl sm:text-3xl font-extrabold text-purple-300 font-mono">
@@ -1455,7 +1455,7 @@ export default function InvestorDashboard({
               </div>
               <div className="text-[11px] text-slate-400 flex items-center gap-1">
                 <span className="text-purple-400 font-semibold font-mono">€{SHARE_PRICE_IPO_TARGET.toFixed(2)} per aandeel</span>
-                <span>bij LSE beursgang</span>
+                <span>bij beursgang</span>
               </div>
             </div>
           </div>
@@ -1982,13 +1982,13 @@ export default function InvestorDashboard({
               <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
                 <span className="text-[11px] font-mono text-slate-400 uppercase block">Volgende Tranche (B)</span>
                 <span className="text-base font-bold font-mono text-cyan-300">€12,50</span>
-                <span className="text-[10px] text-slate-500 block">Verwacht Q4 2025</span>
+                <span className="text-[10px] text-slate-500 block">Verwacht</span>
               </div>
 
               <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
                 <span className="text-[11px] font-mono text-slate-400 uppercase block">Beoogde IPO Waarde</span>
                 <span className="text-base font-bold font-mono text-purple-300">€14,50</span>
-                <span className="text-[10px] text-purple-400 block">LSE Listing Target</span>
+                <span className="text-[10px] text-purple-400 block">Beoogde richtprijs</span>
               </div>
             </div>
           </div>
@@ -2132,7 +2132,7 @@ export default function InvestorDashboard({
                   <span className="text-cyan-400 font-bold">{ANNUAL_DIVIDEND_PERCENT}%</span>
                 </div>
                 <div className="flex justify-between text-slate-400">
-                  <span>Beoogde LSE Richtprijs:</span>
+                  <span>Beoogde richtprijs:</span>
                   <span className="text-purple-400 font-bold">€{SHARE_PRICE_IPO_TARGET.toFixed(2)}</span>
                 </div>
               </div>
@@ -2160,7 +2160,7 @@ export default function InvestorDashboard({
                 <div className="text-2xl font-bold font-mono text-purple-300">
                   €{calcTargetIpoValue.toLocaleString('nl-NL', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                 </div>
-                <span className="text-[10px] text-purple-400">Bij LSE Beursgang</span>
+                <span className="text-[10px] text-purple-400">Bij beursgang</span>
               </div>
 
               <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
@@ -2227,7 +2227,7 @@ export default function InvestorDashboard({
             </div>
 
             <div className="pt-4 border-t border-slate-800 text-[11px] font-mono text-slate-400 flex flex-wrap justify-between items-center gap-2">
-              <span>Notariële Deponering: 14 januari 2025</span>
+              <span>Notariële Deponering</span>
               <span className="text-emerald-400 flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 Geldig en Onherroepelijk
@@ -3166,7 +3166,7 @@ export default function InvestorDashboard({
             <div className="space-y-3 font-mono text-xs">
               <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 space-y-1">
                 <div className="flex items-center justify-between font-bold">
-                  <span>Dividend Reservering Q1 2025</span>
+                  <span>Dividend Reservering</span>
                   <span className="text-[10px] text-slate-400">Vandaag</span>
                 </div>
                 <p className="text-slate-300 text-[11px]">

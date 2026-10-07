@@ -35,6 +35,7 @@ import {
   institutioneleVierPijlers
 } from '../data/institutionalPitch';
 import { ecosystemData } from '../data/ecosystem';
+import { PrivateAmount, useAmountPrivacy } from '../lib/amountPrivacy';
 
 interface InstitutionalDossierModalProps {
   isOpen?: boolean;
@@ -109,7 +110,7 @@ const TABS: TabItem[] = [
   {
     id: 'projections',
     chapterNumber: '06',
-    label: 'Schaalbaarheid 2026 tot 2029',
+    label: 'Schaalbaarheid en Groeiprojecties',
     shortLabel: 'Projecties',
     category: 'Groei',
     icon: TrendingUp
@@ -125,7 +126,7 @@ const TABS: TabItem[] = [
   {
     id: 'ipoRoadmap',
     chapterNumber: '08',
-    label: 'LSE Beursgang en Cap Table',
+    label: 'Beursgang en Cap Table',
     shortLabel: 'Beursgang',
     category: 'Kapitaalmarkt',
     icon: PieChartIcon
@@ -133,7 +134,7 @@ const TABS: TabItem[] = [
   {
     id: 'allocation',
     chapterNumber: '09',
-    label: 'Strategische Kapitaalallocatie (€ 22M)',
+    label: 'Strategische Kapitaalallocatie',
     shortLabel: 'Kapitaalallocatie',
     category: 'Allocatie',
     icon: Coins
@@ -155,6 +156,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
   onSelectNodeInCanvas,
   onSwitchTo3D
 }) => {
+  const { mask } = useAmountPrivacy();
   const [activeTab, setActiveTab] = useState<TabType>('summary');
   const [interactiveMemberCount, setInteractiveMemberCount] = useState<number>(100);
 
@@ -205,7 +207,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
             </div>
           </div>
           <p className="text-xs text-slate-400 mt-3 leading-relaxed">
-            Volledige institutionele analyse en beursgang specificaties conform LSE Main Market standaarden.
+            Volledige institutionele analyse en beursgang specificaties.
           </p>
         </div>
 
@@ -310,10 +312,10 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
               {activeTab === 'aiGateway' && 'De frictieloze toevoer van internationaal talent en de autonome executiekracht van de Investbotiq motor.'}
               {activeTab === 'synergy' && 'Wederzijdse versnelling tussen kernentiteiten en gespecialiseerde modules zonder logistieke vertraging.'}
               {activeTab === 'calculator' && 'Wiskundige cumulatie via de Reeks van Gauss en de gestandaardiseerde Viercomponentenoutput.'}
-              {activeTab === 'projections' && 'Driejarige groeitrajecten en capaciteitsschaling richting € 1,87 miljard geconsolideerde jaaromzet.'}
+              {activeTab === 'projections' && 'Driejarige groeitrajecten en capaciteitsschaling van de geconsolideerde jaaromzet.'}
               {activeTab === 'infiniteLoop' && 'Maximale Velocity of Money via Time Gap Cashflow en prudentieel escrowbeheer zonder extern schuldrisico.'}
-              {activeTab === 'ipoRoadmap' && 'Introductie op de London Stock Exchange Main Market en gedisciplineerde aandelenverdeling.'}
-              {activeTab === 'allocation' && 'Doelgerichte aanwending van € 22 miljoen netto beurskapitaal over infrastructuur, licenties en groei.'}
+              {activeTab === 'ipoRoadmap' && 'Beoogde beursintroductie en gedisciplineerde aandelenverdeling.'}
+              {activeTab === 'allocation' && 'Doelgerichte aanwending van het netto beurskapitaal over infrastructuur, licenties en groei.'}
               {activeTab === 'governance' && 'UK Substance vereisten in Londen, onafhankelijke raad van commissarissen en juridische risico isolatie.'}
             </p>
           </div>
@@ -349,7 +351,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
 
                 <div className="p-10 rounded-3xl bg-slate-900/60 border border-slate-800 hover:border-emerald-400/40 transition-all space-y-3">
                   <div className="text-4xl sm:text-5xl font-extrabold text-emerald-400 font-mono tracking-normal">
-                    € 20,4M
+                    <PrivateAmount value="€ 20,4M" />
                   </div>
                   <div className="text-sm font-bold uppercase tracking-wider text-slate-200">
                     Eerstejaars Target
@@ -361,13 +363,13 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
 
                 <div className="p-10 rounded-3xl bg-slate-900/60 border border-slate-800 hover:border-amber-400/40 transition-all space-y-3">
                   <div className="text-4xl sm:text-5xl font-extrabold text-amber-300 font-mono tracking-normal">
-                    € 82M
+                    <PrivateAmount value="€ 82M" />
                   </div>
                   <div className="text-sm font-bold uppercase tracking-wider text-slate-200">
                     Beoogde Waardering
                   </div>
                   <p className="text-sm text-slate-400 leading-relaxed">
-                    Marktwaarde bij London Stock Exchange Main Market IPO medio 2027 op basis van 4,0x Price to Sales ratio.
+                    Beoogde marktwaarde bij beursintroductie op basis van 4,0x Price to Sales ratio.
                   </p>
                 </div>
               </div>
@@ -393,7 +395,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                   <div className="p-8 sm:p-10 rounded-2xl bg-black/40 border border-white/5 space-y-3">
                     <div className="text-base font-bold text-white">Voorspelbare Rendementen</div>
                     <p className="text-sm text-slate-400 leading-relaxed">
-                      Elk actief lid activeert een gestandaardiseerde Viercomponentenmotor van exact € 2.625 bruto per maand.
+                      Elk actief lid activeert een gestandaardiseerde Viercomponentenmotor van exact <PrivateAmount value="€ 2.625" /> bruto per maand.
                     </p>
                   </div>
                   <div className="p-8 sm:p-10 rounded-2xl bg-black/40 border border-white/5 space-y-3">
@@ -650,7 +652,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                   De Viercomponentenmotor: Gestandaardiseerde Waardecreatie
                 </h2>
                 <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
-                  Eén geactiveerd lid staat gelijk aan een gestandaardiseerde wiskundige output motor van exact € 2.625 bruto per maand.
+                  Eén geactiveerd lid staat gelijk aan een gestandaardiseerde wiskundige output motor van exact <PrivateAmount value="€ 2.625" /> bruto per maand.
                 </p>
               </div>
 
@@ -666,7 +668,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                     </div>
                     <div className="text-base font-bold text-white">{comp.naam}</div>
                     <div className="text-3xl font-extrabold text-amber-400 font-mono tracking-normal">
-                      € {comp.bedrag}
+                      <PrivateAmount value={`€ ${comp.bedrag}`} />
                     </div>
                     <p className="text-sm text-slate-400 leading-relaxed pt-2">
                       {comp.omschrijving}
@@ -687,7 +689,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                   </div>
                 </div>
                 <div className="text-3xl sm:text-4xl font-extrabold font-mono text-amber-300">
-                  € 2.625 / maand
+                  <PrivateAmount value="€ 2.625 / maand" />
                 </div>
               </div>
 
@@ -704,7 +706,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                     </p>
                   </div>
                   <div className="text-xs font-mono text-amber-300 bg-black/40 px-4 py-2.5 rounded-xl border border-amber-400/30 shrink-0 self-start sm:self-auto font-semibold">
-                    € 204.750 per lid op jaarbasis
+                    <PrivateAmount value="€ 204.750 per lid op jaarbasis" />
                   </div>
                 </div>
 
@@ -766,17 +768,17 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                   <div className="p-8 sm:p-10 rounded-2xl bg-black/40 border border-white/5 space-y-2">
                     <div className="text-xs uppercase text-slate-400 font-semibold">Geconsolideerde Omzet</div>
                     <div className="text-2xl sm:text-3xl font-bold font-mono text-emerald-400">
-                      € {Math.round(consolidatedRevenue).toLocaleString('nl')}
+                      <PrivateAmount value={`€ ${Math.round(consolidatedRevenue).toLocaleString('nl')}`} />
                     </div>
                     <div className="text-xs text-slate-400 pt-1">
-                      Basis voor beurswaardering
+                      Basis voor waardering
                     </div>
                   </div>
 
                   <div className="p-8 sm:p-10 rounded-2xl bg-black/40 border border-white/5 space-y-2">
                     <div className="text-xs uppercase text-slate-400 font-semibold">Waardering (4,0x P/S)</div>
                     <div className="text-2xl sm:text-3xl font-bold font-mono text-amber-300">
-                      € {Math.round(valuation).toLocaleString('nl')}
+                      <PrivateAmount value={`€ ${Math.round(valuation).toLocaleString('nl')}`} />
                     </div>
                     <div className="text-xs text-slate-400 pt-1">
                       Marktkapitalisatie
@@ -786,7 +788,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                   <div className="p-8 sm:p-10 rounded-2xl bg-black/40 border border-white/5 space-y-2">
                     <div className="text-xs uppercase text-slate-400 font-semibold">Koers per Aandeel</div>
                     <div className="text-2xl sm:text-3xl font-bold font-mono text-amber-400">
-                      € {pricePerShare.toFixed(2)}
+                      <PrivateAmount value={`€ ${pricePerShare.toFixed(2)}`} />
                     </div>
                     <div className="text-xs text-slate-400 pt-1">
                       Op 10.000.000 aandelen
@@ -797,15 +799,15 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
             </div>
           )}
 
-          {/* HOOFDSTUK 6: SCHAALBAARHEID 2026 TOT 2029 */}
+          {/* HOOFDSTUK 6: SCHAALBAARHEID */}
           {activeTab === 'projections' && (
             <div className="space-y-10">
               <div className="text-center max-w-2xl mx-auto space-y-2 pb-2">
                 <h2 className="text-2xl sm:text-3xl font-bold text-white">
-                  Schaalbaarheid: Driejarige Groeiprojecties (2026 tot 2029)
+                  Schaalbaarheid: Driejarige Groeiprojecties
                 </h2>
                 <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
-                  Gestructureerde capaciteitsschaling richting een jaaromzet van € 1,87 miljard.
+                  Gestructureerde capaciteitsschaling richting een jaaromzet van <PrivateAmount value="€ 1,87 miljard" />.
                 </p>
               </div>
 
@@ -826,7 +828,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                       </div>
                       <h3 className="text-lg font-bold text-white mb-2">{proj.titel}</h3>
                       <div className="text-3xl sm:text-4xl font-extrabold font-mono text-emerald-400 mb-6 tracking-normal">
-                        {proj.omzetLabel}
+                        {mask(proj.omzetLabel)}
                       </div>
 
                       <div className="space-y-3 py-5 border-y border-white/10 text-sm text-slate-200 font-mono">
@@ -841,7 +843,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                       </div>
 
                       <p className="text-sm text-slate-300 leading-relaxed pt-5">
-                        {proj.toelichting}
+                        {mask(proj.toelichting)}
                       </p>
                     </div>
                   </div>
@@ -869,7 +871,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                   <div className="p-8 sm:p-10 rounded-2xl bg-black/40 border border-white/5 space-y-2">
                     <div className="text-emerald-400 font-bold text-base">Margerobustheid</div>
                     <p className="text-slate-400 leading-relaxed">
-                      Vaste brutomarges van € 2.625 per lid borgen winstgevendheid vanaf dag 1 van elke nieuwe inschrijving.
+                      Vaste brutomarges van <PrivateAmount value="€ 2.625" /> per lid borgen winstgevendheid vanaf dag 1 van elke nieuwe inschrijving.
                     </p>
                   </div>
                 </div>
@@ -885,7 +887,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                   De Infinite Loop van Kapitaalrotatie en Time Gap Cashflow
                 </h2>
                 <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
-                  Gesloten cyclusvolume van € 66.000 per 99 leden; maximale Velocity of Money zonder extern schuldrisico.
+                  Gesloten cyclusvolume van <PrivateAmount value="€ 66.000" /> per 99 leden; maximale Velocity of Money zonder extern schuldrisico.
                 </p>
               </div>
 
@@ -905,7 +907,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                         {step.entiteiten}
                       </div>
                       <p className="text-sm text-slate-300 leading-relaxed">
-                        {step.mechanisme}
+                        {mask(step.mechanisme)}
                       </p>
                     </div>
                   </div>
@@ -964,7 +966,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
             </div>
           )}
 
-          {/* HOOFDSTUK 8: LSE BEURSGANG & CAP TABLE */}
+          {/* HOOFDSTUK 8: BEURSGANG & CAP TABLE */}
           {activeTab === 'ipoRoadmap' && (
             <div className="space-y-10">
               <div className="text-center max-w-2xl mx-auto space-y-2 pb-2">
@@ -972,7 +974,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                   {ipoHorizonData.waarderingTitel}
                 </h2>
                 <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
-                  Marsroute naar de London Stock Exchange Main Market IPO medio 2027.
+                  Gedisciplineerde marsroute naar de beursintroductie.
                 </p>
               </div>
 
@@ -987,7 +989,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                     <div className="flex justify-between items-center py-3 border-b border-white/10">
                       <span className="text-slate-400">Target Jaar 1 Omzet:</span>
                       <span className="font-mono font-bold text-white">
-                        {ipoHorizonData.omzetDoelJaar1Label}
+                        {mask(ipoHorizonData.omzetDoelJaar1Label)}
                       </span>
                     </div>
                     <div className="flex justify-between items-center py-3 border-b border-white/10">
@@ -999,13 +1001,13 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                     <div className="flex justify-between items-center py-3 border-b border-white/10">
                       <span className="text-slate-400">Beoogde Beurswaardering:</span>
                       <span className="font-mono font-extrabold text-amber-400 text-xl">
-                        {ipoHorizonData.beurswaarderingLabel}
+                        {mask(ipoHorizonData.beurswaarderingLabel)}
                       </span>
                     </div>
                     <div className="flex justify-between items-center py-3">
                       <span className="text-slate-400">Introductieprijs per aandeel:</span>
                       <span className="font-mono font-bold text-white">
-                        {ipoHorizonData.uitgifteprijsPerAandeel} ({ipoHorizonData.aandelenLabel})
+                        {mask(ipoHorizonData.uitgifteprijsPerAandeel)} ({ipoHorizonData.aandelenLabel})
                       </span>
                     </div>
                   </div>
@@ -1031,7 +1033,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                             {item.percentage}%
                           </span>
                         </div>
-                        <p className="text-sm text-slate-300 leading-relaxed">{item.rechten}</p>
+                        <p className="text-sm text-slate-300 leading-relaxed">{mask(item.rechten)}</p>
                       </div>
                     ))}
                   </div>
@@ -1041,7 +1043,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
               {/* Vier Treden Marsroute */}
               <div className="space-y-6">
                 <div className="text-sm font-bold text-white uppercase tracking-wider">
-                  Gedisciplineerde Marsroute naar de Beurs (2026 tot 2027)
+                  Gedisciplineerde Marsroute naar de Beurs
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {beursgangRoadmap.map((step) => (
@@ -1051,20 +1053,20 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                     >
                       <div>
                         <div className="text-xs font-mono font-bold text-amber-400">
-                          {step.periode}
+                          {mask(step.periode)}
                         </div>
                         <div className="text-base font-bold text-white mt-1.5 mb-1">
-                          {step.titel}
+                          {mask(step.titel)}
                         </div>
                         <p className="text-sm text-slate-300 leading-relaxed mb-4">
-                          {step.beschrijving}
+                          {mask(step.beschrijving)}
                         </p>
                       </div>
                       <div className="space-y-2 pt-4 border-t border-white/10">
                         {step.mijlpalen.map((m) => (
                           <div key={m} className="flex items-start gap-2.5 text-xs text-slate-300">
                             <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                            <span>{m}</span>
+                            <span>{mask(m)}</span>
                           </div>
                         ))}
                       </div>
@@ -1080,10 +1082,10 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
             <div className="space-y-10">
               <div className="text-center max-w-2xl mx-auto space-y-2 pb-2">
                 <h2 className="text-2xl sm:text-3xl font-bold text-white">
-                  Strategische Kapitaalallocatie: Fysieke Inzet van € 22 Miljoen
+                  Strategische Kapitaalallocatie: Fysieke Inzet van <PrivateAmount value="€ 22 Miljoen" />
                 </h2>
                 <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
-                  Totaal netto beurskapitaal gerealiseerd via de 30% Free Float uitgifte op LSE Main Market.
+                  Totaal netto beurskapitaal gerealiseerd via de 30% Free Float uitgifte.
                 </p>
               </div>
 
@@ -1098,7 +1100,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                         {item.percentage}%
                       </div>
                       <div className="text-sm font-mono font-bold text-slate-200 mt-1.5 mb-2">
-                        {item.bedrag}
+                        {mask(item.bedrag)}
                       </div>
                       <div className="text-base font-bold text-white mb-2">{item.categorie}</div>
                       <p className="text-sm text-slate-300 leading-relaxed">
@@ -1106,7 +1108,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                       </p>
                     </div>
                     <div className="pt-4 border-t border-white/10 text-xs text-slate-400 leading-relaxed">
-                      {item.toelichting}
+                      {mask(item.toelichting)}
                     </div>
                   </div>
                 ))}
@@ -1191,14 +1193,14 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                           {pijler.ondertitel}
                         </div>
                         <p className="text-sm text-slate-300 leading-relaxed mb-4">
-                          {pijler.inhoud}
+                          {mask(pijler.inhoud)}
                         </p>
                       </div>
                       <div className="space-y-2.5 pt-4 border-t border-white/10">
                         {pijler.garanties.map((g) => (
                           <div key={g} className="flex items-start gap-2.5 text-xs text-slate-300">
                             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                            <span>{g}</span>
+                            <span>{mask(g)}</span>
                           </div>
                         ))}
                       </div>
@@ -1263,7 +1265,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
             </div>
             <div>
               <div className="text-base font-bold text-white">QuantumInitium Ltd</div>
-              <div className="text-xs text-slate-400">LSE Main Market Prospectus Dossier</div>
+              <div className="text-xs text-slate-400">Institutioneel Dossier</div>
             </div>
           </div>
           {onClose && (

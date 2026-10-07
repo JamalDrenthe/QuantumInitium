@@ -160,7 +160,7 @@ export const DEMO_ADMIN: AuthUser = {
   sharesOwned: 450000,
   purchasePrice: 2.50,
   currentPrice: SHARE_PRICE_CURRENT,
-  certificateId: 'QI ADM 0001 LSE',
+  certificateId: 'QI ADM 0001',
   joinDate: '1 september 2024',
   walletAddress: '0x10A...99FF',
   title: 'Managing Director & Systeembeheer',

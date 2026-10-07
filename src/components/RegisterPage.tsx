@@ -275,7 +275,7 @@ export default function RegisterPage({
                 className="mt-0.5 rounded border-slate-700 text-amber-400 focus:ring-amber-400 cursor-pointer"
               />
               <span>
-                Ik verklaar kennis te hebben genomen van het LSE Prospectus en de juridische brandmuurisolatie tussen de 5 subholdings.
+                Ik verklaar kennis te hebben genomen van het Investeerdersdossier en de juridische brandmuurisolatie tussen de 5 subholdings.
               </span>
             </label>
 

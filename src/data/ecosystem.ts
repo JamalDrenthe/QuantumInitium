@@ -15,14 +15,14 @@ export const ecosystemData: Record<string, NodeData> = {
         shape: 'octahedron',
         color: '#ffd700',
         type: 'Moederholding',
-        compliance: 'UK Substance, UK GAAP, IFRS en LSE Main Market gereedheid'
+        compliance: 'UK Substance, UK GAAP, IFRS en beursgereedheid'
       }
     ],
     color: '#ffd700',
     accent: 'rgba(212, 175, 55, 0.4)',
     pos: [0, 3.2, 0],
     corporateDetails: {
-      focus: 'Overkoepelend toezicht, M&A strategie, kapitaalallocatie en LSE beursnotering',
+      focus: 'Overkoepelend toezicht, M&A strategie, kapitaalallocatie en beursnotering',
       model: 'Holdingstructuur, geconsolideerde deelnemingen en dividendinkomsten',
       substance: 'Fysiek hoofdkantoor Londen, minimaal 2 UK bestuurders, 3 deskundige RvC commissarissen',
       firewalling: '100% juridische en financiële scheiding van operationele risicos per dochtermaatschappij'

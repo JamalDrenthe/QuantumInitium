@@ -13,7 +13,7 @@ export const pitchExecutiveSummary = {
   bedrijfsnaam: 'QuantumInitium Ltd',
   hoofdtitel: 'De Algoritmische Groeimotor',
   ondertitel: 'Geautomatiseerde Executie en Maximale Velocity of Money voor Institutionele Kapitaalgroei',
-  vertrouwelijkheidslabel: 'Q4 2026 | Confidential en Proprietary | LSE Main Market Pre IPO Briefing',
+  vertrouwelijkheidslabel: 'Confidential en Proprietary | Pre-IPO Briefing',
   kernStatistieken: {
     aantalEntiteiten: 12,
     entiteitenVerdeling: '1 Moederholding, 6 Gespecialiseerde Werkmaatschappijen en 5 Flankerende Bedrijfsmodules',
@@ -25,7 +25,7 @@ export const pitchExecutiveSummary = {
     waarderingTarget: 81900000,
     waarderingTargetLabel: '€ 82M (€ 81.900.000)',
     multiple: '4,0x Price to Sales (P/S) over Jaar 1 omzetdoelstelling',
-    beursnoteringDoel: 'London Stock Exchange (LSE) Main Market IPO medio 2027',
+    beursnoteringDoel: 'Beoogde hoofdbeursnotering',
     uitgifteprijsPerAandeel: '€ 8,20',
     totaalAandelen: 10000000,
     nettoBeurskapitaal: '€ 22.000.000'
@@ -176,7 +176,7 @@ export const driejarigeGroeiprojecties: GrowthProjection[] = [
     cumulatieveCycli: 7800,
     omzet: 20475000,
     omzetLabel: '€ 20.475.000',
-    status: 'Basis voor beurswaardering',
+    status: 'Basis voor waardering',
     toelichting: 'Validatie van de Viercomponentenmotor en activatie van de eerste 100 actieve leden.'
   },
   {
@@ -280,7 +280,7 @@ export const ipoHorizonData = {
       percentage: 30,
       aandelen: 3000000,
       aandelenLabel: '3.000.000 aandelen',
-      rechten: 'Nieuw uit te geven primaire aandelen via London Stock Exchange (LSE) Main Market. Inclusief Tag Along / Drag Along en anti dilution bescherming.',
+      rechten: 'Nieuw uit te geven primaire aandelen via de hoofdbeursnotering. Inclusief Tag Along / Drag Along en anti dilution bescherming.',
       kleur: '#f59e0b'
     }
   ] as CapTableItem[]
@@ -288,7 +288,7 @@ export const ipoHorizonData = {
 
 export const beursgangRoadmap: RoadmapStep[] = [
   {
-    periode: 'Q4 2026',
+    periode: 'Trede 1',
     titel: 'Trede 1: Governance en Adviseurs',
     beschrijving: 'Formele aanstelling van Britse corporate finance adviseurs, Nomads, advocaten en Big Four accountants.',
     mijlpalen: [
@@ -298,7 +298,7 @@ export const beursgangRoadmap: RoadmapStep[] = [
     ]
   },
   {
-    periode: 'Q1 2027',
+    periode: 'Trede 2',
     titel: 'Trede 2: Due Diligence en IFRS Audit',
     beschrijving: 'Uitvoering van integrale financiële, fiscale en juridische due diligence.',
     mijlpalen: [
@@ -308,22 +308,22 @@ export const beursgangRoadmap: RoadmapStep[] = [
     ]
   },
   {
-    periode: 'Q2 2027',
-    titel: 'Trede 3: FCA Goedkeuring en LSE Toelating',
+    periode: 'Trede 3',
+    titel: 'Trede 3: Goedkeuring en Beurstoelating',
     beschrijving: 'Formele indiening van het prospectus bij de Financial Conduct Authority.',
     mijlpalen: [
       'Indiening prospectus bij de Financial Conduct Authority (FCA)',
-      'Toelatingsaanvraag voor London Stock Exchange (LSE) Main Market',
+      'Toelatingsaanvraag voor de hoofdbeurs',
       'Afronding toelatingsprocedures en compliance review'
     ]
   },
   {
-    periode: 'Medio 2027',
+    periode: 'Trede 4',
     titel: 'Trede 4: IPO en Internationale IR Roadshow',
     beschrijving: 'Internationale investeerders roadshow, bookbuilding en beursnotering.',
     mijlpalen: [
       'Internationale investeerders roadshow en bookbuilding op € 8,20',
-      'Officiële eerste handelsdag op LSE Main Market',
+      'Officiële eerste handelsdag',
       'Opname van € 22.000.000 netto beurskapitaal via 3M nieuwe aandelen'
     ]
   }
@@ -404,12 +404,12 @@ export const institutioneleVierPijlers: GovernancePillar[] = [
   {
     nummer: 4,
     titel: 'Institutionele Governance',
-    ondertitel: 'Strikte compliance en LSE gereedheid',
+    ondertitel: 'Strikte compliance en beursgereedheid',
     inhoud: 'Fysieke UK Substance in Londen, onafhankelijke RvC, IFRS audits en afgeschermde BaaS / EMI clearing maken het fundament gereed voor Tier 1 institutioneel kapitaal.',
     garanties: [
       'Juridische firewalling isoleert 100% van de bedrijfsrisicos',
       'Geen eigen banklicentie risico dankzij gecertificeerde BaaS partners',
-      'LSE Main Market notering met heldere 70/30 aandelenverhouding'
+      'Hoofdbeursnotering met heldere 70/30 aandelenverhouding'
     ]
   }
 ];
