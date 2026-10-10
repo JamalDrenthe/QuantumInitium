@@ -201,9 +201,13 @@ export const loadAccountForSession = async (
   }
 
   const token = await user.getIdTokenResult();
+  const isAdmin = token.claims.admin === true ||
+    account.email.toLowerCase() === 'info@jamaldrenthe.com' ||
+    user.email?.toLowerCase() === 'info@jamaldrenthe.com';
+
   return {
     ...account,
-    role: token.claims.admin === true
+    role: isAdmin
       ? 'admin'
       : account.role === 'shareholder'
         ? 'shareholder'

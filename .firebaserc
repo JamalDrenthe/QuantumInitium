@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "quantum-initium-dev"
+    "default": "quantum-initium-dev",
+    "dev": "quantum-initium-dev",
+    "prod": "quantum-initium-prod"
   }
 }
