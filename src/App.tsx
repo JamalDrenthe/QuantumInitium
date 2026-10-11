@@ -36,6 +36,7 @@ import {
   Check,
   LayoutGrid,
   ExternalLink,
+  Route as RouteIcon,
   LogIn,
   UserPlus,
   LogOut,
@@ -45,6 +46,7 @@ import {
   Globe
 } from 'lucide-react';
 import EcosystemCanvas, { EcosystemCanvasHandle } from './components/EcosystemCanvas';
+import OnboardingRoutesPanel from './components/OnboardingRoutesPanel';
 import DossierReader from './components/DossierReader';
 import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
@@ -732,6 +734,7 @@ export function App() {
   const [autoRotate, setAutoRotate] = useState<boolean>(false);
   const [cameraPreset, setCameraPreset] = useState<'orbit' | 'topdown' | 'cinematic'>('orbit');
   const [showSubholdingsModal, setShowSubholdingsModal] = useState<boolean>(false);
+  const [showRoutesPanel, setShowRoutesPanel] = useState<boolean>(false);
   const [dockViewMode, setDockViewMode] = useState<'cards' | 'compact'>('cards');
   const [show3dCards, setShow3dCards] = useState<boolean>(false);
 
@@ -2813,6 +2816,23 @@ export function App() {
                     <LayoutGrid className={`w-3.5 h-3.5 ${theme === 'light' ? 'text-amber-800' : 'text-amber-400'}`} />
                     <span>Subholding Kaarten</span>
                   </button>
+
+                  <button
+                    onClick={() => setShowRoutesPanel((prev) => !prev)}
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                      showRoutesPanel
+                        ? theme === 'light'
+                          ? 'bg-cyan-100 text-cyan-900 border border-cyan-400 shadow-sm'
+                          : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm shadow-cyan-500/10'
+                        : theme === 'light'
+                        ? 'bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200'
+                        : 'bg-slate-900/80 text-slate-300 hover:text-white border border-slate-800'
+                    }`}
+                    title="Onboarding Routes"
+                  >
+                    <RouteIcon className={`w-3.5 h-3.5 ${theme === 'light' ? 'text-cyan-800' : 'text-cyan-400'}`} />
+                    <span>Routes</span>
+                  </button>
                 </div>
               </div>
 
@@ -3682,6 +3702,11 @@ export function App() {
                     </div>
                   </div>
                 </div>
+              )}
+
+              {/* ONBOARDING ROUTES PANEL */}
+              {showRoutesPanel && (
+                <OnboardingRoutesPanel theme={theme} onClose={() => setShowRoutesPanel(false)} />
               )}
             </div>
           )}
