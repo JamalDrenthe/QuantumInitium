@@ -55,6 +55,17 @@ export const ecosystemData: Record<string, NodeData> = {
         financialContribution: 'Verdeelt en activeert de maandelijkse € 2.625 cycli per actief lid',
         synergyWith: 'Spontiva Ltd, VVC Ltd, Xabi World Ltd',
         synergyEffect: 'Activeert autonome kasstroomtriggers, directe clearing koppeling en automatische intake van geverifieerd talent'
+      },
+      {
+        name: 'Spontiva Ltd',
+        role: 'Fintech Motor en Time Gap Cashflow (TGC)',
+        desc: 'Aangestuurd door Investbotiq. Activeert kasstromen en Working Capital Optimization (WCO) door het tijdsverschil tussen ontvangst (T=0) en verplichting (T=1) prudentieel productief te maken.',
+        shape: 'pyramid',
+        color: '#22d3ee',
+        type: 'Werkmaatschappij',
+        financialContribution: 'Optimaliseert werkkapitaal (OPM) voor directe herinvestering in assets',
+        synergyWith: 'WoningVry Ltd, Boostplug Ltd, Investbotiq Ltd, DJOBBA Ltd',
+        synergyEffect: 'Directe liquiditeitsallocatie, IT detacheringskasstroom absorptie en werkkapitaal financiering aangestuurd door de AI engine'
       }
     ],
     color: '#00f0ff',
@@ -158,7 +169,7 @@ export const ecosystemData: Record<string, NodeData> = {
     objectName: 'Node_Compute',
     title: 'Compute en Media Holdco',
     subTitle: 'Compute Cloud en Digitale Distributie',
-    desc: 'Infrastructuur voor veeleisende compute workloads, GPU clusters en Time Gap Cashflow monetarisering.',
+    desc: 'Infrastructuur voor veeleisende compute workloads en GPU clusters.',
     entities: [
       {
         name: 'Boostplug Ltd',
@@ -180,25 +191,14 @@ export const ecosystemData: Record<string, NodeData> = {
         type: 'Flankerende Module',
         synergyWith: 'Boostplug Ltd',
         synergyEffect: 'Directe monetarisering van overtollige GPU capaciteit zonder externe tussenpersonen'
-      },
-      {
-        name: 'Spontiva Ltd',
-        role: 'Fintech Motor en Time Gap Cashflow (TGC)',
-        desc: 'Aangestuurd door Investbotiq. Activeert kasstromen en Working Capital Optimization (WCO) door het tijdsverschil tussen ontvangst (T=0) en verplichting (T=1) prudentieel productief te maken.',
-        shape: 'pyramid',
-        color: '#e879f9',
-        type: 'Werkmaatschappij',
-        financialContribution: 'Optimaliseert werkkapitaal (OPM) voor directe herinvestering in assets',
-        synergyWith: 'WoningVry Ltd, Boostplug Ltd, Investbotiq Ltd, DJOBBA Ltd',
-        synergyEffect: 'Directe liquiditeitsallocatie, IT detacheringskasstroom absorptie en werkkapitaal financiering aangestuurd door de AI engine'
       }
     ],
     color: '#a855f7',
     accent: 'rgba(168, 85, 247, 0.35)',
     pos: [10.5, 0.5, 4.5],
     corporateDetails: {
-      focus: 'High performance servers, GPU clusters, data monetarisering en Time Gap Cashflow',
-      model: 'Capaciteitsvergoedingen, mining output, hosting fees en Time Gap liquiditeit',
+      focus: 'High performance servers, GPU clusters en data monetarisering',
+      model: 'Capaciteitsvergoedingen, mining output en hosting fees',
       governance: 'Prudentieel afgeschermde escrow van vooruitontvangen gelden'
     }
   },
