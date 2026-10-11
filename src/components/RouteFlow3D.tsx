@@ -178,9 +178,15 @@ const RouteFlow3D: React.FC<RouteFlow3DProps> = ({ graph, theme = 'dark' }) => {
     observer.observe(mount);
 
     let raf = 0;
+    let visible = true;
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+    }, { rootMargin: '100px' });
+    io.observe(mount);
     const start = performance.now();
     const animate = () => {
       raf = requestAnimationFrame(animate);
+      if (!visible) return;
       const t = (performance.now() - start) / 1000;
       root.rotation.y = t * 0.14;
       pulses.forEach((p) => {
@@ -194,9 +200,16 @@ const RouteFlow3D: React.FC<RouteFlow3DProps> = ({ graph, theme = 'dark' }) => {
     return () => {
       cancelAnimationFrame(raf);
       observer.disconnect();
+      io.disconnect();
       mount.removeChild(renderer.domElement);
       scene.traverse((obj) => {
-        if (obj instanceof THREE.Mesh || obj instanceof THREE.Line || obj instanceof THREE.Sprite) {
+        if (obj instanceof THREE.Sprite) {
+          const material = obj.material as THREE.SpriteMaterial;
+          material.map?.dispose();
+          material.dispose();
+          return;
+        }
+        if (obj instanceof THREE.Mesh || obj instanceof THREE.Line) {
           const o = obj as THREE.Mesh;
           o.geometry?.dispose?.();
           const m = (o as THREE.Mesh).material as THREE.Material | THREE.Material[];

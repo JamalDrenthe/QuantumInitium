@@ -2677,7 +2677,7 @@ export function App() {
                 )}
 
                 {/* 3D Camera Controls Toolbar */}
-                <div className={`flex items-center gap-1.5 mt-3 pt-3 border-t ${theme === 'light' ? 'border-sky-100' : 'border-slate-800/80'}`}>
+                <div className={`flex items-center gap-1.5 mt-3 pt-3 border-t overflow-x-auto no-scrollbar max-w-full ${theme === 'light' ? 'border-sky-100' : 'border-slate-800/80'}`}>
                   <button
                     onClick={() => canvasRef.current?.resetView()}
                     className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
