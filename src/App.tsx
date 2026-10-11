@@ -167,12 +167,12 @@ const allEntitiesList: EntityItem[] = [
   },
   {
     name: 'Spontiva Ltd',
-    holdingKey: 'sub4',
-    holdingName: 'Subholding 4: Compute & Media',
-    category: 'compute',
+    holdingKey: 'sub1',
+    holdingName: 'Subholding 1: IP & Tech',
+    category: 'tech',
     type: 'Fintech Cashflow Motor',
     role: 'Working Capital Optimization (WCO) en Time Gap Cashflow structuren.',
-    color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
+    color: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30'
   },
   {
     name: 'WoningVry Ltd',
@@ -225,6 +225,11 @@ const subholdingMatrix: Record<string, SubholdingNode> = {
         name: 'Investbotiq Ltd',
         type: 'AI Executie Engine',
         role: 'IQ Bot & Agent voor autonome kapitaal en orderdistributie.'
+      },
+      {
+        name: 'Spontiva Ltd',
+        type: 'Fintech Cashflow Motor',
+        role: 'Working Capital Optimization (WCO) en Time Gap Cashflow structuren.'
       }
     ]
   },
@@ -267,7 +272,7 @@ const subholdingMatrix: Record<string, SubholdingNode> = {
   },
   sub4: {
     title: 'Compute & Media Subholding',
-    desc: 'Infrastructuur voor high performance GPU AI inferentie, bandbreedte monetarisering, accountverhuur en Time Gap Cashflow.',
+    desc: 'Infrastructuur voor high performance GPU AI inferentie, bandbreedte monetarisering en accountverhuur.',
     entities: [
       {
         name: 'Boostplug Ltd',
@@ -278,11 +283,6 @@ const subholdingMatrix: Record<string, SubholdingNode> = {
         name: 'Logs.rent',
         type: 'Account Marketplace',
         role: 'Geautomatiseerd verhuur en handelsplatform voor compute accounts.'
-      },
-      {
-        name: 'Spontiva Ltd',
-        type: 'Fintech Cashflow Motor',
-        role: 'Working Capital Optimization (WCO) en Time Gap Cashflow structuren.'
       }
     ]
   },
@@ -400,7 +400,7 @@ export const subholdingCardsData: SubholdingCardData[] = [
     title: 'IP & Tech Holdco',
     subTitle: 'Intellectual Property & Software Portfolio',
     sector: 'AI & Enterprise SaaS',
-    desc: 'Eigenaar en beheerder van alle intellectuele eigendommen, softwarepatenten, AI modellen, CRMos B2B SaaS en de Investbotiq centrale executiemotor.',
+    desc: 'Eigenaar en beheerder van alle intellectuele eigendommen, softwarepatenten, AI modellen, CRMos B2B SaaS, de Investbotiq centrale executiemotor en de Spontiva kasstroommotor.',
     colorHex: '#00f0ff',
     textColor: 'text-cyan-400',
     badgeClass: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30',
@@ -408,8 +408,8 @@ export const subholdingCardsData: SubholdingCardData[] = [
     hoverBorderClass: 'hover:border-cyan-400/60',
     activeClass: 'bg-cyan-500/15 border-cyan-400 ring-2 ring-cyan-400/30 shadow-lg shadow-cyan-500/20 text-cyan-200',
     iconName: 'Cpu',
-    entitiesCount: 2,
-    entityNames: ['CRMos Ltd', 'Investbotiq Ltd'],
+    entitiesCount: 3,
+    entityNames: ['CRMos Ltd', 'Investbotiq Ltd', 'Spontiva Ltd'],
     focus: 'Softwareontwikkeling, intellectueel eigendom en enterprise cloud software',
     firewall: 'Strikte IP licenties, zero operationele schulden besmetting',
     substance: 'UK Ltd met eigen IP beheer en software auteursrechten',
@@ -466,7 +466,7 @@ export const subholdingCardsData: SubholdingCardData[] = [
     title: 'Compute & Media Holdco',
     subTitle: 'High Performance GPU AI & Stream Monetarisering',
     sector: 'Hardware & Compute Marketplace',
-    desc: 'Infrastructuur voor high performance GPU AI inferentie, hardware mining clusters, streaming bandbreedte, accountverhuur en Time Gap Cashflow.',
+    desc: 'Infrastructuur voor high performance GPU AI inferentie, hardware mining clusters, streaming bandbreedte en accountverhuur.',
     colorHex: '#a855f7',
     textColor: 'text-purple-400',
     badgeClass: 'text-purple-400 bg-purple-500/10 border-purple-500/30',
@@ -474,9 +474,9 @@ export const subholdingCardsData: SubholdingCardData[] = [
     hoverBorderClass: 'hover:border-purple-400/60',
     activeClass: 'bg-purple-500/15 border-purple-400 ring-2 ring-purple-400/30 shadow-lg shadow-purple-500/20 text-purple-200',
     iconName: 'Server',
-    entitiesCount: 3,
-    entityNames: ['Boostplug Ltd', 'Logs.rent', 'Spontiva Ltd'],
-    focus: 'GPU rekenkracht, accountverhuur marketplace en Time Gap Cashflow motor',
+    entitiesCount: 2,
+    entityNames: ['Boostplug Ltd', 'Logs.rent'],
+    focus: 'GPU rekenkracht en accountverhuur marketplace',
     firewall: 'Hardware activa en verhuurcontracten afzonderlijk geborgd per werkmaatschappij',
     substance: 'Eigen fysieke en cloud compute clusters met geregistreerde hardware contracten',
     model: 'Compute verhuur, hash rate commissies en werkkapitaal optimalisatie marges'
@@ -2105,7 +2105,7 @@ export function App() {
                         <Cpu className="w-4 h-4" />
                       </div>
                       <h4 className={`font-bold text-sm ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>IP & Tech</h4>
-                      <div className={`text-[10px] font-mono ${theme === 'light' ? 'text-cyan-700 font-semibold' : 'text-cyan-300'}`}>CRMos Ltd • Investbotiq Ltd</div>
+                      <div className={`text-[10px] font-mono ${theme === 'light' ? 'text-cyan-700 font-semibold' : 'text-cyan-300'}`}>CRMos Ltd • Investbotiq Ltd • Spontiva Ltd</div>
                       <p className={`text-[11px] ${theme === 'light' ? 'text-sky-900/70' : 'text-slate-400'}`}>
                         Centraal beheer van AI modellen, softwarepatenten en B2B SaaS engines.
                       </p>
@@ -2177,9 +2177,9 @@ export function App() {
                         <Server className="w-4 h-4" />
                       </div>
                       <h4 className={`font-bold text-sm ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>Compute & Media</h4>
-                      <div className={`text-[10px] font-mono ${theme === 'light' ? 'text-emerald-700 font-semibold' : 'text-emerald-300'}`}>Boostplug • Logs.rent • Spontiva</div>
+                      <div className={`text-[10px] font-mono ${theme === 'light' ? 'text-emerald-700 font-semibold' : 'text-emerald-300'}`}>Boostplug • Logs.rent</div>
                       <p className={`text-[11px] ${theme === 'light' ? 'text-sky-900/70' : 'text-slate-400'}`}>
-                        GPU rekenkracht, account supply en fintech kasstroommotor.
+                        GPU rekenkracht, account supply en bandbreedte monetarisering.
                       </p>
                     </div>
 
