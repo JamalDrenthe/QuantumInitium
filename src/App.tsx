@@ -579,17 +579,19 @@ export function App() {
           handleLoginSuccess(account);
         }
       } catch {
-        if (oauthIntent === 'register') {
+        if (oauthIntent !== null || identity.email.toLowerCase() === 'info@jamaldrenthe.com') {
           try {
+            const isInfoAdmin = identity.email.toLowerCase() === 'info@jamaldrenthe.com';
             const newUser = buildRegisteredInvestor(
               identity.id,
-              identity.name || identity.email.split('@')[0] || 'Investeerder',
+              identity.name || (isInfoAdmin ? 'Jamal Drenthe (Directie)' : identity.email.split('@')[0] || 'Investeerder'),
               identity.email,
-              2500
+              isInfoAdmin ? 0 : 2500
             );
             await createManagedAccount(newUser, identity.id);
+            const account = await loadAccountForSession(identity);
             if (isMounted) {
-              handleLoginSuccess(newUser);
+              handleLoginSuccess(account);
             }
             return;
           } catch {

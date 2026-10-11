@@ -63,7 +63,7 @@ service cloud.firestore {
         && resource.data.authUserId == request.auth.uid
       );
       allow list: if isAdmin();
-      allow create: if validNewAccount(accountUid);
+      allow create: if isAdmin() || validNewAccount(accountUid);
       allow update: if (
         isAdmin()
         && request.resource.data.authUserId == resource.data.authUserId
