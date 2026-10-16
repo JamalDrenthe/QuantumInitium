@@ -1,7 +1,7 @@
 # Quantum Initium Development
 
 - **Firebase Project ID:** `quantum-initium-dev`
-- **Gekoppeld account:** `info@jamaldrenthe.com`
+- **Beheerdersaccount:** `info@quantuminitium.com` (en `info@jamaldrenthe.com`)
 - **Workspace pad:** `/home/jsdrenthe/antigravity/quantum-initium-dev`
 
 ## Handige Firebase commando's

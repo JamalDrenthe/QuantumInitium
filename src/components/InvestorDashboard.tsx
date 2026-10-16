@@ -1364,29 +1364,33 @@ export default function InvestorDashboard({
       )}
 
       {/* TICKER MET LIVE MARKTSTATUS VAN HET INTERNE AANDEEL */}
-      <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+      <div className={`p-3.5 rounded-2xl border flex flex-wrap items-center justify-between gap-3 text-xs font-mono shadow-md ${
+        theme === 'light'
+          ? 'glass-panel-luxe border-sky-200/80 text-sky-950'
+          : 'glass-panel-luxe border-slate-800/80 text-slate-200'
+      }`}>
         <div className="flex items-center gap-4 flex-wrap">
-          <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
+          <div className="flex items-center gap-1.5 text-emerald-400 font-bold px-2 py-0.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
             <span>INTERNE BEURS: OPEN</span>
           </div>
-          <div className="text-slate-400">
-            Ticker: <strong className="text-white">QI.NL</strong>
+          <div className={theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}>
+            Ticker: <strong className={theme === 'light' ? 'text-sky-950 font-bold' : 'text-white'}>QI.NL</strong>
           </div>
-          <div className="text-slate-400">
-            Laatste Koers: <strong className="text-cyan-300 font-bold">€{SHARE_PRICE_CURRENT.toFixed(2)}</strong>
+          <div className={theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}>
+            Laatste Koers: <strong className="text-cyan-400 font-bold font-mono">€{SHARE_PRICE_CURRENT.toFixed(2)}</strong>
           </div>
-          <div className="text-slate-400">
-            24u Verandering: <strong className="text-emerald-400 font-bold">+2,5%</strong>
+          <div className={theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}>
+            24u Verandering: <strong className="text-emerald-400 font-bold font-mono">+2,5%</strong>
           </div>
-          <div className="text-slate-400">
-            Dagvolume: <strong className="text-amber-300">142.500 aandelen</strong>
+          <div className={theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}>
+            Dagvolume: <strong className="text-amber-400 font-bold font-mono">142.500 aandelen</strong>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 text-slate-400">
-          <span>Beschikbaar Werkkapitaal:</span>
-          <span className="text-emerald-300 font-bold font-mono">
+        <div className="flex items-center gap-2">
+          <span className={theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}>Beschikbaar Werkkapitaal:</span>
+          <span className="text-emerald-400 font-bold font-mono px-2 py-0.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
             €{cashBalance.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
         </div>
@@ -1400,104 +1404,110 @@ export default function InvestorDashboard({
           {/* HOOFD STATISTIEKEN GRID: AANDELEN, KOERS, WAARDE ETC. */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Kaart 1: Aantal aandelen in bezit */}
-            <div className="glass-panel p-5 rounded-2xl border border-slate-800 space-y-2 relative overflow-hidden">
+            <div className="stat-card-luxe card-ambient-top-gold p-5 rounded-2xl space-y-2 relative overflow-hidden group">
               <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-                <span>Aantal Aandelen in Bezit</span>
-                <Award className="w-4 h-4 text-amber-400" />
+                <span className={theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}>Aantal Aandelen in Bezit</span>
+                <Award className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
               </div>
-              <div className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
+              <div className="text-2xl sm:text-3xl font-extrabold gold-gradient-text font-mono tracking-tight">
                 {currentUser.sharesOwned.toLocaleString('nl-NL')}
               </div>
-              <div className="text-[11px] text-slate-400 flex items-center justify-between">
+              <div className="text-[11px] flex items-center justify-between">
                 <span className="text-amber-400 font-semibold font-mono">Serie A Tranche</span>
-                <span className="text-slate-500 font-mono">{ownershipPercentage.toFixed(4)}% van totaal</span>
+                <span className="text-slate-400 font-mono">{ownershipPercentage.toFixed(4)}% van totaal</span>
               </div>
             </div>
 
             {/* Kaart 2: De actuele koers van het aandeel */}
-            <div className="glass-panel p-5 rounded-2xl border border-slate-800 space-y-2 relative overflow-hidden">
+            <div className="stat-card-luxe card-ambient-top-cyan p-5 rounded-2xl space-y-2 relative overflow-hidden group">
               <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-                <span>Koers van het Aandeel</span>
-                <TrendingUp className="w-4 h-4 text-cyan-400" />
+                <span className={theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}>Koers van het Aandeel</span>
+                <TrendingUp className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform" />
               </div>
-              <div className="text-2xl sm:text-3xl font-extrabold text-cyan-300 font-mono">
+              <div className="text-2xl sm:text-3xl font-extrabold cyan-gradient-text font-mono tracking-tight">
                 €{SHARE_PRICE_CURRENT.toFixed(2)}
               </div>
               <div className="text-[11px] text-slate-400 flex items-center gap-1">
                 <span className="text-emerald-400 font-semibold font-mono">+28,1%</span>
-                <span>sinds nominale uitgifte</span>
+                <span className={theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}>sinds nominale uitgifte</span>
               </div>
             </div>
 
             {/* Kaart 3: Totale actuele waarde van uw aandeel */}
-            <div className="glass-panel p-5 rounded-2xl border border-slate-800 space-y-2 relative overflow-hidden">
+            <div className="stat-card-luxe card-ambient-top-emerald p-5 rounded-2xl space-y-2 relative overflow-hidden group">
               <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-                <span>Totale Portefeuillewaarde</span>
-                <Wallet className="w-4 h-4 text-emerald-400" />
+                <span className={theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}>Totale Portefeuillewaarde</span>
+                <Wallet className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
               </div>
-              <div className="text-2xl sm:text-3xl font-extrabold text-emerald-300 font-mono">
+              <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono tracking-tight">
                 €{currentTotalValue.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
               <div className="text-[11px] text-slate-400 flex items-center gap-1">
                 <span className="text-emerald-400 font-semibold font-mono">
                   +€{unrealizedProfit.toLocaleString('nl-NL', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                 </span>
-                <span>ongerealiseerde winst</span>
+                <span className={theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}>ongerealiseerde winst</span>
               </div>
             </div>
 
             {/* Kaart 4: Beoogde IPO Waarde */}
-            <div className="glass-panel p-5 rounded-2xl border border-slate-800 space-y-2 relative overflow-hidden">
+            <div className="stat-card-luxe card-ambient-top-purple p-5 rounded-2xl space-y-2 relative overflow-hidden group">
               <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-                <span>Beoogde IPO Waarde</span>
-                <Sparkles className="w-4 h-4 text-purple-400" />
+                <span className={theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}>Beoogde IPO Waarde</span>
+                <Sparkles className="w-4 h-4 text-purple-400 group-hover:scale-110 transition-transform" />
               </div>
-              <div className="text-2xl sm:text-3xl font-extrabold text-purple-300 font-mono">
+              <div className="text-2xl sm:text-3xl font-extrabold text-purple-300 font-mono tracking-tight">
                 €{targetIpoValue.toLocaleString('nl-NL', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
               </div>
               <div className="text-[11px] text-slate-400 flex items-center gap-1">
                 <span className="text-purple-400 font-semibold font-mono">€{SHARE_PRICE_IPO_TARGET.toFixed(2)} per aandeel</span>
-                <span>bij beursgang</span>
+                <span className={theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}>bij beursgang</span>
               </div>
             </div>
           </div>
 
           {/* EXTRA STATISTIEKEN BALK */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
+            <div className="stat-card-luxe p-4 rounded-xl flex items-center justify-between">
               <div>
-                <span className="text-[11px] text-slate-400 font-mono uppercase block">Jaarlijks Dividend (7,4%)</span>
-                <span className="text-xl font-bold font-mono text-cyan-300">
+                <span className={`text-[11px] font-mono uppercase block ${theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}`}>
+                  Jaarlijks Dividend (7,4%)
+                </span>
+                <span className="text-xl font-bold font-mono text-cyan-400">
                   €{annualDividend.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / jr
                 </span>
               </div>
               <div className="text-right">
-                <span className="text-[10px] text-slate-500 font-mono block">Maandelijks</span>
+                <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/60' : 'text-slate-500'}`}>Maandelijks</span>
                 <span className="text-xs font-mono text-cyan-400 font-bold">
                   €{monthlyDividend.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
+            <div className="stat-card-luxe p-4 rounded-xl flex items-center justify-between">
               <div>
-                <span className="text-[11px] text-slate-400 font-mono uppercase block">Gemiddelde Aankoopprijs</span>
-                <span className="text-xl font-bold font-mono text-amber-300">
+                <span className={`text-[11px] font-mono uppercase block ${theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}`}>
+                  Gemiddelde Aankoopprijs
+                </span>
+                <span className="text-xl font-bold font-mono text-amber-400">
                   €{currentUser.purchasePrice.toFixed(2)} / aandeel
                 </span>
               </div>
               <div className="text-right">
-                <span className="text-[10px] text-slate-500 font-mono block">Rendement tot heden</span>
+                <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/60' : 'text-slate-500'}`}>Rendement tot heden</span>
                 <span className="text-xs font-mono text-emerald-400 font-bold">
                   +{profitPercentage.toFixed(1)}%
                 </span>
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-between">
+            <div className="stat-card-luxe p-4 rounded-xl flex items-center justify-between">
               <div>
-                <span className="text-[11px] text-slate-400 font-mono uppercase block">Beschikbare Liquiditeit</span>
-                <span className="text-xl font-bold font-mono text-emerald-300">
+                <span className={`text-[11px] font-mono uppercase block ${theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}`}>
+                  Beschikbare Liquiditeit
+                </span>
+                <span className="text-xl font-bold font-mono text-emerald-400">
                   €{cashBalance.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>
@@ -1505,7 +1515,7 @@ export default function InvestorDashboard({
                 <button
                   type="button"
                   onClick={() => setInternalView('wallet')}
-                  className="px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition-colors cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold text-xs hover:bg-emerald-400 transition-colors cursor-pointer shadow-sm shadow-emerald-500/20"
                 >
                   Naar Wallet
                 </button>
@@ -1519,48 +1529,48 @@ export default function InvestorDashboard({
               <button
                 type="button"
                 onClick={() => setInternalView('wallet')}
-                className="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-emerald-500/50 text-left transition-all group cursor-pointer"
+                className="stat-card-luxe p-5 rounded-2xl hover:border-emerald-500/50 text-left transition-all group cursor-pointer"
               >
               <div className="flex items-center justify-between mb-3">
                 <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:scale-110 transition-transform">
                   <Wallet className="w-5 h-5" />
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 transition-colors" />
+                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all" />
               </div>
-              <h4 className="text-sm font-bold text-white mb-1">Wallet & Saldo Opladen</h4>
-              <p className="text-xs text-slate-400">Bekijk uw aandelen saldo, stort werkkapitaal of verstuur aandelen.</p>
+              <h4 className={`text-sm font-bold mb-1 ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>Wallet & Saldo Opladen</h4>
+              <p className={`text-xs ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Bekijk uw aandelen saldo, stort werkkapitaal of verstuur aandelen.</p>
               </button>
             )}
 
             <button
               type="button"
               onClick={() => setInternalView('koers')}
-              className="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/50 text-left transition-all group cursor-pointer"
+              className="stat-card-luxe p-5 rounded-2xl hover:border-cyan-500/50 text-left transition-all group cursor-pointer"
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 group-hover:scale-110 transition-transform">
                   <TrendingUp className="w-5 h-5" />
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 transition-colors" />
+                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 group-hover:translate-x-0.5 transition-all" />
               </div>
-              <h4 className="text-sm font-bold text-white mb-1">Koersgrafiek Analyse</h4>
-              <p className="text-xs text-slate-400">Bekijk de historische koers en tranches per uur, dag, week en jaar.</p>
+              <h4 className={`text-sm font-bold mb-1 ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>Koersgrafiek Analyse</h4>
+              <p className={`text-xs ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Bekijk de historische koers en tranches per uur, dag, week en jaar.</p>
             </button>
 
             {canUseInvestorWorkflows && (
               <button
                 type="button"
                 onClick={() => setShowTransferModal(true)}
-                className="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-amber-500/50 text-left transition-all group cursor-pointer"
+                className="stat-card-luxe p-5 rounded-2xl hover:border-amber-500/50 text-left transition-all group cursor-pointer"
               >
               <div className="flex items-center justify-between mb-3">
                 <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 group-hover:scale-110 transition-transform">
                   <Send className="w-5 h-5" />
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
+                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-amber-400 group-hover:translate-x-0.5 transition-all" />
               </div>
-              <h4 className="text-sm font-bold text-white mb-1">Directe Aandelen Transfer</h4>
-              <p className="text-xs text-slate-400">Draag direct aandelen of werkkapitaal over aan een ander account.</p>
+              <h4 className={`text-sm font-bold mb-1 ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>Directe Aandelen Transfer</h4>
+              <p className={`text-xs ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Draag direct aandelen of werkkapitaal over aan een ander account.</p>
               </button>
             )}
           </div>

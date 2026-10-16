@@ -154,7 +154,7 @@ export const DEMO_INVESTOR: AuthUser = {
 export const DEMO_ADMIN: AuthUser = {
   id: 'admin_directie',
   name: 'Directie QuantumInitium',
-  email: 'admin@quantuminitium.com',
+  email: 'info@quantuminitium.com',
   role: 'admin',
   sharesOwned: 450000,
   purchasePrice: 2.50,

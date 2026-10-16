@@ -123,7 +123,7 @@ export default function RegisterPage({
         </div>
 
         {/* Registratie Kaart */}
-        <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-slate-800 shadow-2xl relative overflow-hidden">
+        <div className="glass-panel-luxe p-6 sm:p-8 rounded-3xl border border-white/[0.09] shadow-2xl relative overflow-hidden before:absolute before:inset-x-0 before:top-0 before:h-[2px] before:bg-gradient-to-r before:from-transparent before:via-cyan-400/60 before:to-transparent">
           <div className="absolute top-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 

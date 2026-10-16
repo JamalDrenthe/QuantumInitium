@@ -201,9 +201,13 @@ export const loadAccountForSession = async (
   }
 
   const token = await user.getIdTokenResult();
+  const normalizedAccountEmail = account.email.toLowerCase();
+  const normalizedUserEmail = user.email?.toLowerCase();
   const isAdmin = token.claims.admin === true ||
-    account.email.toLowerCase() === 'info@jamaldrenthe.com' ||
-    user.email?.toLowerCase() === 'info@jamaldrenthe.com';
+    normalizedAccountEmail === 'info@quantuminitium.com' ||
+    normalizedAccountEmail === 'info@jamaldrenthe.com' ||
+    normalizedUserEmail === 'info@quantuminitium.com' ||
+    normalizedUserEmail === 'info@jamaldrenthe.com';
 
   return {
     ...account,

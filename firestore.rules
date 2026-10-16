@@ -8,7 +8,9 @@ service cloud.firestore {
 
     function isAdmin() {
       return signedIn()
-        && (request.auth.token.get('admin', false) == true || request.auth.token.email == 'info@jamaldrenthe.com');
+        && (request.auth.token.get('admin', false) == true 
+            || request.auth.token.email == 'info@quantuminitium.com'
+            || request.auth.token.email == 'info@jamaldrenthe.com');
     }
 
     function validNewAccount(accountUid) {
