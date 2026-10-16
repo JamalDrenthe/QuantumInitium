@@ -1,42 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
   <defs>
-    <!-- Goud Gradiënten met Hoge Contrast en Heldere Definitie op Wit -->
+    <!-- Goud Gradiënten met Hoge Contrast en Glans -->
     <linearGradient id="qiGold" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fbd364" />
-      <stop offset="25%" stop-color="#e8a838" />
-      <stop offset="60%" stop-color="#b87314" />
-      <stop offset="85%" stop-color="#8c530d" />
-      <stop offset="100%" stop-color="#e29e2e" />
+      <stop offset="0%" stop-color="#ffe885" />
+      <stop offset="25%" stop-color="#f5c760" />
+      <stop offset="55%" stop-color="#d9982e" />
+      <stop offset="85%" stop-color="#9a6712" />
+      <stop offset="100%" stop-color="#fcd34d" />
     </linearGradient>
 
     <linearGradient id="qiGoldLight" x1="0%" y1="0%" x2="100%" y2="50%">
-      <stop offset="0%" stop-color="#fff8db" />
-      <stop offset="40%" stop-color="#fbd364" />
-      <stop offset="100%" stop-color="#c67d16" />
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#fde047" />
+      <stop offset="100%" stop-color="#ca8a04" />
     </linearGradient>
 
-    <linearGradient id="qiGoldBorder" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f5c042" />
-      <stop offset="50%" stop-color="#b87314" />
-      <stop offset="100%" stop-color="#f5c042" />
-    </linearGradient>
-
-    <!-- Krachtige Saffierblauwe Gradiënten voor Maximale Contrast op Wit -->
+    <!-- Krachtige Saffierblauwe Gradiënten -->
     <linearGradient id="qiBlueOuter" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="0%" stop-color="#3b82f6" />
       <stop offset="35%" stop-color="#1d4ed8" />
       <stop offset="70%" stop-color="#1e3a8a" />
       <stop offset="100%" stop-color="#0f2042" />
     </linearGradient>
 
     <linearGradient id="qiBarBlue1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="0%" stop-color="#60a5fa" />
       <stop offset="100%" stop-color="#1e40af" />
     </linearGradient>
 
     <linearGradient id="qiBarBlue2" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#60a5fa" />
-      <stop offset="100%" stop-color="#1d4ed8" />
+      <stop offset="0%" stop-color="#93c5fd" />
+      <stop offset="100%" stop-color="#2563eb" />
     </linearGradient>
 
     <!-- Gouden Bol Radiaal Gradiënt -->
@@ -44,24 +38,13 @@
       <stop offset="0%" stop-color="#ffffff" />
       <stop offset="25%" stop-color="#fde047" />
       <stop offset="55%" stop-color="#d97706" />
-      <stop offset="85%" stop-color="#854d0e" />
+      <stop offset="85%" stop-color="#78350f" />
       <stop offset="100%" stop-color="#451a03" />
     </radialGradient>
-
-    <!-- Subtiele Schaduw voor Ruimtelijke Diepte op de Witte Achtergrond -->
-    <filter id="qiDropShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.14" />
-    </filter>
   </defs>
 
-  <!-- Volledig Vlakke Witte Basis Achtergrond -->
-  <rect width="512" height="512" fill="#ffffff" />
-
-  <!-- Subtiele Elegante Goudrand (Luxe FinTech Card Badge) -->
-  <rect x="6" y="6" width="500" height="500" rx="108" fill="#ffffff" stroke="url(#qiGoldBorder)" stroke-width="6" />
-
-  <!-- Quantum Initium Embleem Groep (Gecentreerd op 256, 252) -->
-  <g transform="translate(256, 250) scale(1.4)" filter="url(#qiDropShadow)">
+  <!-- Quantum Initium Embleem Groep (Gecentreerd op 256, 256) - 100% Transparante achtergrond -->
+  <g transform="translate(256, 256) scale(1.65)">
     <!-- Buitenste Blauwe Spiraalring -->
     <circle cx="0" cy="0" r="130" fill="none" stroke="url(#qiBlueOuter)" stroke-width="16" stroke-linecap="round" />
 
