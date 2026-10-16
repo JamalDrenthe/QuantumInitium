@@ -255,13 +255,15 @@ export default function InvestorDashboard({
       id: 'ent_1',
       name: 'QuantumInitium Ltd',
       website: 'https://quantuminitium.com',
+      domain: 'quantuminitium.com',
+      email: 'info@quantuminitium.com',
       holdingKey: 'mother',
       holdingName: 'QuantumInitium Ltd (Moederholding Londen)',
       category: 'holding',
       type: 'Centrale Moederholding & IFRS Governance',
       obligationReason: 'Statutair verplichte aandeelhoudersregistratie, centrale IFRS Cap Table synchronisatie en notariële deponeringen in het Verenigd Koninkrijk.',
       protocol: 'REST API v3 (TLS 1.3)',
-      endpoint: 'https://api.quantuminitium.uk/v3/captable/sync',
+      endpoint: 'https://api.quantuminitium.com/v3/captable/sync',
       status: 'connected',
       lastSync: '1 minuut geleden',
       latency: '11ms',
@@ -274,13 +276,15 @@ export default function InvestorDashboard({
       id: 'ent_2',
       name: 'CRMos Ltd',
       website: 'https://crmos.one',
+      domain: 'crmos.one',
+      email: 'info@crmos.one',
       holdingKey: 'sub1',
       holdingName: 'Subholding 1: IP & Tech',
       category: 'tech',
       type: 'Enterprise SaaS & Contract Engine',
       obligationReason: 'Verplichte koppeling voor enterprise licentie inkomsten, software royalty split en geautomatiseerde contractregistratie.',
       protocol: 'GraphQL & Webhooks',
-      endpoint: 'https://api.crmos.io/graphql/investor',
+      endpoint: 'https://api.crmos.one/graphql/investor',
       status: 'connected',
       lastSync: '4 minuten geleden',
       latency: '14ms',
@@ -293,13 +297,15 @@ export default function InvestorDashboard({
       id: 'ent_3',
       name: 'Investbotiq Ltd',
       website: 'https://investbotiq.com',
+      domain: 'investbotiq.com',
+      email: 'info@investbotiq.com',
       holdingKey: 'sub1',
       holdingName: 'Subholding 1: IP & Tech',
       category: 'tech',
       type: 'AI Executie Engine & IQ Bot',
       obligationReason: 'Autonome kapitaalallocatie en realtime orderstroom synchronisatie voor optimale tranche waarderingen.',
       protocol: 'WSS Secure Streaming',
-      endpoint: 'wss://feed.investbotiq.ai/stream/orders',
+      endpoint: 'wss://feed.investbotiq.com/stream/orders',
       status: 'connected',
       lastSync: 'Realtime',
       latency: '4ms',
@@ -312,13 +318,15 @@ export default function InvestorDashboard({
       id: 'ent_4',
       name: 'Xabi World Ltd',
       website: 'https://xabi.world',
+      domain: 'xabi.world',
+      email: 'info@xabi.world',
       holdingKey: 'sub2',
       holdingName: 'Subholding 2: Fintech & SABI Liquidity',
       category: 'fintech',
       type: 'Clearing & SABI Escrow Rails',
       obligationReason: 'Cruciale clearing hub voor SABI rails, escrow split payments, BaaS EMI integraties en directe SEPA dividend transfers.',
       protocol: 'SABI Rails / ISO 20022',
-      endpoint: 'https://clearing.sabi.xabiworld.com/v2/escrow',
+      endpoint: 'https://clearing.xabi.world/v2/escrow',
       status: 'connected',
       lastSync: '2 minuten geleden',
       latency: '9ms',
@@ -331,13 +339,15 @@ export default function InvestorDashboard({
       id: 'ent_5',
       name: 'VVC Ltd',
       website: 'https://vvc.works',
+      domain: 'vvc.works',
+      email: 'info@vvc.works',
       holdingKey: 'sub3',
       holdingName: 'Subholding 3: Talent & Gateway',
       category: 'talent',
       type: 'Gateway Hub & Community Portal',
       obligationReason: 'Verplichte aandeelhouders onboarding verificatie, governance community toegang en strategisch partnernetwerk.',
       protocol: 'OAuth 2.0 / REST',
-      endpoint: 'https://gateway.vvc.holdings/api/v1/auth',
+      endpoint: 'https://gateway.vvc.works/api/v1/auth',
       status: 'connected',
       lastSync: '12 minuten geleden',
       latency: '18ms',
@@ -350,13 +360,15 @@ export default function InvestorDashboard({
       id: 'ent_6',
       name: 'DJOBBA Ltd',
       website: 'https://djobba.works',
+      domain: 'djobba.works',
+      email: 'info@djobba.works',
       holdingKey: 'sub3',
       holdingName: 'Subholding 3: Talent & Gateway',
       category: 'talent',
       type: 'B2B IT Recruitment Marketplace',
       obligationReason: 'Directe feed van internationale IT plaatsingen en resourcing marges voor aandeelhouders dividend allocatie.',
       protocol: 'REST Event Webhook',
-      endpoint: 'https://feed.djobba.com/v1/placements',
+      endpoint: 'https://feed.djobba.works/v1/placements',
       status: 'connected',
       lastSync: '6 minuten geleden',
       latency: '15ms',
@@ -369,6 +381,8 @@ export default function InvestorDashboard({
       id: 'ent_7',
       name: 'Immigratiepunt Ltd',
       website: 'https://immigratiepunt.nl',
+      domain: 'immigratiepunt.nl',
+      email: 'info@immigratiepunt.nl',
       holdingKey: 'sub3',
       holdingName: 'Subholding 3: Talent & Gateway',
       category: 'talent',
@@ -388,13 +402,15 @@ export default function InvestorDashboard({
       id: 'ent_8',
       name: 'Zheavenzy Ltd',
       website: 'https://zheavenzy.one',
+      domain: 'zheavenzy.one',
+      email: 'info@zheavenzy.one',
       holdingKey: 'sub3',
       holdingName: 'Subholding 3: Talent & Gateway',
       category: 'media',
       type: 'Muzieklabel & Creative Rights Hub',
       obligationReason: 'Smart contract gestuurde distributie van streaming royalties en intellectuele eigendoms monetarisering.',
       protocol: 'Smart Contract Event Bus',
-      endpoint: 'https://royalty.zheavenzy.media/sync/investors',
+      endpoint: 'https://royalty.zheavenzy.one/sync/investors',
       status: 'connected',
       lastSync: '8 minuten geleden',
       latency: '16ms',
@@ -406,14 +422,16 @@ export default function InvestorDashboard({
     {
       id: 'ent_9',
       name: 'Boostplug Ltd',
-      website: 'https://boostplug.com',
+      website: 'https://boostplug.one',
+      domain: 'boostplug.one',
+      email: 'info@boostplug.one',
       holdingKey: 'sub4',
       holdingName: 'Subholding 4: Compute & Media',
       category: 'compute',
       type: 'Hardware & GPU Mining Clusters',
       obligationReason: 'Realtime hashrate data feed en bandbreedte monetarisering yield verificatie van high performance compute clusters.',
       protocol: 'Stratum v2 / Telemetry API',
-      endpoint: 'https://telemetry.boostplug.cloud/v1/yield',
+      endpoint: 'https://telemetry.boostplug.one/v1/yield',
       status: 'connected',
       lastSync: '3 minuten geleden',
       latency: '8ms',
@@ -426,6 +444,8 @@ export default function InvestorDashboard({
       id: 'ent_10',
       name: 'Logs.rent',
       website: 'https://logs.rent',
+      domain: 'logs.rent',
+      email: 'info@logs.rent',
       holdingKey: 'sub4',
       holdingName: 'Subholding 4: Compute & Media',
       category: 'compute',
@@ -445,13 +465,15 @@ export default function InvestorDashboard({
       id: 'ent_11',
       name: 'Spontiva Ltd',
       website: 'https://spontiva.nl',
+      domain: 'spontiva.nl',
+      email: 'info@spontiva.nl',
       holdingKey: 'sub1',
       holdingName: 'Subholding 1: IP & Tech',
       category: 'tech',
       type: 'Working Capital Optimization (WCO)',
       obligationReason: 'Fintech werkkapitaal structurering, Time Gap cashflow optimalisatie en debiteuren escrow audits.',
       protocol: 'SABI Treasury Direct API',
-      endpoint: 'https://treasury.spontiva.io/v1/wco/stream',
+      endpoint: 'https://treasury.spontiva.nl/v1/wco/stream',
       status: 'connected',
       lastSync: '5 minuten geleden',
       latency: '10ms',
@@ -464,6 +486,8 @@ export default function InvestorDashboard({
       id: 'ent_12',
       name: 'WoningVry Ltd & Afterstudenthousing',
       website: 'https://woningvry.nl',
+      domain: 'woningvry.nl',
+      email: 'info@woningvry.nl',
       holdingKey: 'sub5',
       holdingName: 'Subholding 5: PropTech & Real Estate',
       category: 'proptech',
@@ -2718,24 +2742,42 @@ export default function InvestorDashboard({
                         {ent.obligationReason}
                       </div>
 
-                      {/* Technische Protocol & Endpoint Gegevens */}
+                      {/* Technische Protocol, Domein, E-mail & Endpoint Gegevens */}
                       <div className="space-y-1.5 font-mono text-[10px]">
+                        <div className="flex justify-between items-center text-slate-400">
+                          <span>Domein:</span>
+                          <a
+                            href={ent.website}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-cyan-300 hover:text-cyan-200 truncate max-w-[170px] inline-flex items-center gap-1 font-semibold"
+                            title={`Open ${ent.website}`}
+                          >
+                            <Globe className="w-3 h-3 shrink-0" />
+                            <span className="truncate">{ent.domain || ent.website.replace(/^https?:\/\//, '')}</span>
+                            <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                          </a>
+                        </div>
+                        <div className="flex justify-between items-center text-slate-400">
+                          <span>E-mail:</span>
+                          <a
+                            href={`mailto:${ent.email}`}
+                            className="text-amber-300 hover:text-amber-200 truncate max-w-[170px] inline-flex items-center gap-1 font-semibold"
+                            title={`Mail naar ${ent.email}`}
+                          >
+                            <Mail className="w-3 h-3 shrink-0" />
+                            <span className="truncate">{ent.email}</span>
+                          </a>
+                        </div>
                         <div className="flex justify-between text-slate-400">
                           <span>Protocol:</span>
                           <span className="text-teal-300 font-semibold">{ent.protocol}</span>
                         </div>
                         <div className="flex justify-between text-slate-400">
                           <span>Endpoint:</span>
-                          <a
-                            href={ent.website}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-cyan-300 hover:text-cyan-200 truncate max-w-[180px] inline-flex items-center gap-1"
-                            title={`Open ${ent.name}`}
-                          >
-                            <span className="truncate">{ent.website.replace(/^https?:\/\//, '')}</span>
-                            <ExternalLink className="w-3 h-3 shrink-0" />
-                          </a>
+                          <span className="text-slate-300 truncate max-w-[170px]" title={ent.endpoint}>
+                            {ent.endpoint}
+                          </span>
                         </div>
                         <div className="flex justify-between text-slate-400">
                           <span>Latency & Sync:</span>
@@ -2877,7 +2919,30 @@ export default function InvestorDashboard({
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+              <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-400">Domein / Website:</span>
+                  <a
+                    href={selectedEntityModal.website}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-cyan-300 hover:text-cyan-200 inline-flex items-center gap-1 font-bold underline"
+                  >
+                    <Globe className="w-3.5 h-3.5" />
+                    <span>{selectedEntityModal.domain || selectedEntityModal.website}</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-400">Contact E-mail:</span>
+                  <a
+                    href={`mailto:${selectedEntityModal.email}`}
+                    className="text-amber-300 hover:text-amber-200 inline-flex items-center gap-1 font-bold underline"
+                  >
+                    <Mail className="w-3.5 h-3.5" />
+                    <span>{selectedEntityModal.email}</span>
+                  </a>
+                </div>
                 <div className="flex justify-between">
                   <span className="text-slate-400">Endpoint:</span>
                   <span className="text-teal-300 font-bold">{selectedEntityModal.endpoint}</span>

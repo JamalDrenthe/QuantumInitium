@@ -10,6 +10,8 @@ export interface EntityItem {
   synergyEffect?: string;
   financialContribution?: string;
   compliance?: string;
+  website?: string;
+  email?: string;
 }
 
 export interface NodeData {

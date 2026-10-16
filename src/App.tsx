@@ -43,7 +43,8 @@ import {
   TrendingUp,
   Sun,
   Moon,
-  Globe
+  Globe,
+  Mail
 } from 'lucide-react';
 import EcosystemCanvas, { EcosystemCanvasHandle } from './components/EcosystemCanvas';
 import OnboardingRoutesPanel from './components/OnboardingRoutesPanel';
@@ -74,11 +75,17 @@ interface EntityItem {
   type: string;
   role: string;
   color: string;
+  website?: string;
+  domain?: string;
+  email?: string;
 }
 
 const allEntitiesList: EntityItem[] = [
   {
     name: 'QuantumInitium Ltd',
+    website: 'https://quantuminitium.com',
+    domain: 'quantuminitium.com',
+    email: 'info@quantuminitium.com',
     holdingKey: 'mother',
     holdingName: 'QuantumInitium Ltd (Moederholding)',
     category: 'holding',
@@ -88,6 +95,9 @@ const allEntitiesList: EntityItem[] = [
   },
   {
     name: 'CRMos Ltd',
+    website: 'https://crmos.one',
+    domain: 'crmos.one',
+    email: 'info@crmos.one',
     holdingKey: 'sub1',
     holdingName: 'Subholding 1: IP & Tech',
     category: 'tech',
@@ -97,6 +107,9 @@ const allEntitiesList: EntityItem[] = [
   },
   {
     name: 'Investbotiq Ltd',
+    website: 'https://investbotiq.com',
+    domain: 'investbotiq.com',
+    email: 'info@investbotiq.com',
     holdingKey: 'sub1',
     holdingName: 'Subholding 1: IP & Tech',
     category: 'tech',
@@ -106,6 +119,9 @@ const allEntitiesList: EntityItem[] = [
   },
   {
     name: 'Xabi World Ltd',
+    website: 'https://xabi.world',
+    domain: 'xabi.world',
+    email: 'info@xabi.world',
     holdingKey: 'sub2',
     holdingName: 'Subholding 2: Fintech & Liquidity',
     category: 'fintech',
@@ -115,6 +131,9 @@ const allEntitiesList: EntityItem[] = [
   },
   {
     name: 'VVC Ltd',
+    website: 'https://vvc.works',
+    domain: 'vvc.works',
+    email: 'info@vvc.works',
     holdingKey: 'sub3',
     holdingName: 'Subholding 3: Talent & Gateway',
     category: 'talent',
@@ -124,6 +143,9 @@ const allEntitiesList: EntityItem[] = [
   },
   {
     name: 'DJOBBA Ltd',
+    website: 'https://djobba.works',
+    domain: 'djobba.works',
+    email: 'info@djobba.works',
     holdingKey: 'sub3',
     holdingName: 'Subholding 3: Talent & Gateway',
     category: 'talent',
@@ -133,6 +155,9 @@ const allEntitiesList: EntityItem[] = [
   },
   {
     name: 'Immigratiepunt Ltd',
+    website: 'https://immigratiepunt.nl',
+    domain: 'immigratiepunt.nl',
+    email: 'info@immigratiepunt.nl',
     holdingKey: 'sub3',
     holdingName: 'Subholding 3: Talent & Gateway',
     category: 'talent',
@@ -142,6 +167,9 @@ const allEntitiesList: EntityItem[] = [
   },
   {
     name: 'Zheavenzy Ltd',
+    website: 'https://zheavenzy.one',
+    domain: 'zheavenzy.one',
+    email: 'info@zheavenzy.one',
     holdingKey: 'sub3',
     holdingName: 'Subholding 3: Talent & Gateway',
     category: 'media',
@@ -151,6 +179,9 @@ const allEntitiesList: EntityItem[] = [
   },
   {
     name: 'Boostplug Ltd',
+    website: 'https://boostplug.one',
+    domain: 'boostplug.one',
+    email: 'info@boostplug.one',
     holdingKey: 'sub4',
     holdingName: 'Subholding 4: Compute & Media',
     category: 'compute',
@@ -160,6 +191,9 @@ const allEntitiesList: EntityItem[] = [
   },
   {
     name: 'Logs.rent',
+    website: 'https://logs.rent',
+    domain: 'logs.rent',
+    email: 'info@logs.rent',
     holdingKey: 'sub4',
     holdingName: 'Subholding 4: Compute & Media',
     category: 'compute',
@@ -169,6 +203,9 @@ const allEntitiesList: EntityItem[] = [
   },
   {
     name: 'Spontiva Ltd',
+    website: 'https://spontiva.nl',
+    domain: 'spontiva.nl',
+    email: 'info@spontiva.nl',
     holdingKey: 'sub1',
     holdingName: 'Subholding 1: IP & Tech',
     category: 'tech',
@@ -178,6 +215,9 @@ const allEntitiesList: EntityItem[] = [
   },
   {
     name: 'WoningVry Ltd',
+    website: 'https://woningvry.nl',
+    domain: 'woningvry.nl',
+    email: 'info@woningvry.nl',
     holdingKey: 'sub5',
     holdingName: 'Subholding 5: Real Estate & Operations',
     category: 'proptech',
@@ -187,6 +227,9 @@ const allEntitiesList: EntityItem[] = [
   },
   {
     name: 'Afterstudenthousing Ltd',
+    website: 'https://woningvry.nl',
+    domain: 'woningvry.nl',
+    email: 'info@woningvry.nl',
     holdingKey: 'sub5',
     holdingName: 'Subholding 5: Real Estate & Operations',
     category: 'proptech',
@@ -1935,6 +1978,30 @@ export function App() {
                           </button>
                         </div>
                       </div>
+                      {item.website && (
+                        <div className="pt-1.5 border-t border-slate-800/60 flex items-center justify-between text-[10px] font-mono">
+                          <a
+                            href={item.website}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 text-cyan-400 hover:text-cyan-300 hover:underline truncate max-w-[125px]"
+                            title={`Open ${item.website}`}
+                          >
+                            <Globe className="w-2.5 h-2.5 shrink-0" />
+                            <span className="truncate">{item.domain || item.website.replace(/^https?:\/\//, '')}</span>
+                          </a>
+                          {item.email && (
+                            <a
+                              href={`mailto:${item.email}`}
+                              className="inline-flex items-center gap-1 text-slate-400 hover:text-amber-300 transition-colors truncate max-w-[120px]"
+                              title={`Mail naar ${item.email}`}
+                            >
+                              <Mail className="w-2.5 h-2.5 shrink-0" />
+                              <span className="truncate">{item.email}</span>
+                            </a>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                     </div>
@@ -3086,6 +3153,45 @@ export function App() {
                         {amountsVisible ? selectedEntityData.entity.role : maskAmounts(selectedEntityData.entity.role ?? '')}
                       </h4>
                     </div>
+
+                    {/* Officiële Domein & Contactgegevens */}
+                    {(selectedEntityData.entity.website || selectedEntityData.entity.email) && (
+                      <div className={`p-3 rounded-xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs font-mono ${
+                        theme === 'light'
+                          ? 'bg-white/90 border-sky-200 text-sky-950 shadow-sm'
+                          : 'bg-slate-900/90 border-slate-800 text-slate-300'
+                      }`}>
+                        {selectedEntityData.entity.website && (
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-slate-400 text-[10px] uppercase">Domein:</span>
+                            <a
+                              href={selectedEntityData.entity.website}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-cyan-400 hover:text-cyan-300 font-bold inline-flex items-center gap-1 underline"
+                              title={`Bezoek ${selectedEntityData.entity.website}`}
+                            >
+                              <Globe className="w-3.5 h-3.5" />
+                              <span>{selectedEntityData.entity.website.replace(/^https?:\/\//, '')}</span>
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </div>
+                        )}
+                        {selectedEntityData.entity.email && (
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-slate-400 text-[10px] uppercase">E-mail:</span>
+                            <a
+                              href={`mailto:${selectedEntityData.entity.email}`}
+                              className="text-amber-400 hover:text-amber-300 font-bold inline-flex items-center gap-1 underline"
+                              title={`Mail naar ${selectedEntityData.entity.email}`}
+                            >
+                              <Mail className="w-3.5 h-3.5" />
+                              <span>{selectedEntityData.entity.email}</span>
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     {/* Uitgebreide omschrijving van het geselecteerde bedrijf */}
                     <div className={`p-3.5 rounded-xl border ${

@@ -15,7 +15,9 @@ export const ecosystemData: Record<string, NodeData> = {
         shape: 'octahedron',
         color: '#ffd700',
         type: 'Moederholding',
-        compliance: 'UK Substance, UK GAAP, IFRS en beursgereedheid'
+        compliance: 'UK Substance, UK GAAP, IFRS en beursgereedheid',
+        website: 'https://quantuminitium.com',
+        email: 'info@quantuminitium.com'
       }
     ],
     color: '#ffd700',
@@ -43,7 +45,9 @@ export const ecosystemData: Record<string, NodeData> = {
         color: '#00f0ff',
         type: 'Flankerende Module',
         synergyWith: 'VVC Ltd, DJOBBA Ltd, Immigratiepunt Ltd',
-        synergyEffect: 'Haalt operationele wrijving weg en digitaliseert de volledige talent en contractcyclus'
+        synergyEffect: 'Haalt operationele wrijving weg en digitaliseert de volledige talent en contractcyclus',
+        website: 'https://crmos.one',
+        email: 'info@crmos.one'
       },
       {
         name: 'Investbotiq Ltd',
@@ -54,7 +58,9 @@ export const ecosystemData: Record<string, NodeData> = {
         type: 'Werkmaatschappij',
         financialContribution: 'Verdeelt en activeert de maandelijkse € 2.625 cycli per actief lid',
         synergyWith: 'Spontiva Ltd, VVC Ltd, Xabi World Ltd',
-        synergyEffect: 'Activeert autonome kasstroomtriggers, directe clearing koppeling en automatische intake van geverifieerd talent'
+        synergyEffect: 'Activeert autonome kasstroomtriggers, directe clearing koppeling en automatische intake van geverifieerd talent',
+        website: 'https://investbotiq.com',
+        email: 'info@investbotiq.com'
       },
       {
         name: 'Spontiva Ltd',
@@ -65,7 +71,9 @@ export const ecosystemData: Record<string, NodeData> = {
         type: 'Werkmaatschappij',
         financialContribution: 'Optimaliseert werkkapitaal (OPM) voor directe herinvestering in assets',
         synergyWith: 'WoningVry Ltd, Boostplug Ltd, Investbotiq Ltd, DJOBBA Ltd',
-        synergyEffect: 'Directe liquiditeitsallocatie, IT detacheringskasstroom absorptie en werkkapitaal financiering aangestuurd door de AI engine'
+        synergyEffect: 'Directe liquiditeitsallocatie, IT detacheringskasstroom absorptie en werkkapitaal financiering aangestuurd door de AI engine',
+        website: 'https://spontiva.nl',
+        email: 'info@spontiva.nl'
       }
     ],
     color: '#00f0ff',
@@ -93,7 +101,9 @@ export const ecosystemData: Record<string, NodeData> = {
         type: 'Werkmaatschappij',
         compliance: '100% dekkend voor DNB, FCA en UK GDPR (KYC en AML)',
         synergyWith: 'DJOBBA Ltd, Spontiva Ltd, Investbotiq Ltd',
-        synergyEffect: 'Houdt kapitaal binnen de gesloten cyclus van € 66.000 per 99 leden en verzorgt realtime SABI clearing voor AI executie'
+        synergyEffect: 'Houdt kapitaal binnen de gesloten cyclus van € 66.000 per 99 leden en verzorgt realtime SABI clearing voor AI executie',
+        website: 'https://xabi.world',
+        email: 'info@xabi.world'
       }
     ],
     color: '#10b981',
@@ -120,7 +130,9 @@ export const ecosystemData: Record<string, NodeData> = {
         color: '#38bdf8',
         type: 'Werkmaatschappij',
         synergyWith: 'Immigratiepunt Ltd, Investbotiq Ltd',
-        synergyEffect: 'Verwerkt gevalideerde kennismigranten direct naar de autorisatie poort'
+        synergyEffect: 'Verwerkt gevalideerde kennismigranten direct naar de autorisatie poort',
+        website: 'https://vvc.works',
+        email: 'info@vvc.works'
       },
       {
         name: 'DJOBBA Ltd',
@@ -131,7 +143,9 @@ export const ecosystemData: Record<string, NodeData> = {
         type: 'Werkmaatschappij',
         financialContribution: 'Start Knooppunt 1 van de Infinite Loop van kapitaalrotatie',
         synergyWith: 'Xabi World Ltd, VVC Ltd, Spontiva Ltd',
-        synergyEffect: 'Koppelt detacheringskasstromen direct aan Time Gap Cashflow werkkapitaal optimalisatie en SABI clearing'
+        synergyEffect: 'Koppelt detacheringskasstromen direct aan Time Gap Cashflow werkkapitaal optimalisatie en SABI clearing',
+        website: 'https://djobba.works',
+        email: 'info@djobba.works'
       },
       {
         name: 'Immigratiepunt Ltd',
@@ -141,7 +155,9 @@ export const ecosystemData: Record<string, NodeData> = {
         color: '#93c5fd',
         type: 'Flankerende Module',
         synergyWith: 'VVC Ltd',
-        synergyEffect: 'Gegarandeerde continue toevoer van gekwalificeerd talent zonder frictie'
+        synergyEffect: 'Gegarandeerde continue toevoer van gekwalificeerd talent zonder frictie',
+        website: 'https://immigratiepunt.nl',
+        email: 'info@immigratiepunt.nl'
       },
       {
         name: 'Zheavenzy Ltd',
@@ -152,7 +168,9 @@ export const ecosystemData: Record<string, NodeData> = {
         type: 'Werkmaatschappij',
         financialContribution: 'Genereert inkomsten via muziekrechten, streaming royalties en media talent partnerships',
         synergyWith: 'VVC Ltd, Boostplug Ltd',
-        synergyEffect: 'Koppelt talent onboarding en artiestenontwikkeling van VVC direct aan streaming en media exploitatie'
+        synergyEffect: 'Koppelt talent onboarding en artiestenontwikkeling van VVC direct aan streaming en media exploitatie',
+        website: 'https://zheavenzy.one',
+        email: 'info@zheavenzy.one'
       }
     ],
     color: '#38bdf8',
@@ -180,7 +198,9 @@ export const ecosystemData: Record<string, NodeData> = {
         type: 'Werkmaatschappij',
         financialContribution: 'Genereert € 1.500 / maand per actief lid binnen de Viercomponentenmotor',
         synergyWith: 'Logs.rent, Spontiva Ltd, Zheavenzy Ltd',
-        synergyEffect: 'Directe liquiditeitsallocatie, GPU compute clusters en high performance streaming bandbreedte voor artiesten'
+        synergyEffect: 'Directe liquiditeitsallocatie, GPU compute clusters en high performance streaming bandbreedte voor artiesten',
+        website: 'https://boostplug.one',
+        email: 'info@boostplug.one'
       },
       {
         name: 'Logs.rent',
@@ -190,7 +210,9 @@ export const ecosystemData: Record<string, NodeData> = {
         color: '#c084fc',
         type: 'Flankerende Module',
         synergyWith: 'Boostplug Ltd',
-        synergyEffect: 'Directe monetarisering van overtollige GPU capaciteit zonder externe tussenpersonen'
+        synergyEffect: 'Directe monetarisering van overtollige GPU capaciteit zonder externe tussenpersonen',
+        website: 'https://logs.rent',
+        email: 'info@logs.rent'
       }
     ],
     color: '#a855f7',
@@ -218,7 +240,9 @@ export const ecosystemData: Record<string, NodeData> = {
         type: 'Werkmaatschappij',
         financialContribution: 'Genereert € 1.125 / maand per actief lid binnen de Viercomponentenmotor',
         synergyWith: 'Afterstudenthousing Ltd, Spontiva Ltd',
-        synergyEffect: 'Synergie met Afterstudenthousing voor huurdersretentie en met Spontiva voor werkkapitaal en liquiditeit'
+        synergyEffect: 'Synergie met Afterstudenthousing voor huurdersretentie en met Spontiva voor werkkapitaal en liquiditeit',
+        website: 'https://woningvry.nl',
+        email: 'info@woningvry.nl'
       },
       {
         name: 'Afterstudenthousing Ltd',
@@ -228,7 +252,9 @@ export const ecosystemData: Record<string, NodeData> = {
         color: '#fbbf24',
         type: 'Flankerende Module',
         synergyWith: 'WoningVry Ltd',
-        synergyEffect: 'Verhoogt de levensduurwaarde van bewoners en minimaliseert leegstand'
+        synergyEffect: 'Verhoogt de levensduurwaarde van bewoners en minimaliseert leegstand',
+        website: 'https://woningvry.nl',
+        email: 'info@woningvry.nl'
       }
     ],
     color: '#f59e0b',
