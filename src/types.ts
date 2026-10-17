@@ -10,7 +10,9 @@ export interface EntityItem {
   synergyEffect?: string;
   financialContribution?: string;
   compliance?: string;
+  tagline?: string;
   website?: string;
+  domain?: string;
   email?: string;
 }
 

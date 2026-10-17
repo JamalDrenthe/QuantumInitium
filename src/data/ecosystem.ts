@@ -11,12 +11,14 @@ export const ecosystemData: Record<string, NodeData> = {
       {
         name: 'QuantumInitium Ltd',
         role: 'Top Platform en Moederholding',
-        desc: 'Fysiek hoofdkantoor in Londen met minimaal 2 UK resident bestuurders en onafhankelijke Raad van Commissarissen (minimaal 50% onafhankelijk). Rapportage conform UK GAAP en IFRS.',
+        tagline: 'Holdingstructuur en strategisch deelnemingenoverzicht voor QuantumInitium Ltd',
+        desc: 'Fysiek hoofdkantoor in Londen met minimaal 2 UK resident bestuurders en onafhankelijke Raad van Commissarissen (minimaal 50% onafhankelijk). Centrale kapitaalallocatie en IFRS beursvoorbereiding.',
         shape: 'octahedron',
         color: '#ffd700',
         type: 'Moederholding',
         compliance: 'UK Substance, UK GAAP, IFRS en beursgereedheid',
         website: 'https://quantuminitium.com',
+        domain: 'quantuminitium.com',
         email: 'info@quantuminitium.com'
       }
     ],
@@ -39,20 +41,23 @@ export const ecosystemData: Record<string, NodeData> = {
     entities: [
       {
         name: 'CRMos Ltd',
-        role: 'Enterprise SaaS en Triple Enablement Platform',
-        desc: 'Flankerende module: Triple Enablement via AI outreach, recruitment ATS, dialers en geautomatiseerd contractbeheer. De technologische lijm van het netwerk.',
+        role: 'Enterprise SaaS & Triple Enablement CRM',
+        tagline: 'One Platform. Three Disciplines. One Connected Workflow. — From People to Performance',
+        desc: 'Hybride CRM oplossing die Field Sales (door-to-door), Callcenters en Recruitment samenbrengt in één centraal platform. Geïnspireerd door en alternatief voor Salesdock, LeadDesk en Recruit CRM.',
         shape: 'cube',
         color: '#00f0ff',
         type: 'Flankerende Module',
         synergyWith: 'VVC Ltd, DJOBBA Ltd, Immigratiepunt Ltd',
-        synergyEffect: 'Haalt operationele wrijving weg en digitaliseert de volledige talent en contractcyclus',
+        synergyEffect: 'Haalt operationele wrijving weg en digitaliseert de volledige talent- en contractcyclus',
         website: 'https://crmos.one',
+        domain: 'crmos.one',
         email: 'info@crmos.one'
       },
       {
         name: 'Investbotiq Ltd',
         role: 'Centrale AI Executiemotor en Allocatie',
-        desc: 'Het kloppend hart van de holding. Ontvangt talentstroom via API, berekent capaciteit en triggert autonome workflows in de operationele clusters.',
+        tagline: 'Automated Cashflow Platform & Autonome Executie Engine',
+        desc: 'Het kloppend hart van de holding. Ontvangt talentstroom via API, berekent ordercapaciteit, matcht tranches en triggert autonome cashflow workflows in de operationele clusters.',
         shape: 'diamond',
         color: '#38bdf8',
         type: 'Werkmaatschappij',
@@ -60,12 +65,14 @@ export const ecosystemData: Record<string, NodeData> = {
         synergyWith: 'Spontiva Ltd, VVC Ltd, Xabi World Ltd',
         synergyEffect: 'Activeert autonome kasstroomtriggers, directe clearing koppeling en automatische intake van geverifieerd talent',
         website: 'https://investbotiq.com',
+        domain: 'investbotiq.com',
         email: 'info@investbotiq.com'
       },
       {
         name: 'Spontiva Ltd',
         role: 'Fintech Motor en Time Gap Cashflow (TGC)',
-        desc: 'Aangestuurd door Investbotiq. Activeert kasstromen en Working Capital Optimization (WCO) door het tijdsverschil tussen ontvangst (T=0) en verplichting (T=1) prudentieel productief te maken.',
+        tagline: 'TIME GAP CASHFLOW — Sluit direct aan op hoe geld door jouw bedrijf beweegt',
+        desc: 'Aangestuurd door Investbotiq. Brengt gepatenteerde TGC-methodes en Working Capital Optimization (WCO) in om het tijdsverschil tussen ontvangst (T=0) en verplichting (T=1) productief in te zetten.',
         shape: 'pyramid',
         color: '#22d3ee',
         type: 'Werkmaatschappij',
@@ -73,6 +80,7 @@ export const ecosystemData: Record<string, NodeData> = {
         synergyWith: 'WoningVry Ltd, Boostplug Ltd, Investbotiq Ltd, DJOBBA Ltd',
         synergyEffect: 'Directe liquiditeitsallocatie, IT detacheringskasstroom absorptie en werkkapitaal financiering aangestuurd door de AI engine',
         website: 'https://spontiva.nl',
+        domain: 'spontiva.nl',
         email: 'info@spontiva.nl'
       }
     ],
@@ -95,7 +103,8 @@ export const ecosystemData: Record<string, NodeData> = {
       {
         name: 'Xabi World Ltd',
         role: 'Clearing en Betaalinfrastructuur (SABI Clearing Rails / Geen Eigen Banklicentie)',
-        desc: 'Xabi World Ltd beheert de SABI betaalinfrastructuur en liquiditeitsretentie. Werkt exclusief via gecertificeerde BaaS en EMI partners (Wallester, Swan) en Stichting Derdengelden (Escrow).',
+        tagline: 'Meer overzicht voor de volgende stap — Financiële helderheid en SABI clearing',
+        desc: 'Xabi World Ltd beheert de SABI betaalinfrastructuur en liquiditeitsretentie. Werkt exclusief via gecertificeerde BaaS en EMI partners (Wallester, Swan) en Stichting Derdengelden (Escrow rails).',
         shape: 'cylinder',
         color: '#10b981',
         type: 'Werkmaatschappij',
@@ -103,6 +112,7 @@ export const ecosystemData: Record<string, NodeData> = {
         synergyWith: 'DJOBBA Ltd, Spontiva Ltd, Investbotiq Ltd',
         synergyEffect: 'Houdt kapitaal binnen de gesloten cyclus van € 66.000 per 99 leden en verzorgt realtime SABI clearing voor AI executie',
         website: 'https://xabi.world',
+        domain: 'xabi.world',
         email: 'info@xabi.world'
       }
     ],
@@ -124,20 +134,23 @@ export const ecosystemData: Record<string, NodeData> = {
     entities: [
       {
         name: 'VVC Ltd',
-        role: 'Centrale Gateway en Partnernetwerk',
-        desc: 'De centrale hub voor talentonboarding. Geen passief beleggingsinstrument; beloning uitsluitend op basis van gerealiseerde, gecontracteerde B2B transacties.',
+        role: 'Verdienende Vrienden Club & Gateway Hub',
+        tagline: 'Join the Money Movement — €50k-€100k OTE + Passief inkomen als partner',
+        desc: 'Verdienende Vrienden Club (VVC) is een exclusief ecosysteem voor high-ticket sales talent en partners. Geen passief beleggingsinstrument; beloning uitsluitend op basis van gerealiseerde, gecontracteerde B2B transacties.',
         shape: 'sphere',
         color: '#38bdf8',
         type: 'Werkmaatschappij',
         synergyWith: 'Immigratiepunt Ltd, Investbotiq Ltd',
         synergyEffect: 'Verwerkt gevalideerde kennismigranten direct naar de autorisatie poort',
         website: 'https://vvc.works',
+        domain: 'vvc.works',
         email: 'info@vvc.works'
       },
       {
         name: 'DJOBBA Ltd',
-        role: 'Transactiestroom en Flexibele IT Pool',
-        desc: 'Genereert initiële kasstromen via zakelijke B2B IT detacheringscontracten met directe embedded financing via Xabi World Ltd.',
+        role: 'B2B IT Detachering & Flexibele Pool',
+        tagline: 'Next-Gen B2B IT Detachering & Flexibele Pool — Directe SABI Rails clearing',
+        desc: 'Het Supabase-achtige B2B IT platform voor flexibele gigs en vaste IT contracten. Koppelt detacheringskasstromen met directe uitbetaling en SABI Rails clearing aan het ecosysteem.',
         shape: 'diamond',
         color: '#60a5fa',
         type: 'Werkmaatschappij',
@@ -145,24 +158,28 @@ export const ecosystemData: Record<string, NodeData> = {
         synergyWith: 'Xabi World Ltd, VVC Ltd, Spontiva Ltd',
         synergyEffect: 'Koppelt detacheringskasstromen direct aan Time Gap Cashflow werkkapitaal optimalisatie en SABI clearing',
         website: 'https://djobba.works',
+        domain: 'djobba.works',
         email: 'info@djobba.works'
       },
       {
         name: 'Immigratiepunt Ltd',
         role: 'Flankerende Module voor Visumaanvragen en Relocatie',
-        desc: 'Flankerende module: Verleent gespecialiseerde visa en relocatiediensten voor internationale kennismigranten; haalt logistieke vertraging uit de talenttoevoer.',
+        tagline: 'Start je leven in Nederland — Bankzaken, huisvesting, werk en postadres helpers',
+        desc: 'Flankerende module: Helpt nieuwkomers en internationale kennismigranten met bankzaken, huisvesting, werk en administratie in Nederland (NL, EN, AR) en verbindt postadres helpers.',
         shape: 'pyramid',
         color: '#93c5fd',
         type: 'Flankerende Module',
         synergyWith: 'VVC Ltd',
         synergyEffect: 'Gegarandeerde continue toevoer van gekwalificeerd talent zonder frictie',
         website: 'https://immigratiepunt.nl',
+        domain: 'immigratiepunt.nl',
         email: 'info@immigratiepunt.nl'
       },
       {
         name: 'Zheavenzy Ltd',
-        role: 'Muzieklabel en Talentportaal voor Artiesten',
-        desc: 'Het officiële muzieklabel en talentportaal binnen het ecosysteem. Faciliteert artiestenontwikkeling, muziekrechten, streaming distributie en strategische IP monetarisering.',
+        role: 'Muziekplatform voor Independent Artiesten & Label',
+        tagline: 'Het platform voor independent artiesten — Muziekdistributie & studio zonder wurgcontracten',
+        desc: 'Alles-in-één platform voor de independent artiest: wereldwijde muziekdistributie, studiosessies, marketingcampagnes, events en boekingen met 100% eigenaarschap en smart contract royalties.',
         shape: 'sphere',
         color: '#ec4899',
         type: 'Werkmaatschappij',
@@ -170,6 +187,7 @@ export const ecosystemData: Record<string, NodeData> = {
         synergyWith: 'VVC Ltd, Boostplug Ltd',
         synergyEffect: 'Koppelt talent onboarding en artiestenontwikkeling van VVC direct aan streaming en media exploitatie',
         website: 'https://zheavenzy.one',
+        domain: 'zheavenzy.one',
         email: 'info@zheavenzy.one'
       }
     ],
@@ -187,12 +205,13 @@ export const ecosystemData: Record<string, NodeData> = {
     objectName: 'Node_Compute',
     title: 'Compute en Media Holdco',
     subTitle: 'Compute Cloud en Digitale Distributie',
-    desc: 'Infrastructuur voor veeleisende compute workloads en GPU clusters.',
+    desc: 'Infrastructuur voor veeleisende compute workloads, streaming distributie en GPU clusters.',
     entities: [
       {
         name: 'Boostplug Ltd',
-        role: 'High Performance GPU Infrastructuur en Mining',
-        desc: 'Verantwoordelijk voor GPU mining (€ 1.000 / mnd per lid via 5 GPU nodes) en Stream Point mining (€ 500 / mnd via medianetwerk bandbreedte).',
+        role: 'Streaming & Reviews Growth Platform & Mining Node Network',
+        tagline: 'Streaming & Reviews Growth Platform — Drip-feed algoritmebescherming & Cloud Tracking',
+        desc: 'Verhoogt streams, followers en reviews op Spotify, Apple Music, Google Maps en Trustpilot met veilige drip-feed algoritmebescherming. Beheert tevens het hardware Mining Node protocol voor communityleden.',
         shape: 'cube',
         color: '#a855f7',
         type: 'Werkmaatschappij',
@@ -200,18 +219,21 @@ export const ecosystemData: Record<string, NodeData> = {
         synergyWith: 'Logs.rent, Spontiva Ltd, Zheavenzy Ltd',
         synergyEffect: 'Directe liquiditeitsallocatie, GPU compute clusters en high performance streaming bandbreedte voor artiesten',
         website: 'https://boostplug.one',
+        domain: 'boostplug.one',
         email: 'info@boostplug.one'
       },
       {
         name: 'Logs.rent',
-        role: 'Flankerende Module voor Verhandelbare Accountcapaciteit',
-        desc: 'Flankerende module: Gesloten accountmarktplaats die de eigen hardware en GPU infrastructuur direct transformeert in liquide, verhandelbare capaciteit.',
+        role: 'Digital Asset Exchange & Account Marketplace',
+        tagline: 'Digital Asset Exchange — Professionele accountverhuur, orderboeken & escrow',
+        desc: 'Flankerende module: Professionele digitale marktplaats en beurs voor accountverhuur, accountverkoop, realtime orderboeken, veilige escrow en Investbotiq-automatisering.',
         shape: 'torus',
         color: '#c084fc',
         type: 'Flankerende Module',
         synergyWith: 'Boostplug Ltd',
         synergyEffect: 'Directe monetarisering van overtollige GPU capaciteit zonder externe tussenpersonen',
         website: 'https://logs.rent',
+        domain: 'logs.rent',
         email: 'info@logs.rent'
       }
     ],
@@ -233,8 +255,9 @@ export const ecosystemData: Record<string, NodeData> = {
     entities: [
       {
         name: 'WoningVry Ltd',
-        role: 'PropTech Verhuurplatform (LongStay en BnB)',
-        desc: 'Beheert residentieel vastgoed voor IT professionals en expats. Genereert binnen de Viercomponentenmotor LongStay (€ 750 / mnd) en BnB short stay (€ 375 / mnd met dynamische dagtarieven).',
+        role: 'PropTech Woningplatform (Zonder BKR, Zonder Hypotheek)',
+        tagline: 'Zonder BKR. Zonder hypotheek. Wél een woning — Woningen van €200k tot €650k',
+        desc: 'Biedt woningen (€200.000 - €650.000) aan via een innovatieve non-hypotheekstructuur zonder BKR-check (500 plekken in 4 rondes in o.a. Amsterdam, Rotterdam, Utrecht, Almere, Eindhoven en Groningen). Beheert LongStay en dynamische BnB exploitatie.',
         shape: 'cylinder',
         color: '#f59e0b',
         type: 'Werkmaatschappij',
@@ -242,18 +265,21 @@ export const ecosystemData: Record<string, NodeData> = {
         synergyWith: 'Afterstudenthousing Ltd, Spontiva Ltd',
         synergyEffect: 'Synergie met Afterstudenthousing voor huurdersretentie en met Spontiva voor werkkapitaal en liquiditeit',
         website: 'https://woningvry.nl',
+        domain: 'woningvry.nl',
         email: 'info@woningvry.nl'
       },
       {
         name: 'Afterstudenthousing Ltd',
-        role: 'Flankerende Module voor Upscale Young Professional Living',
-        desc: 'Flankerende module: Directe upscale fase voor afgestudeerden en jonge starters; waarborgt een structureel hogere bezettingsgraad en huurdersretentie voor het portfolio.',
+        role: 'Flankerende Module voor Young Professional Living',
+        tagline: 'Young Professional Living — Doorgroeiwoningen voor afgestudeerden en starters',
+        desc: 'Flankerende module: Directe upscale fase voor afgestudeerden en young professionals; waarborgt een structureel hogere bezettingsgraad en huurdersretentie voor het portfolio.',
         shape: 'octahedron',
         color: '#fbbf24',
         type: 'Flankerende Module',
         synergyWith: 'WoningVry Ltd',
         synergyEffect: 'Verhoogt de levensduurwaarde van bewoners en minimaliseert leegstand',
         website: 'https://woningvry.nl',
+        domain: 'woningvry.nl',
         email: 'info@woningvry.nl'
       }
     ],

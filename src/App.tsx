@@ -74,6 +74,7 @@ interface EntityItem {
   category: 'tech' | 'fintech' | 'talent' | 'compute' | 'proptech' | 'holding' | 'media';
   type: string;
   role: string;
+  tagline?: string;
   color: string;
   website?: string;
   domain?: string;
@@ -90,6 +91,7 @@ const allEntitiesList: EntityItem[] = [
     holdingName: 'QuantumInitium Ltd (Moederholding)',
     category: 'holding',
     type: 'Moederholding',
+    tagline: 'Holdingstructuur en strategisch deelnemingenoverzicht voor QuantumInitium Ltd',
     role: 'Fysiek hoofdkantoor Londen, twee UK resident bestuurders, centrale kapitaalallocatie & IFRS beursvoorbereiding.',
     color: 'text-amber-400 bg-amber-500/10 border-amber-500/30'
   },
@@ -101,8 +103,9 @@ const allEntitiesList: EntityItem[] = [
     holdingKey: 'sub1',
     holdingName: 'Subholding 1: IP & Tech',
     category: 'tech',
-    type: 'SaaS & Enablement',
-    role: 'Enterprise ATS, AI outreach dialers en geautomatiseerd contractbeheer.',
+    type: 'Hybride CRM & SaaS',
+    tagline: 'One Platform. Three Disciplines. One Connected Workflow. — From People to Performance',
+    role: 'Verbindt Field Sales (door-to-door), Callcenters en Recruitment in één centraal platform (alternatief voor Salesdock, LeadDesk en Recruit CRM).',
     color: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30'
   },
   {
@@ -114,7 +117,8 @@ const allEntitiesList: EntityItem[] = [
     holdingName: 'Subholding 1: IP & Tech',
     category: 'tech',
     type: 'AI Executie Engine',
-    role: 'IQ Bot & Agent voor autonome kapitaal- en orderdistributie over sectoren.',
+    tagline: 'Automated Cashflow Platform & Autonome Executie Engine',
+    role: 'IQ Bot & centrale executie engine voor realtime order matching en geautomatiseerde dividend/cashflow distributie.',
     color: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30'
   },
   {
@@ -126,7 +130,8 @@ const allEntitiesList: EntityItem[] = [
     holdingName: 'Subholding 2: Fintech & Liquidity',
     category: 'fintech',
     type: 'Clearing & Escrow',
-    role: 'Fintech clearing hub (SABI rails), BaaS en EMI integraties en realtime split payments.',
+    tagline: 'Meer overzicht voor de volgende stap — Financiële helderheid en SABI clearing',
+    role: 'Fintech clearing hub (SABI rails), BaaS/EMI integraties en Stichting Derdengelden escrow voor realtime split payments.',
     color: 'text-blue-400 bg-blue-500/10 border-blue-500/30'
   },
   {
@@ -137,8 +142,9 @@ const allEntitiesList: EntityItem[] = [
     holdingKey: 'sub3',
     holdingName: 'Subholding 3: Talent & Gateway',
     category: 'talent',
-    type: 'Gateway & Community',
-    role: 'Centrale onboarding portal en strategisch partnernetwerk voor talentstromen.',
+    type: 'Gateway & Partnernetwerk',
+    tagline: 'Join the Money Movement — €50k-€100k OTE + Passief inkomen als partner',
+    role: 'Verdienende Vrienden Club: exclusief ecosysteem voor high-ticket sales talent, closers en ondernemende partners.',
     color: 'text-amber-400 bg-amber-500/10 border-amber-500/30'
   },
   {
@@ -149,8 +155,9 @@ const allEntitiesList: EntityItem[] = [
     holdingKey: 'sub3',
     holdingName: 'Subholding 3: Talent & Gateway',
     category: 'talent',
-    type: 'Recruitment Marketplace',
-    role: 'B2B IT detacherings en resourcingplatform voor internationale experts.',
+    type: 'B2B IT Detachering',
+    tagline: 'Next-Gen B2B IT Detachering & Flexibele Pool — Directe SABI Rails clearing',
+    role: 'Supabase-achtig B2B IT platform voor flexibele gigs en vaste IT detachering met directe uitbetaling en SABI Rails clearing.',
     color: 'text-amber-400 bg-amber-500/10 border-amber-500/30'
   },
   {
@@ -161,8 +168,9 @@ const allEntitiesList: EntityItem[] = [
     holdingKey: 'sub3',
     holdingName: 'Subholding 3: Talent & Gateway',
     category: 'talent',
-    type: 'Expat Logistics',
-    role: 'Visumaanvragen, kennismigranten en complete relocatieservice.',
+    type: 'Expat Logistics & Helpers',
+    tagline: 'Start je leven in Nederland — Bankzaken, huisvesting, werk en postadres helpers',
+    role: 'Ondersteunt nieuwkomers en IT expats met visa, bankzaken, huisvesting en postadreskoppeling in NL, EN en AR.',
     color: 'text-amber-400 bg-amber-500/10 border-amber-500/30'
   },
   {
@@ -173,8 +181,9 @@ const allEntitiesList: EntityItem[] = [
     holdingKey: 'sub3',
     holdingName: 'Subholding 3: Talent & Gateway',
     category: 'media',
-    type: 'Muzieklabel & Talentportaal',
-    role: 'Muzieklabel en digitaal talentportaal voor artiesten, streaming distributie en creatieve rechten monetarisering.',
+    type: 'Muzieklabel & Artiestenplatform',
+    tagline: 'Het platform voor independent artiesten — Muziekdistributie & studio zonder wurgcontracten',
+    role: 'Alles-in-één platform voor independent artiesten: wereldwijde streaming distributie, studiosessies, marketing en smart contract royalties.',
     color: 'text-pink-400 bg-pink-500/10 border-pink-500/30'
   },
   {
@@ -185,8 +194,9 @@ const allEntitiesList: EntityItem[] = [
     holdingKey: 'sub4',
     holdingName: 'Subholding 4: Compute & Media',
     category: 'compute',
-    type: 'Hardware & Mining',
-    role: 'Exclusieve GPU mining clusters en stream point bandbreedte monetarisering.',
+    type: 'Growth Platform & Hardware Mining',
+    tagline: 'Streaming & Reviews Growth Platform & Mining Node Network',
+    role: 'Verhoogt streams en verified reviews (Spotify, Apple Music, Trustpilot) met drip-feed algoritmebescherming en hardware mining nodes.',
     color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
   },
   {
@@ -197,8 +207,9 @@ const allEntitiesList: EntityItem[] = [
     holdingKey: 'sub4',
     holdingName: 'Subholding 4: Compute & Media',
     category: 'compute',
-    type: 'Account Marketplace',
-    role: 'Geautomatiseerd verhuur en handelsplatform voor compute accounts.',
+    type: 'Digital Asset Exchange',
+    tagline: 'Digital Asset Exchange — Professionele accountverhuur, orderboeken & escrow',
+    role: 'Digitale beurs en marktplaats voor accountverhuur, realtime orderboeken, escrow-afhandeling en geautomatiseerde compute settlements.',
     color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
   },
   {
@@ -209,8 +220,9 @@ const allEntitiesList: EntityItem[] = [
     holdingKey: 'sub1',
     holdingName: 'Subholding 1: IP & Tech',
     category: 'tech',
-    type: 'Fintech Cashflow Motor',
-    role: 'Working Capital Optimization (WCO) en Time Gap Cashflow structuren.',
+    type: 'Time Gap Cashflow (TGC)',
+    tagline: 'TIME GAP CASHFLOW — Sluit direct aan op hoe geld door jouw bedrijf beweegt',
+    role: 'Working Capital Optimization (WCO) en Time Gap Cashflow structuren om kapitaalrotatie tussen T=0 en T=1 te versnellen.',
     color: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30'
   },
   {
@@ -221,8 +233,9 @@ const allEntitiesList: EntityItem[] = [
     holdingKey: 'sub5',
     holdingName: 'Subholding 5: Real Estate & Operations',
     category: 'proptech',
-    type: 'PropTech Huisvesting',
-    role: 'LongStay residentiële huur en dynamische BnB exploitatie voor IT expats.',
+    type: 'Non-Hypotheek PropTech',
+    tagline: 'Zonder BKR. Zonder hypotheek. Wél een woning — Woningen van €200k tot €650k',
+    role: 'Non-hypotheekmodel voor woningen van €200k tot €650k (500 plekken in 4 rondes) plus LongStay en dynamische BnB exploitatie.',
     color: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/30'
   },
   {
@@ -233,8 +246,9 @@ const allEntitiesList: EntityItem[] = [
     holdingKey: 'sub5',
     holdingName: 'Subholding 5: Real Estate & Operations',
     category: 'proptech',
-    type: 'Student & Expat Transit',
-    role: 'Doorstroomhuisvesting voor IT trainees en young professionals.',
+    type: 'Young Professional Living',
+    tagline: 'Young Professional Living — Doorgroeiwoningen voor afgestudeerden en starters',
+    role: 'Doorstroomhuisvesting voor afgestudeerden en young professionals met structureel hoge bezetting en huurdersretentie.',
     color: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/30'
   }
 ];
@@ -3190,6 +3204,20 @@ export function App() {
                             </a>
                           </div>
                         )}
+                      </div>
+                    )}
+
+                    {/* Live Website Propositie / Tagline */}
+                    {selectedEntityData.entity.tagline && (
+                      <div className={`p-3 rounded-xl border text-xs leading-relaxed font-medium ${
+                        theme === 'light'
+                          ? 'bg-amber-500/10 border-amber-500/30 text-amber-950'
+                          : 'bg-amber-400/10 border-amber-400/25 text-amber-200'
+                      }`}>
+                        <span className="text-[10px] font-mono uppercase tracking-wider block font-bold mb-0.5 text-amber-400">
+                          Officiële Platform Propositie:
+                        </span>
+                        <span className="italic font-semibold">"{selectedEntityData.entity.tagline}"</span>
                       </div>
                     )}
 

@@ -261,6 +261,7 @@ export default function InvestorDashboard({
       holdingName: 'QuantumInitium Ltd (Moederholding Londen)',
       category: 'holding',
       type: 'Centrale Moederholding & IFRS Governance',
+      tagline: 'Holdingstructuur en strategisch deelnemingenoverzicht voor QuantumInitium Ltd',
       obligationReason: 'Statutair verplichte aandeelhoudersregistratie, centrale IFRS Cap Table synchronisatie en notariële deponeringen in het Verenigd Koninkrijk.',
       protocol: 'REST API v3 (TLS 1.3)',
       endpoint: 'https://api.quantuminitium.com/v3/captable/sync',
@@ -281,7 +282,8 @@ export default function InvestorDashboard({
       holdingKey: 'sub1',
       holdingName: 'Subholding 1: IP & Tech',
       category: 'tech',
-      type: 'Enterprise SaaS & Contract Engine',
+      type: 'Hybride CRM (Sales, Callcenter & Recruitment)',
+      tagline: 'One Platform. Three Disciplines. One Connected Workflow. — From People to Performance',
       obligationReason: 'Verplichte koppeling voor enterprise licentie inkomsten, software royalty split en geautomatiseerde contractregistratie.',
       protocol: 'GraphQL & Webhooks',
       endpoint: 'https://api.crmos.one/graphql/investor',
@@ -303,6 +305,7 @@ export default function InvestorDashboard({
       holdingName: 'Subholding 1: IP & Tech',
       category: 'tech',
       type: 'AI Executie Engine & IQ Bot',
+      tagline: 'Automated Cashflow Platform & Autonome Executie Engine',
       obligationReason: 'Autonome kapitaalallocatie en realtime orderstroom synchronisatie voor optimale tranche waarderingen.',
       protocol: 'WSS Secure Streaming',
       endpoint: 'wss://feed.investbotiq.com/stream/orders',
@@ -324,6 +327,7 @@ export default function InvestorDashboard({
       holdingName: 'Subholding 2: Fintech & SABI Liquidity',
       category: 'fintech',
       type: 'Clearing & SABI Escrow Rails',
+      tagline: 'Meer overzicht voor de volgende stap — Financiële helderheid en SABI clearing',
       obligationReason: 'Cruciale clearing hub voor SABI rails, escrow split payments, BaaS EMI integraties en directe SEPA dividend transfers.',
       protocol: 'SABI Rails / ISO 20022',
       endpoint: 'https://clearing.xabi.world/v2/escrow',
@@ -344,7 +348,8 @@ export default function InvestorDashboard({
       holdingKey: 'sub3',
       holdingName: 'Subholding 3: Talent & Gateway',
       category: 'talent',
-      type: 'Gateway Hub & Community Portal',
+      type: 'Gateway Hub & Partnernetwerk',
+      tagline: 'Join the Money Movement — €50k-€100k OTE + Passief inkomen als partner',
       obligationReason: 'Verplichte aandeelhouders onboarding verificatie, governance community toegang en strategisch partnernetwerk.',
       protocol: 'OAuth 2.0 / REST',
       endpoint: 'https://gateway.vvc.works/api/v1/auth',
@@ -365,7 +370,8 @@ export default function InvestorDashboard({
       holdingKey: 'sub3',
       holdingName: 'Subholding 3: Talent & Gateway',
       category: 'talent',
-      type: 'B2B IT Recruitment Marketplace',
+      type: 'B2B IT Detachering & Flexibele Pool',
+      tagline: 'Next-Gen B2B IT Detachering & Flexibele Pool — Directe SABI Rails clearing',
       obligationReason: 'Directe feed van internationale IT plaatsingen en resourcing marges voor aandeelhouders dividend allocatie.',
       protocol: 'REST Event Webhook',
       endpoint: 'https://feed.djobba.works/v1/placements',
@@ -387,6 +393,7 @@ export default function InvestorDashboard({
       holdingName: 'Subholding 3: Talent & Gateway',
       category: 'talent',
       type: 'Expat Logistics & Compliance',
+      tagline: 'Start je leven in Nederland — Bankzaken, huisvesting, werk en postadres helpers',
       obligationReason: 'Relocatie settlement auditing en kennismigranten compliance monitoring voor internationale expansie.',
       protocol: 'JSON RPC 2.0 (TLS)',
       endpoint: 'https://compliance.immigratiepunt.nl/rpc/v1',
@@ -408,6 +415,7 @@ export default function InvestorDashboard({
       holdingName: 'Subholding 3: Talent & Gateway',
       category: 'media',
       type: 'Muzieklabel & Creative Rights Hub',
+      tagline: 'Het platform voor independent artiesten — Muziekdistributie & studio zonder wurgcontracten',
       obligationReason: 'Smart contract gestuurde distributie van streaming royalties en intellectuele eigendoms monetarisering.',
       protocol: 'Smart Contract Event Bus',
       endpoint: 'https://royalty.zheavenzy.one/sync/investors',
@@ -429,6 +437,7 @@ export default function InvestorDashboard({
       holdingName: 'Subholding 4: Compute & Media',
       category: 'compute',
       type: 'Hardware & GPU Mining Clusters',
+      tagline: 'Streaming & Reviews Growth Platform & Mining Node Network',
       obligationReason: 'Realtime hashrate data feed en bandbreedte monetarisering yield verificatie van high performance compute clusters.',
       protocol: 'Stratum v2 / Telemetry API',
       endpoint: 'https://telemetry.boostplug.one/v1/yield',
@@ -449,7 +458,8 @@ export default function InvestorDashboard({
       holdingKey: 'sub4',
       holdingName: 'Subholding 4: Compute & Media',
       category: 'compute',
-      type: 'Compute Account Marketplace',
+      type: 'Digital Asset Exchange',
+      tagline: 'Digital Asset Exchange — Professionele accountverhuur, orderboeken & escrow',
       obligationReason: 'Geautomatiseerde settlement van cloud compute verhuur contracten en broker marge reconciliatie.',
       protocol: 'REST API v2 / Webhook',
       endpoint: 'https://api.logs.rent/v2/settlements',
@@ -471,6 +481,7 @@ export default function InvestorDashboard({
       holdingName: 'Subholding 1: IP & Tech',
       category: 'tech',
       type: 'Working Capital Optimization (WCO)',
+      tagline: 'TIME GAP CASHFLOW — Sluit direct aan op hoe geld door jouw bedrijf beweegt',
       obligationReason: 'Fintech werkkapitaal structurering, Time Gap cashflow optimalisatie en debiteuren escrow audits.',
       protocol: 'SABI Treasury Direct API',
       endpoint: 'https://treasury.spontiva.nl/v1/wco/stream',
@@ -492,6 +503,7 @@ export default function InvestorDashboard({
       holdingName: 'Subholding 5: PropTech & Real Estate',
       category: 'proptech',
       type: 'PropTech Huisvesting & Expat Transit',
+      tagline: 'Zonder BKR. Zonder hypotheek. Wél een woning — Woningen van €200k tot €650k',
       obligationReason: 'Residentiële vastgoed exploitatie, LongStay huurinkomsten aggregatie en transit housing dividend stromen.',
       protocol: 'PropTech Open Data API',
       endpoint: 'https://portal.woningvry.nl/api/v1/yields',
@@ -2912,6 +2924,15 @@ export default function InvestorDashboard({
             </div>
 
             <div className="space-y-3 font-mono text-xs">
+              {selectedEntityModal.tagline && (
+                <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1">
+                  <span className="text-amber-400 text-[10px] uppercase font-bold block">Officiële Platform Propositie</span>
+                  <p className="text-amber-200 text-xs italic font-semibold leading-relaxed font-sans">
+                    "{selectedEntityModal.tagline}"
+                  </p>
+                </div>
+              )}
+
               <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5">
                 <span className="text-slate-400 text-[10px] uppercase block">Statutaire Reden & Doel</span>
                 <p className="text-slate-200 text-xs leading-relaxed font-sans">
