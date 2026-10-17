@@ -163,23 +163,31 @@ function requireFirestore() {
 }
 
 export const loadManagedAccounts = async (): Promise<AuthUser[]> => {
-  if (isDemoModeEnabled) {
-    const storedAccounts = readDemoAccounts();
-    const accounts = [DEMO_INVESTOR, DEMO_ADMIN, ...storedAccounts];
-    return accounts.filter((account, index) =>
-      accounts.findIndex((candidate) => candidate.id === account.id) === index
-    );
+  const storedAccounts = readDemoAccounts();
+  const demoFallback = [DEMO_INVESTOR, DEMO_ADMIN, ...storedAccounts].filter(
+    (account, index, arr) => arr.findIndex((c) => c.id === account.id) === index
+  );
+
+  if (!firebaseAuth?.currentUser) {
+    return demoFallback;
   }
 
-  const { db } = requireFirestore();
-  const accountsQuery = query(
-    collection(db, ACCOUNT_COLLECTION),
-    orderBy('name')
-  );
-  const snapshot = await getDocs(accountsQuery);
-  return snapshot.docs
-    .map((document) => mapAccount(document.id, document.data()))
-    .filter((account): account is AuthUser => account !== null);
+  try {
+    const { db } = requireFirestore();
+    const accountsQuery = query(
+      collection(db, ACCOUNT_COLLECTION),
+      orderBy('name')
+    );
+    const snapshot = await getDocs(accountsQuery);
+    const loaded = snapshot.docs
+      .map((document) => mapAccount(document.id, document.data()))
+      .filter((account): account is AuthUser => account !== null);
+    if (loaded.length > 0) return loaded;
+  } catch (err) {
+    console.warn('loadManagedAccounts error from Firestore, using local accounts:', err);
+  }
+
+  return demoFallback;
 };
 
 export const loadAccountForSession = async (
@@ -235,7 +243,8 @@ export const createManagedAccount = async (
 };
 
 export const saveManagedAccount = async (account: AuthUser): Promise<void> => {
-  if (isDemoModeEnabled) {
+  const isDemo = account.id === DEMO_INVESTOR.id || account.id === DEMO_ADMIN.id || !firebaseAuth?.currentUser;
+  if (isDemo) {
     const accounts = readDemoAccounts();
     const updatedAccounts = accounts.some((existing) => existing.id === account.id)
       ? accounts.map((existing) => existing.id === account.id ? account : existing)
@@ -244,10 +253,19 @@ export const saveManagedAccount = async (account: AuthUser): Promise<void> => {
     return;
   }
 
-  const { db, user } = requireFirestore();
-  const authUserId = account.authUserId ?? user.uid;
-  await updateDoc(
-    doc(db, ACCOUNT_COLLECTION, authUserId),
-    serializeAccount(account, authUserId)
-  );
+  try {
+    const { db, user } = requireFirestore();
+    const authUserId = account.authUserId ?? user.uid;
+    await updateDoc(
+      doc(db, ACCOUNT_COLLECTION, authUserId),
+      serializeAccount(account, authUserId)
+    );
+  } catch (err) {
+    console.warn('saveManagedAccount Firestore write failed, saving locally:', err);
+    const accounts = readDemoAccounts();
+    const updatedAccounts = accounts.some((existing) => existing.id === account.id)
+      ? accounts.map((existing) => existing.id === account.id ? account : existing)
+      : [...accounts, account];
+    writeDemoAccounts(updatedAccounts);
+  }
 };

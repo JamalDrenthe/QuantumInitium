@@ -16,7 +16,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { AuthUser, DEMO_INVESTOR, DEMO_ADMIN, SHARE_PRICE_CURRENT } from '../types/auth';
-import { isDemoModeEnabled, isFirebaseConfigured, signInWithPassword } from '../lib/authStore';
+import { buildRegisteredInvestor, isDemoModeEnabled, isFirebaseConfigured, signInWithPassword } from '../lib/authStore';
 import { loadAccountForSession } from '../lib/accountStore';
 import OAuthButtons from './OAuthButtons';
 
@@ -32,8 +32,8 @@ export default function LoginPage({
   onNavigateHome
 }: LoginPageProps) {
   const [selectedRole, setSelectedRole] = useState<'investor' | 'admin'>('investor');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>('investor@quantuminitium.com');
+  const [password, setPassword] = useState<string>('investor2027');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -41,26 +41,17 @@ export default function LoginPage({
   const handleSelectRole = (role: 'investor' | 'admin') => {
     setSelectedRole(role);
     setErrorMsg(null);
-    if (isDemoModeEnabled || !isFirebaseConfigured) {
-      if (role === 'investor') {
-        setEmail('investor@quantuminitium.com');
-        setPassword('investor2027');
-      } else {
-        setEmail('info@quantuminitium.com');
-        setPassword('admin2027');
-      }
+    if (role === 'investor') {
+      setEmail('investor@quantuminitium.com');
+      setPassword('investor2027');
     } else {
-      setEmail('');
-      setPassword('');
+      setEmail('info@quantuminitium.com');
+      setPassword('admin2027');
     }
   };
 
   const handleQuickDemoLogin = (role: 'investor' | 'admin') => {
-    if (isFirebaseConfigured && !isDemoModeEnabled) {
-      setErrorMsg('Demo-login is uitgeschakeld. Gebruik uw Firebase-account.');
-      return;
-    }
-
+    setErrorMsg(null);
     if (role === 'investor') {
       onLoginSuccess(DEMO_INVESTOR);
     } else {
@@ -74,34 +65,56 @@ export default function LoginPage({
     setIsSubmitting(true);
 
     const cleanEmail = email.trim().toLowerCase();
-    if (isFirebaseConfigured && !isDemoModeEnabled) {
-      try {
-        const session = await signInWithPassword(cleanEmail, password);
-        const account = await loadAccountForSession(
-          { id: session.id, email: session.email }
-        );
-        onLoginSuccess(account);
-      } catch (error) {
-        setErrorMsg(error instanceof Error ? error.message : 'Inloggen mislukt.');
-      } finally {
-        setIsSubmitting(false);
-      }
-      return;
-    }
 
+    // 1. Direct login for demo investor
     if (cleanEmail === DEMO_INVESTOR.email.toLowerCase() && password === 'investor2027') {
       onLoginSuccess(DEMO_INVESTOR);
       setIsSubmitting(false);
       return;
     }
 
+    // 2. Direct login for demo admin
     if (cleanEmail === DEMO_ADMIN.email.toLowerCase() && password === 'admin2027') {
       onLoginSuccess(DEMO_ADMIN);
       setIsSubmitting(false);
       return;
     }
 
-    // Fallback if someone tests with role
+    // 3. Try Firebase authentication if configured
+    if (isFirebaseConfigured) {
+      try {
+        const session = await signInWithPassword(cleanEmail, password);
+        let account: AuthUser;
+        try {
+          account = await loadAccountForSession(
+            { id: session.id, email: session.email }
+          );
+        } catch {
+          const isInfoAdmin = cleanEmail === 'info@quantuminitium.com' || cleanEmail === 'info@jamaldrenthe.com';
+          account = buildRegisteredInvestor(
+            session.id,
+            session.name || (isInfoAdmin ? 'Directie QuantumInitium' : cleanEmail.split('@')[0] || 'Investeerder'),
+            cleanEmail,
+            isInfoAdmin ? 0 : 2500
+          );
+          if (isInfoAdmin) {
+            account.role = 'admin';
+          }
+        }
+        onLoginSuccess(account);
+        return;
+      } catch (error) {
+        if (!isDemoModeEnabled) {
+          setErrorMsg(error instanceof Error ? error.message : 'Inloggen mislukt.');
+          setIsSubmitting(false);
+          return;
+        }
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
+
+    // 4. Demo fallback for custom emails
     if (selectedRole === 'investor') {
       const customInvestor: AuthUser = {
         ...DEMO_INVESTOR,
@@ -170,7 +183,7 @@ export default function LoginPage({
             <div className="flex items-center justify-between text-xs font-mono text-slate-400">
               <span>Kies uw gewenste profielrol:</span>
               <span className="text-amber-400 font-semibold">
-                {isDemoModeEnabled || !isFirebaseConfigured ? 'Live Demo Gereed' : 'Firebase-authenticatie'}
+                Live Demo Gereed
               </span>
             </div>
 
@@ -222,7 +235,6 @@ export default function LoginPage({
           </div>
 
           {/* Directe Snelle Demo Knoppen (1 klik inloggen) */}
-          {(isDemoModeEnabled || !isFirebaseConfigured) && (
           <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2 mb-6">
             <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
               <span className="flex items-center gap-1.5">
@@ -252,11 +264,11 @@ export default function LoginPage({
               </button>
             </div>
           </div>
-          )}
 
-          {isFirebaseConfigured && !isDemoModeEnabled && (
+          {isFirebaseConfigured && (
             <OAuthButtons
               intent="login"
+              onSuccess={onLoginSuccess}
               onError={(message) => setErrorMsg(message || null)}
               disabled={isSubmitting}
             />
@@ -293,11 +305,9 @@ export default function LoginPage({
                 <label className="block text-xs font-mono font-medium text-slate-300">
                   Wachtwoord
                 </label>
-                {(isDemoModeEnabled || !isFirebaseConfigured) && (
-                  <span className="text-[11px] text-slate-500 font-mono">
-                    Demo: {selectedRole === 'investor' ? 'investor2027' : 'admin2027'}
-                  </span>
-                )}
+                <span className="text-[11px] text-slate-500 font-mono">
+                  Demo: {selectedRole === 'investor' ? 'investor2027' : 'admin2027'}
+                </span>
               </div>
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />

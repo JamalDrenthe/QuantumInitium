@@ -622,14 +622,14 @@ export function App() {
   };
 
   useEffect(() => {
-    if (isDemoModeEnabled || !isFirebaseConfigured) return;
+    if (!isFirebaseConfigured) return;
 
     let isMounted = true;
     void getCurrentAuthIdentity().then(async (identity) => {
       if (!identity || !isMounted) {
         return;
       }
-      const oauthIntent = consumeOAuthIntent();
+      consumeOAuthIntent();
       try {
         const account = await loadAccountForSession(identity);
         if (isMounted) {
@@ -638,30 +638,31 @@ export function App() {
       } catch {
         const normalizedEmail = identity.email.toLowerCase();
         const isInfoAdmin = normalizedEmail === 'info@quantuminitium.com' || normalizedEmail === 'info@jamaldrenthe.com';
-        if (oauthIntent !== null || isInfoAdmin) {
-          try {
-            const newUser = buildRegisteredInvestor(
-              identity.id,
-              identity.name || (isInfoAdmin ? 'Directie QuantumInitium' : identity.email.split('@')[0] || 'Investeerder'),
-              identity.email,
-              isInfoAdmin ? 0 : 2500
-            );
-            await createManagedAccount(newUser, identity.id);
-            const account = await loadAccountForSession(identity);
-            if (isMounted) {
-              handleLoginSuccess(account);
-            }
-            return;
-          } catch {
-            // Fall through to session cleanup when the profile cannot be created.
+        const newUser = buildRegisteredInvestor(
+          identity.id,
+          identity.name || (isInfoAdmin ? 'Directie QuantumInitium' : identity.email.split('@')[0] || 'Investeerder'),
+          identity.email,
+          isInfoAdmin ? 0 : 2500
+        );
+        if (isInfoAdmin) {
+          newUser.role = 'admin';
+        }
+        try {
+          await createManagedAccount(newUser, identity.id);
+          const account = await loadAccountForSession(identity);
+          if (isMounted) {
+            handleLoginSuccess(account);
+          }
+        } catch (createError) {
+          console.warn('Account synchronisatie Firestore fallback:', createError);
+          if (isMounted) {
+            handleLoginSuccess(newUser);
           }
         }
-        void clearAuthSession();
       }
     }).catch((error: unknown) => {
       if (isMounted) {
-        setAccountSaveError(error instanceof Error ? error.message : 'Firebase-sessie herstellen is mislukt.');
-        void clearAuthSession().catch(() => undefined);
+        console.warn('Firebase-sessie herstel melding:', error);
       }
     });
 

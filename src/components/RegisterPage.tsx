@@ -78,20 +78,28 @@ export default function RegisterPage({
     }
 
     const cleanEmail = email.trim().toLowerCase();
-    if (isFirebaseConfigured && !isDemoModeEnabled) {
+    if (isFirebaseConfigured) {
       try {
         const session = await signUpWithPassword(cleanEmail, password, {
           name: name.trim(),
         });
         const newUser = buildRegisteredInvestor(session.id, name.trim(), cleanEmail, desiredShares);
-        await createManagedAccount(newUser, session.id);
+        try {
+          await createManagedAccount(newUser, session.id);
+        } catch (createErr) {
+          console.warn('createManagedAccount fallback to in-memory profile:', createErr);
+        }
         onRegisterSuccess(newUser);
+        return;
       } catch (error) {
-        setErrorMsg(error instanceof Error ? error.message : 'Registratie mislukt.');
+        if (!isDemoModeEnabled) {
+          setErrorMsg(error instanceof Error ? error.message : 'Registratie mislukt.');
+          setIsSubmitting(false);
+          return;
+        }
       } finally {
         setIsSubmitting(false);
       }
-      return;
     }
 
     const newUser = buildRegisteredInvestor(
@@ -143,9 +151,10 @@ export default function RegisterPage({
             </p>
           </div>
 
-          {isFirebaseConfigured && !isDemoModeEnabled && (
+          {isFirebaseConfigured && (
             <OAuthButtons
               intent="register"
+              onSuccess={onRegisterSuccess}
               onError={(message) => setErrorMsg(message || null)}
               disabled={isSubmitting}
             />

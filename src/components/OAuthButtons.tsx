@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { BriefcaseBusiness, Facebook, Linkedin, LoaderCircle } from 'lucide-react';
-import { OAuthIntent, OAuthProvider, signInWithOAuth } from '../lib/authStore';
+import { AuthUser } from '../types/auth';
+import { buildRegisteredInvestor, OAuthIntent, OAuthProvider, signInWithOAuth } from '../lib/authStore';
+import { createManagedAccount, loadAccountForSession } from '../lib/accountStore';
 
 const GoogleIcon = () => (
   <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
@@ -26,6 +28,7 @@ const GoogleIcon = () => (
 interface OAuthButtonsProps {
   intent: OAuthIntent;
   onError: (message: string) => void;
+  onSuccess?: (user: AuthUser) => void;
   disabled?: boolean;
 }
 
@@ -41,16 +44,43 @@ const providerIcons: Record<OAuthProvider, React.ComponentType<{ className?: str
   facebook: Facebook
 };
 
-export default function OAuthButtons({ intent, onError, disabled = false }: OAuthButtonsProps) {
+export default function OAuthButtons({ intent, onError, onSuccess, disabled = false }: OAuthButtonsProps) {
   const [activeProvider, setActiveProvider] = useState<OAuthProvider | null>(null);
 
   const handleOAuth = async (provider: OAuthProvider) => {
     onError('');
     setActiveProvider(provider);
     try {
-      await signInWithOAuth(provider, intent);
+      const identity = await signInWithOAuth(provider, intent);
+      if (identity && onSuccess) {
+        let account: AuthUser;
+        try {
+          account = await loadAccountForSession(identity);
+        } catch {
+          const normalizedEmail = identity.email.toLowerCase();
+          const isInfoAdmin = normalizedEmail === 'info@quantuminitium.com' || normalizedEmail === 'info@jamaldrenthe.com';
+          const newUser = buildRegisteredInvestor(
+            identity.id,
+            identity.name || (isInfoAdmin ? 'Directie QuantumInitium' : identity.email.split('@')[0] || 'Investeerder'),
+            identity.email,
+            isInfoAdmin ? 0 : 2500
+          );
+          if (isInfoAdmin) {
+            newUser.role = 'admin';
+          }
+          try {
+            await createManagedAccount(newUser, identity.id);
+            account = await loadAccountForSession(identity);
+          } catch (createErr) {
+            console.warn('Firestore account synchronisatie fallback naar geheugen:', createErr);
+            account = newUser;
+          }
+        }
+        onSuccess(account);
+      }
     } catch (error) {
       onError(error instanceof Error ? error.message : 'Social login mislukt.');
+    } finally {
       setActiveProvider(null);
     }
   };

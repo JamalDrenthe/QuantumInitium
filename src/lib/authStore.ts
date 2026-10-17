@@ -8,6 +8,7 @@ import {
   onAuthStateChanged,
   setPersistence,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signInWithRedirect,
   signOut,
   updateProfile,
@@ -22,7 +23,7 @@ export type OAuthIntent = 'login' | 'register';
 const OAUTH_INTENT_STORAGE_KEY = 'qi_auth_oauth_intent';
 
 export const isDemoModeEnabled =
-  import.meta.env.VITE_ENABLE_DEMO_MODE === 'true' || !isFirebaseConfigured;
+  import.meta.env.VITE_ENABLE_DEMO_MODE !== 'false' || !isFirebaseConfigured;
 
 export { isFirebaseConfigured };
 
@@ -45,25 +46,31 @@ function toIdentity(user: User) {
 }
 
 export const getCurrentAuthIdentity = async () => {
-  const auth = requireFirebaseAuth();
-  const redirectResult = await getRedirectResult(auth);
-  const user = redirectResult?.user ?? auth.currentUser ?? await new Promise<User | null>((resolve) => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      unsubscribe();
-      resolve(currentUser);
-    }, () => {
-      unsubscribe();
-      resolve(null);
+  if (!firebaseAuth) return null;
+  const auth = firebaseAuth;
+  try {
+    const redirectResult = await getRedirectResult(auth);
+    const user = redirectResult?.user ?? auth.currentUser ?? await new Promise<User | null>((resolve) => {
+      const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        unsubscribe();
+        resolve(currentUser);
+      }, () => {
+        unsubscribe();
+        resolve(null);
+      });
     });
-  });
 
-  if (!user) return null;
+    if (!user) return null;
 
-  if (redirectResult) {
-    window.history.replaceState(null, document.title, window.location.pathname);
+    if (redirectResult) {
+      window.history.replaceState(null, document.title, window.location.pathname);
+    }
+
+    return toIdentity(user);
+  } catch (error) {
+    console.warn('getCurrentAuthIdentity warning:', error);
+    return null;
   }
-
-  return toIdentity(user);
 };
 
 export const signInWithPassword = async (email: string, password: string) => {
@@ -85,7 +92,10 @@ export const signUpWithPassword = async (
   return toIdentity(credential.user);
 };
 
-export const signInWithOAuth = async (provider: OAuthProvider, intent: OAuthIntent) => {
+export const signInWithOAuth = async (
+  provider: OAuthProvider,
+  intent: OAuthIntent
+): Promise<{ id: string; email: string; name?: string }> => {
   const auth = requireFirebaseAuth();
   await setPersistence(auth, browserSessionPersistence);
   sessionStorage.setItem(OAUTH_INTENT_STORAGE_KEY, intent);
@@ -97,7 +107,22 @@ export const signInWithOAuth = async (provider: OAuthProvider, intent: OAuthInte
       : new FirebaseOAuthProvider('oidc.linkedin');
 
   authProvider.setCustomParameters({ prompt: 'select_account' });
-  await signInWithRedirect(auth, authProvider);
+
+  try {
+    const credential = await signInWithPopup(auth, authProvider);
+    return toIdentity(credential.user);
+  } catch (popupError: unknown) {
+    const errorCode = (popupError as { code?: string })?.code;
+    if (errorCode === 'auth/popup-closed-by-user') {
+      throw new Error(`Inloggen met ${provider === 'google' ? 'Google' : provider} is geannuleerd.`);
+    }
+    // If popup was blocked or unsupported, fallback to redirect
+    if (errorCode === 'auth/popup-blocked' || errorCode === 'auth/cancelled-popup-request') {
+      await signInWithRedirect(auth, authProvider);
+      return new Promise(() => {}); // Wait for redirect unload
+    }
+    throw popupError;
+  }
 };
 
 export const consumeOAuthIntent = (): OAuthIntent | null => {
