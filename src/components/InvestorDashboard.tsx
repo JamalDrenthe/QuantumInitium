@@ -47,7 +47,19 @@ import {
   Terminal,
   CheckSquare,
   Share2,
-  PieChart as PieChartIcon
+  PieChart as PieChartIcon,
+  Home,
+  FileText,
+  BadgeCheck,
+  Briefcase,
+  Laptop,
+  Server,
+  HardDrive,
+  Landmark,
+  Copy,
+  Eye,
+  QrCode,
+  Power
 } from 'lucide-react';
 import {
   AuthUser,
@@ -201,7 +213,8 @@ export default function InvestorDashboard({
   // Calculator State
   const [calcShares, setCalcShares] = useState<number>(currentUser.sharesOwned || 12500);
 
-  // Account CRUD State
+  // Account Sub-Tab & Institutional State
+  const [accountSubTab, setAccountSubTab] = useState<'profiel' | 'bank' | 'ecosysteem' | 'documenten' | 'beveiliging'>('profiel');
   const [accountFormData, setAccountFormData] = useState({
     name: currentUser.name || '',
     email: currentUser.email || '',
@@ -211,8 +224,28 @@ export default function InvestorDashboard({
     city: currentUser.city || 'Amsterdam',
     country: currentUser.country || 'Nederland',
     iban: currentUser.iban || 'NL91 ABNA 0412 8891 00',
-    taxId: currentUser.taxId || 'NL884291882B01'
+    bic: currentUser.bic || 'ABNANL2A',
+    bankName: currentUser.bankName || 'ABN AMRO Bank N.V.',
+    taxId: currentUser.taxId || 'NL884291882B01',
+    nationality: currentUser.nationality || 'Nederlandse',
+    dateOfBirth: currentUser.dateOfBirth || '14-08-1984',
+    kycLevel: (currentUser.kycLevel || 'tier2') as 'tier1' | 'tier2' | 'tier3',
+    payoutPreference: (currentUser.payoutPreference || 'SEPA') as 'SEPA' | 'DRIP',
+    payoutFrequency: (currentUser.payoutFrequency || 'monthly') as 'monthly' | 'quarterly',
+    woningType: currentUser.woningType || 'Rijwoning / Appartement',
+    woningLocatie: currentUser.woningLocatie || 'Amsterdam / Randstad',
+    woningBudget: currentUser.woningBudget || '€450.000',
+    woningRonde: currentUser.woningRonde || 'Ronde 1 (Plek 42 van 500)',
+    boostplugNodeId: currentUser.boostplugNodeId || 'BP-NODE-8842',
+    boostplugNodeStatus: (currentUser.boostplugNodeStatus || 'active') as 'active' | 'standby' | 'syncing'
   });
+  const [activeSessions, setActiveSessions] = useState([
+    { id: 'sess_1', device: 'Chrome on macOS (Antigravity Workstation)', ip: '82.161.44.12', location: 'Amsterdam, NL', current: true, lastActive: 'Nu actief' },
+    { id: 'sess_2', device: 'Safari on iPhone 16 Pro', ip: '145.15.22.90', location: 'Utrecht, NL', current: false, lastActive: 'Vandaag om 08:42' },
+    { id: 'sess_3', device: 'Edge on Windows 11 (Finance Terminal)', ip: '84.241.19.4', location: 'Rotterdam, NL', current: false, lastActive: 'Gisteren om 17:15' }
+  ]);
+  const [showPasswordChangeModal, setShowPasswordChangeModal] = useState(false);
+  const [passwordChangeState, setPasswordChangeState] = useState({ current: '', next: '', confirm: '' });
   const [authorizedPersons, setAuthorizedPersons] = useState<AuthorizedPerson[]>(
     currentUser.authorizedPersons || [
       {
@@ -832,8 +865,8 @@ export default function InvestorDashboard({
   };
 
   // Handler: Account Gegevens Opslaan (Update)
-  const handleSaveAccountData = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSaveAccountData = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     const updatedUser: AuthUser = {
       ...currentUser,
       ...accountFormData,
@@ -843,7 +876,7 @@ export default function InvestorDashboard({
     if (onUpdateUser) {
       onUpdateUser(updatedUser);
     }
-    setPurchaseSuccessMsg('Uw accountgegevens zijn succesvol bijgewerkt en opgeslagen.');
+    setPurchaseSuccessMsg('Uw aandeelhoudersdossier & voorkeuren zijn succesvol opgeslagen.');
     setTimeout(() => setPurchaseSuccessMsg(null), 4000);
   };
 
@@ -873,6 +906,103 @@ export default function InvestorDashboard({
     setPurchaseSuccessMsg('Gemachtigde succesvol verwijderd uit uw account.');
     setTimeout(() => setPurchaseSuccessMsg(null), 4000);
   };
+
+  // Handler: Document Download Simulatie vanuit Fiscale Kluis
+  const handleDownloadVaultDocument = (docTitle: string, filename: string) => {
+    setPurchaseSuccessMsg(`Download gestart voor "${filename}" (Notarieel geverifieerd PDF archief).`);
+    setTimeout(() => setPurchaseSuccessMsg(null), 4000);
+  };
+
+  // Handler: Beëindig overige sessies
+  const handleTerminateOtherSessions = () => {
+    setActiveSessions(prev => prev.filter(s => s.current));
+    setPurchaseSuccessMsg('Alle overige actieve loginsessies zijn met onmiddellijke ingang beëindigd.');
+    setTimeout(() => setPurchaseSuccessMsg(null), 4500);
+  };
+
+  // Handler: Wachtwoord wijzigen
+  const handleChangePassword = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!passwordChangeState.next || passwordChangeState.next !== passwordChangeState.confirm) {
+      setPurchaseSuccessMsg('Wachtwoorden komen niet overeen of zijn onvolledig.');
+      setTimeout(() => setPurchaseSuccessMsg(null), 3500);
+      return;
+    }
+    setPasswordChangeState({ current: '', next: '', confirm: '' });
+    setShowPasswordChangeModal(false);
+    setPurchaseSuccessMsg('Uw aandeelhouderswachtwoord is met succes bijgewerkt en versleuteld.');
+    setTimeout(() => setPurchaseSuccessMsg(null), 4500);
+  };
+
+  // Lijst van officiële documenten in de Fiscale Kluis
+  const vaultDocuments = [
+    {
+      id: 'doc_1',
+      title: 'Notariële Akte van Aandelenuitgifte Serie A',
+      description: 'Officieel notarieel protocol van uitgifte preferente aandelen QuantumInitium Ltd (Londen & Amsterdam).',
+      filename: 'QI_Akte_SerieA_NL8842.pdf',
+      size: '3.2 MB',
+      date: '15 januari 2025',
+      hash: 'SHA256: 8f4c...b924',
+      badge: 'Notarieel Bekrachtigd',
+      badgeColor: 'border-emerald-500/40 text-emerald-400 bg-emerald-500/10'
+    },
+    {
+      id: 'doc_2',
+      title: 'Aandeelhoudersregister Uittreksel (Companies House UK)',
+      description: 'Wettelijk deponeringsextract onder Companies Act 2006, IFRS registratie en stemrechtverdeling.',
+      filename: 'CompaniesHouse_QI_Register_2025.pdf',
+      size: '1.8 MB',
+      date: '18 januari 2025',
+      hash: 'SHA256: 4a21...ef90',
+      badge: 'UK Deponering',
+      badgeColor: 'border-blue-500/40 text-blue-400 bg-blue-500/10'
+    },
+    {
+      id: 'doc_3',
+      title: 'IFRS Jaaropgave & Dividendoverzicht 2024 / 2025',
+      description: 'Fiscaal jaaroverzicht conform IAS 1 & IAS 33 voor opgave inkomstenbelasting en HMRC verdragsverrekening.',
+      filename: 'QI_Jaaropgave_Fiscaal_2024_2025.pdf',
+      size: '840 KB',
+      date: '31 december 2024',
+      hash: 'SHA256: 12c8...399a',
+      badge: 'Fiscaal Dossier',
+      badgeColor: 'border-amber-500/40 text-amber-400 bg-amber-500/10'
+    },
+    {
+      id: 'doc_4',
+      title: 'WoningVry Reserveringscertificaat (500 Plekken Dossier)',
+      description: 'Gegarandeerde aandeelhouders toewijzing Non-Hypotheek Vastgoedpool Ronde 1 (Plek 42). Geen BKR vereiste.',
+      filename: 'WoningVry_Reservering_Ronde1_Certificaat.pdf',
+      size: '1.4 MB',
+      date: '02 februari 2025',
+      hash: 'SHA256: 77d1...99ef',
+      badge: 'PropTech Reservering',
+      badgeColor: 'border-indigo-500/40 text-indigo-400 bg-indigo-500/10'
+    },
+    {
+      id: 'doc_5',
+      title: 'BoostPlug Compute Node Protocol Licentieovereenkomst',
+      description: 'Smart contract exploitatieovereenkomst voor de 5 GPU mining clusters (BP-NODE-8842) en yield allocatie.',
+      filename: 'BoostPlug_Hardware_Node_Protocol_License.pdf',
+      size: '2.1 MB',
+      date: '10 februari 2025',
+      hash: 'SHA256: b349...881c',
+      badge: 'Hardware Node',
+      badgeColor: 'border-cyan-500/40 text-cyan-400 bg-cyan-500/10'
+    },
+    {
+      id: 'doc_6',
+      title: 'SABI Escrow & Derdengelden Overeenkomst (Xabi World)',
+      description: 'DNB & FCA conforme rekeningafsplitsing via Stichting Derdengelden voor gegarandeerde dividend payouts.',
+      filename: 'SABI_Derdengelden_Escrow_Custody.pdf',
+      size: '1.1 MB',
+      date: '20 januari 2025',
+      hash: 'SHA256: 9e02...55ad',
+      badge: 'Escrow Gedekt',
+      badgeColor: 'border-teal-500/40 text-teal-400 bg-teal-500/10'
+    }
+  ];
 
   // Handler: Instellingen Opslaan
   const handleToggleSetting = (key: keyof NotificationSettings) => {
@@ -938,8 +1068,8 @@ export default function InvestorDashboard({
     },
     {
       id: 'account' as InternalView,
-      title: 'Account',
-      subtitle: 'Persoonsgegevens, IBAN en gemachtigden',
+      title: 'Account Centrum',
+      subtitle: 'KYC dossier, bank & SABI rails, ecosysteem rechten & documenten',
       icon: User,
       color: 'text-indigo-400'
     },
@@ -1398,6 +1528,42 @@ export default function InvestorDashboard({
           </button>
         </div>
       )}
+
+      {/* SNELLE HORIZONTALE NAVIGATIE STRIP VOOR ALLE PAGINA'S */}
+      <div className={`p-1.5 rounded-2xl border flex items-center gap-1.5 overflow-x-auto no-scrollbar shadow-sm ${
+        theme === 'light'
+          ? 'bg-sky-50/90 border-sky-200/90'
+          : 'bg-slate-900/70 border-slate-800/80'
+      }`}>
+        {visibleMenuItems.map((item) => {
+          const Icon = item.icon;
+          const isSelected = internalView === item.id;
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => setInternalView(item.id)}
+              className={`px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+                isSelected
+                  ? theme === 'light'
+                    ? 'bg-white text-sky-950 shadow-sm border border-sky-300 font-bold'
+                    : 'bg-amber-500/20 text-white border border-amber-500/40 shadow-sm font-bold'
+                  : theme === 'light'
+                  ? 'text-sky-800 hover:text-sky-950 hover:bg-white/60'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              <Icon className={`w-3.5 h-3.5 ${isSelected ? (theme === 'light' ? 'text-amber-600' : 'text-amber-400') : item.color}`} />
+              <span>{item.title}</span>
+              {item.id === 'account' && (
+                <span className="px-1.5 py-0.2 text-[9px] rounded-full bg-indigo-500/20 text-indigo-400 font-mono font-bold">
+                  KYC 2
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
 
       {/* TICKER MET LIVE MARKTSTATUS VAN HET INTERNE AANDEEL */}
       <div className={`p-3.5 rounded-2xl border flex flex-wrap items-center justify-between gap-3 text-xs font-mono shadow-md ${
@@ -2286,177 +2452,1075 @@ export default function InvestorDashboard({
       )}
 
       {/* ========================================================================= */}
-      {/* 7. TAB: ACCOUNT (CRUD GEGEVENS BEHEER)                                     */}
+      {/* 7. TAB: ACCOUNT CENTRUM (INSTITUTIONEEL DOSSIER & ECOSYSTEEM RECHTEN)     */}
       {/* ========================================================================= */}
       {internalView === 'account' && (
         <div className="space-y-6">
-          <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-slate-800 space-y-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
-              <div>
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <User className="w-5 h-5 text-indigo-400" />
-                  <span>Account & Persoonsgegevens (CRUD)</span>
-                </h3>
-                <p className="text-xs text-slate-400">Bekijk, wijzig of beheer uw contactgegevens, bankrekening en gemachtigden.</p>
+          {/* INSTITUTIONEEL PROFIEL HEADER BANNER */}
+          <div className={`p-6 sm:p-8 rounded-3xl border shadow-xl relative overflow-hidden ${
+            theme === 'light'
+              ? 'bg-gradient-to-br from-white via-sky-50/60 to-indigo-50/40 border-sky-200 text-sky-950'
+              : 'bg-gradient-to-br from-[#0c101d] via-[#080d19] to-[#060810] border-slate-800 text-white'
+          }`}>
+            <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+                <div className="relative">
+                  <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-amber-400 via-indigo-500 to-cyan-400 p-0.5 shadow-xl flex items-center justify-center shrink-0">
+                    <div className={`w-full h-full rounded-[14px] flex items-center justify-center font-black text-2xl tracking-wider ${
+                      theme === 'light' ? 'bg-white text-indigo-950' : 'bg-slate-950 text-amber-300'
+                    }`}>
+                      {(accountFormData.name || currentUser.name || 'QI').slice(0, 2).toUpperCase()}
+                    </div>
+                  </div>
+                  <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-slate-950 flex items-center justify-center text-[10px] text-white" title="Actief & Geverifieerd">
+                    <Check className="w-3 h-3 stroke-[3]" />
+                  </span>
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight">
+                      {accountFormData.name || currentUser.name}
+                    </h2>
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold flex items-center gap-1">
+                      <BadgeCheck className="w-3.5 h-3.5" />
+                      <span>KYC Tier 2 Geverifieerd</span>
+                    </span>
+                  </div>
+                  <p className={`text-xs font-mono flex flex-wrap items-center gap-x-3 gap-y-1 ${
+                    theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'
+                  }`}>
+                    <span>Certificaat: <strong className="text-amber-400 font-bold">{currentUser.certificateId}</strong></span>
+                    <span>•</span>
+                    <span>Rol: <strong className={theme === 'light' ? 'text-sky-950' : 'text-white'}>Serie A Aandeelhouder</strong></span>
+                    <span>•</span>
+                    <span>E-mail: <strong className="text-cyan-400">{accountFormData.email || currentUser.email}</strong></span>
+                  </p>
+                  <p className={`text-[11px] ${theme === 'light' ? 'text-sky-700/70' : 'text-slate-500'}`}>
+                    QuantumInitium Ltd Holding • IFRS IAS 1/33 Governance • UK Companies Act 2006
+                  </p>
+                </div>
               </div>
-              <span className="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 text-xs font-mono font-bold">
-                Status: Geverifieerd
-              </span>
+
+              {/* SNELLE KERNCIJFERS BADGES */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-2.5 shrink-0">
+                <div className={`p-3 rounded-xl border ${
+                  theme === 'light' ? 'bg-white/80 border-sky-200' : 'bg-slate-900/80 border-slate-800'
+                }`}>
+                  <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Aandelenbezit</span>
+                  <span className="text-xs font-bold text-amber-400 font-mono">12.500 QI.NL</span>
+                </div>
+                <div className={`p-3 rounded-xl border ${
+                  theme === 'light' ? 'bg-white/80 border-sky-200' : 'bg-slate-900/80 border-slate-800'
+                }`}>
+                  <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>SABI Clearing</span>
+                  <span className="text-xs font-bold text-emerald-400 font-mono">Xabi Rails Escrow</span>
+                </div>
+                <div className={`p-3 rounded-xl border ${
+                  theme === 'light' ? 'bg-white/80 border-sky-200' : 'bg-slate-900/80 border-slate-800'
+                }`}>
+                  <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>WoningVry Pool</span>
+                  <span className="text-xs font-bold text-indigo-400 font-mono">Ronde 1 (Plek #42)</span>
+                </div>
+                <div className={`p-3 rounded-xl border ${
+                  theme === 'light' ? 'bg-white/80 border-sky-200' : 'bg-slate-900/80 border-slate-800'
+                }`}>
+                  <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>BoostPlug Node</span>
+                  <span className="text-xs font-bold text-cyan-400 font-mono">BP-8842 (Online)</span>
+                </div>
+              </div>
             </div>
 
-            {/* FORMULIER VOOR PROFIELUPDATE (UPDATE) */}
-            <form onSubmit={handleSaveAccountData} className="space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1.5">Volledige Naam:</label>
-                  <input
-                    type="text"
-                    value={accountFormData.name}
-                    onChange={(e) => setAccountFormData({ ...accountFormData, name: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-xs focus:border-indigo-400 focus:outline-none"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1.5">E-mailadres:</label>
-                  <input
-                    type="email"
-                    value={accountFormData.email}
-                    onChange={(e) => setAccountFormData({ ...accountFormData, email: e.target.value })}
-                    readOnly={!emailEditable}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-xs focus:border-indigo-400 focus:outline-none"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1.5">Telefoonnummer:</label>
-                  <input
-                    type="text"
-                    value={accountFormData.phone}
-                    onChange={(e) => setAccountFormData({ ...accountFormData, phone: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-xs focus:border-indigo-400 focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1.5">IBAN Bankrekeningnummer:</label>
-                  <input
-                    type="text"
-                    value={accountFormData.iban}
-                    onChange={(e) => setAccountFormData({ ...accountFormData, iban: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-xs focus:border-indigo-400 focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1.5">Adres & Huisnummer:</label>
-                  <input
-                    type="text"
-                    value={accountFormData.address}
-                    onChange={(e) => setAccountFormData({ ...accountFormData, address: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-xs focus:border-indigo-400 focus:outline-none"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="block text-xs font-mono text-slate-400 mb-1.5">Postcode:</label>
-                    <input
-                      type="text"
-                      value={accountFormData.postalCode}
-                      onChange={(e) => setAccountFormData({ ...accountFormData, postalCode: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-xs focus:border-indigo-400 focus:outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-mono text-slate-400 mb-1.5">Woonplaats:</label>
-                    <input
-                      type="text"
-                      value={accountFormData.city}
-                      onChange={(e) => setAccountFormData({ ...accountFormData, city: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-xs focus:border-indigo-400 focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1.5">Land:</label>
-                  <input
-                    type="text"
-                    value={accountFormData.country}
-                    onChange={(e) => setAccountFormData({ ...accountFormData, country: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-xs focus:border-indigo-400 focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono text-slate-400 mb-1.5">BSN / Fiscaal ID:</label>
-                  <input
-                    type="text"
-                    value={accountFormData.taxId}
-                    onChange={(e) => setAccountFormData({ ...accountFormData, taxId: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-xs focus:border-indigo-400 focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
-                <button
-                  type="submit"
-                  className="px-6 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-lg shadow-indigo-500/20 transition-all cursor-pointer"
-                >
-                  <Check className="w-4 h-4" />
-                  <span>Gegevens Opslaan (Update)</span>
-                </button>
-              </div>
-            </form>
+            {/* SUB-TABS BALK */}
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-6 mt-6 border-t border-slate-800/60">
+              {[
+                { id: 'profiel' as const, label: 'Identiteit & KYC Dossier', icon: User, color: 'text-indigo-400' },
+                { id: 'bank' as const, label: 'Bank, Dividend & SABI Rails', icon: Landmark, color: 'text-emerald-400' },
+                { id: 'ecosysteem' as const, label: 'Ecosysteem Rechten (4 Pijlers)', icon: Network, color: 'text-cyan-400' },
+                { id: 'documenten' as const, label: `Documenten Kluis (${vaultDocuments.length})`, icon: FileText, color: 'text-amber-400' },
+                { id: 'beveiliging' as const, label: 'Beveiliging & Gemachtigden', icon: ShieldCheck, color: 'text-teal-400' }
+              ].map((tab) => {
+                const TabIcon = tab.icon;
+                const isActive = accountSubTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setAccountSubTab(tab.id)}
+                    className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 whitespace-nowrap transition-all cursor-pointer ${
+                      isActive
+                        ? theme === 'light'
+                          ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/25'
+                          : 'bg-indigo-500 text-slate-950 shadow-lg shadow-indigo-500/25'
+                        : theme === 'light'
+                        ? 'bg-white/70 hover:bg-white text-sky-900 border border-sky-200/60'
+                        : 'bg-slate-900/60 hover:bg-slate-900 text-slate-300 border border-slate-800'
+                    }`}
+                  >
+                    <TabIcon className={`w-4 h-4 ${isActive ? (theme === 'light' ? 'text-white' : 'text-slate-950') : tab.color}`} />
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* GEMACHTIGDEN & CONTACTPERSONEN (CREATE & DELETE) */}
-          <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-slate-800 space-y-5">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-              <div>
-                <h4 className="text-base font-bold text-white flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-emerald-400" />
-                  <span>Gemachtigden & Mede Rekeninghouders</span>
-                </h4>
-                <p className="text-xs text-slate-400">Personen die bevoegd zijn tot inzage of medeondertekening.</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowAddPersonModal(true)}
-                className="px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-bold text-xs flex items-center gap-1.5 cursor-pointer"
-              >
-                <PlusCircle className="w-3.5 h-3.5" />
-                <span>Nieuwe Toevoegen (Create)</span>
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {authorizedPersons.map((person) => (
-                <div key={person.id} className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          {/* ========================================================================= */}
+          {/* SUB-TAB 1: IDENTITEIT & KYC DOSSIER                                       */}
+          {/* ========================================================================= */}
+          {accountSubTab === 'profiel' && (
+            <div className="space-y-6">
+              {/* KYC COMPLIANCE CALLOUT */}
+              <div className={`p-5 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
+                theme === 'light'
+                  ? 'bg-emerald-50/70 border-emerald-200 text-emerald-950'
+                  : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-200'
+              }`}>
+                <div className="flex items-start gap-3">
+                  <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 shrink-0 mt-0.5">
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
                   <div>
-                    <div className="text-sm font-bold text-white">{person.name}</div>
-                    <div className="text-xs text-amber-400 font-mono">{person.relation}</div>
-                    <div className="text-xs text-slate-400 font-mono mt-1">
-                      {person.email} • {person.phone}
+                    <h4 className="text-sm font-bold flex items-center gap-2">
+                      <span>KYC Tier 2 Institutional Verification Actief</span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 font-mono">IFRS COMPLIANT</span>
+                    </h4>
+                    <p className="text-xs opacity-85 mt-0.5">
+                      Gedeponeerd bij Companies House onder dossier <strong className="font-mono">QI-REG-2025-NL</strong>. Paspoort- en adresverificatie geldig t/m 12-2027. UBO registratie: <strong className="font-mono">UBO-NL-992144</strong>.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-xs font-mono font-bold px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30">
+                    W-8BEN: VRIJGESTELD
+                  </span>
+                </div>
+              </div>
+
+              {/* PERSOONS- & BEDRIJFSGEGEVENS FORMULIER */}
+              <div className={`p-6 sm:p-8 rounded-3xl border shadow-lg space-y-6 ${
+                theme === 'light' ? 'bg-white border-sky-200 text-sky-950' : 'bg-slate-900/60 border-slate-800 text-white'
+              }`}>
+                <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+                  <div>
+                    <h3 className="text-base font-bold flex items-center gap-2">
+                      <User className="w-5 h-5 text-indigo-400" />
+                      <span>Statutaire Gegevens van de Aandeelhouder</span>
+                    </h3>
+                    <p className={`text-xs ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                      Deze gegevens zijn bindend gekoppeld aan uw digitaal aandelenbewijs en notariële akte Serie A.
+                    </p>
+                  </div>
+                  <span className="text-xs font-mono text-amber-400 font-bold">
+                    Tranche: Serie A Preferent
+                  </span>
+                </div>
+
+                <form onSubmit={handleSaveAccountData} className="space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                      <label className={`block text-xs font-mono mb-1.5 ${theme === 'light' ? 'text-sky-800' : 'text-slate-400'}`}>
+                        Volledige Statutaire Naam:
+                      </label>
+                      <input
+                        type="text"
+                        value={accountFormData.name}
+                        onChange={(e) => setAccountFormData({ ...accountFormData, name: e.target.value })}
+                        className={`w-full px-4 py-2.5 rounded-xl border font-mono text-xs focus:outline-none ${
+                          theme === 'light'
+                            ? 'bg-sky-50/60 border-sky-300 text-sky-950 focus:border-indigo-500'
+                            : 'bg-slate-950 border-slate-800 text-white focus:border-indigo-400'
+                        }`}
+                        required
+                      />
                     </div>
+
+                    <div>
+                      <label className={`block text-xs font-mono mb-1.5 ${theme === 'light' ? 'text-sky-800' : 'text-slate-400'}`}>
+                        Officiële E-mail (Geverifieerd):
+                      </label>
+                      <input
+                        type="email"
+                        value={accountFormData.email}
+                        onChange={(e) => setAccountFormData({ ...accountFormData, email: e.target.value })}
+                        readOnly={!emailEditable}
+                        className={`w-full px-4 py-2.5 rounded-xl border font-mono text-xs focus:outline-none ${
+                          theme === 'light'
+                            ? 'bg-sky-50/60 border-sky-300 text-sky-950 focus:border-indigo-500'
+                            : 'bg-slate-950 border-slate-800 text-white focus:border-indigo-400'
+                        }`}
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className={`block text-xs font-mono mb-1.5 ${theme === 'light' ? 'text-sky-800' : 'text-slate-400'}`}>
+                        Mobiel Telefoonnummer:
+                      </label>
+                      <input
+                        type="text"
+                        value={accountFormData.phone}
+                        onChange={(e) => setAccountFormData({ ...accountFormData, phone: e.target.value })}
+                        className={`w-full px-4 py-2.5 rounded-xl border font-mono text-xs focus:outline-none ${
+                          theme === 'light'
+                            ? 'bg-sky-50/60 border-sky-300 text-sky-950 focus:border-indigo-500'
+                            : 'bg-slate-950 border-slate-800 text-white focus:border-indigo-400'
+                        }`}
+                      />
+                    </div>
+
+                    <div>
+                      <label className={`block text-xs font-mono mb-1.5 ${theme === 'light' ? 'text-sky-800' : 'text-slate-400'}`}>
+                        Geboortedatum:
+                      </label>
+                      <input
+                        type="text"
+                        value={accountFormData.dateOfBirth}
+                        onChange={(e) => setAccountFormData({ ...accountFormData, dateOfBirth: e.target.value })}
+                        placeholder="DD-MM-JJJJ"
+                        className={`w-full px-4 py-2.5 rounded-xl border font-mono text-xs focus:outline-none ${
+                          theme === 'light'
+                            ? 'bg-sky-50/60 border-sky-300 text-sky-950 focus:border-indigo-500'
+                            : 'bg-slate-950 border-slate-800 text-white focus:border-indigo-400'
+                        }`}
+                      />
+                    </div>
+
+                    <div>
+                      <label className={`block text-xs font-mono mb-1.5 ${theme === 'light' ? 'text-sky-800' : 'text-slate-400'}`}>
+                        Nationaliteit:
+                      </label>
+                      <input
+                        type="text"
+                        value={accountFormData.nationality}
+                        onChange={(e) => setAccountFormData({ ...accountFormData, nationality: e.target.value })}
+                        className={`w-full px-4 py-2.5 rounded-xl border font-mono text-xs focus:outline-none ${
+                          theme === 'light'
+                            ? 'bg-sky-50/60 border-sky-300 text-sky-950 focus:border-indigo-500'
+                            : 'bg-slate-950 border-slate-800 text-white focus:border-indigo-400'
+                        }`}
+                      />
+                    </div>
+
+                    <div>
+                      <label className={`block text-xs font-mono mb-1.5 ${theme === 'light' ? 'text-sky-800' : 'text-slate-400'}`}>
+                        BSN / Fiscaal ID (TIN):
+                      </label>
+                      <input
+                        type="text"
+                        value={accountFormData.taxId}
+                        onChange={(e) => setAccountFormData({ ...accountFormData, taxId: e.target.value })}
+                        className={`w-full px-4 py-2.5 rounded-xl border font-mono text-xs focus:outline-none ${
+                          theme === 'light'
+                            ? 'bg-sky-50/60 border-sky-300 text-sky-950 focus:border-indigo-500'
+                            : 'bg-slate-950 border-slate-800 text-white focus:border-indigo-400'
+                        }`}
+                      />
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label className={`block text-xs font-mono mb-1.5 ${theme === 'light' ? 'text-sky-800' : 'text-slate-400'}`}>
+                        Woonadres & Huisnummer:
+                      </label>
+                      <input
+                        type="text"
+                        value={accountFormData.address}
+                        onChange={(e) => setAccountFormData({ ...accountFormData, address: e.target.value })}
+                        className={`w-full px-4 py-2.5 rounded-xl border font-mono text-xs focus:outline-none ${
+                          theme === 'light'
+                            ? 'bg-sky-50/60 border-sky-300 text-sky-950 focus:border-indigo-500'
+                            : 'bg-slate-950 border-slate-800 text-white focus:border-indigo-400'
+                        }`}
+                      />
+                    </div>
+
+                    <div>
+                      <label className={`block text-xs font-mono mb-1.5 ${theme === 'light' ? 'text-sky-800' : 'text-slate-400'}`}>
+                        Postcode:
+                      </label>
+                      <input
+                        type="text"
+                        value={accountFormData.postalCode}
+                        onChange={(e) => setAccountFormData({ ...accountFormData, postalCode: e.target.value })}
+                        className={`w-full px-4 py-2.5 rounded-xl border font-mono text-xs focus:outline-none ${
+                          theme === 'light'
+                            ? 'bg-sky-50/60 border-sky-300 text-sky-950 focus:border-indigo-500'
+                            : 'bg-slate-950 border-slate-800 text-white focus:border-indigo-400'
+                        }`}
+                      />
+                    </div>
+
+                    <div>
+                      <label className={`block text-xs font-mono mb-1.5 ${theme === 'light' ? 'text-sky-800' : 'text-slate-400'}`}>
+                        Woonplaats:
+                      </label>
+                      <input
+                        type="text"
+                        value={accountFormData.city}
+                        onChange={(e) => setAccountFormData({ ...accountFormData, city: e.target.value })}
+                        className={`w-full px-4 py-2.5 rounded-xl border font-mono text-xs focus:outline-none ${
+                          theme === 'light'
+                            ? 'bg-sky-50/60 border-sky-300 text-sky-950 focus:border-indigo-500'
+                            : 'bg-slate-950 border-slate-800 text-white focus:border-indigo-400'
+                        }`}
+                      />
+                    </div>
+
+                    <div>
+                      <label className={`block text-xs font-mono mb-1.5 ${theme === 'light' ? 'text-sky-800' : 'text-slate-400'}`}>
+                        Fiscaal Vestigingsland:
+                      </label>
+                      <input
+                        type="text"
+                        value={accountFormData.country}
+                        onChange={(e) => setAccountFormData({ ...accountFormData, country: e.target.value })}
+                        className={`w-full px-4 py-2.5 rounded-xl border font-mono text-xs focus:outline-none ${
+                          theme === 'light'
+                            ? 'bg-sky-50/60 border-sky-300 text-sky-950 focus:border-indigo-500'
+                            : 'bg-slate-950 border-slate-800 text-white focus:border-indigo-400'
+                        }`}
+                      />
+                    </div>
+
+                    <div>
+                      <label className={`block text-xs font-mono mb-1.5 ${theme === 'light' ? 'text-sky-800' : 'text-slate-400'}`}>
+                        KYC Compliance Level:
+                      </label>
+                      <select
+                        value={accountFormData.kycLevel}
+                        onChange={(e) => setAccountFormData({ ...accountFormData, kycLevel: e.target.value as any })}
+                        className={`w-full px-4 py-2.5 rounded-xl border font-mono text-xs focus:outline-none cursor-pointer ${
+                          theme === 'light'
+                            ? 'bg-sky-50/60 border-sky-300 text-sky-950 focus:border-indigo-500'
+                            : 'bg-slate-950 border-slate-800 text-white focus:border-indigo-400'
+                        }`}
+                      >
+                        <option value="tier1">Tier 1: Basis Aandeelhouder</option>
+                        <option value="tier2">Tier 2: Institutional Verified (Aanbevolen)</option>
+                        <option value="tier3">Tier 3: Executive Partner & UBO</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+                    <button
+                      type="submit"
+                      className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-400 hover:to-indigo-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-indigo-500/20 transition-all cursor-pointer"
+                    >
+                      <Check className="w-4 h-4" />
+                      <span>Statutair Dossier Opslaan</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* SUB-TAB 2: BANK, DIVIDEND & SABI RAILS                                    */}
+          {/* ========================================================================= */}
+          {accountSubTab === 'bank' && (
+            <div className="space-y-6">
+              <div className={`p-6 sm:p-8 rounded-3xl border shadow-lg space-y-6 ${
+                theme === 'light' ? 'bg-white border-sky-200 text-sky-950' : 'bg-slate-900/60 border-slate-800 text-white'
+              }`}>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+                  <div>
+                    <h3 className="text-base font-bold flex items-center gap-2">
+                      <Landmark className="w-5 h-5 text-emerald-400" />
+                      <span>Tegenrekening & SABI Rails Clearing Hub</span>
+                    </h3>
+                    <p className={`text-xs ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                      Koppeling met Xabi World Ltd rails en Stichting Derdengelden escrow voor directe SEPA dividenduitbetalingen.
+                    </p>
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-mono font-bold flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>SABI Rails: Live</span>
+                  </span>
+                </div>
+
+                <form onSubmit={handleSaveAccountData} className="space-y-6">
+                  {/* BANK REKENING VELDEN */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="sm:col-span-1">
+                      <label className={`block text-xs font-mono mb-1.5 ${theme === 'light' ? 'text-sky-800' : 'text-slate-400'}`}>
+                        Bankinstelling:
+                      </label>
+                      <input
+                        type="text"
+                        value={accountFormData.bankName}
+                        onChange={(e) => setAccountFormData({ ...accountFormData, bankName: e.target.value })}
+                        className={`w-full px-4 py-2.5 rounded-xl border font-mono text-xs focus:outline-none ${
+                          theme === 'light'
+                            ? 'bg-sky-50/60 border-sky-300 text-sky-950 focus:border-emerald-500'
+                            : 'bg-slate-950 border-slate-800 text-white focus:border-emerald-400'
+                        }`}
+                        placeholder="Bijv. ABN AMRO Bank N.V."
+                      />
+                    </div>
+
+                    <div className="sm:col-span-1">
+                      <label className={`block text-xs font-mono mb-1.5 ${theme === 'light' ? 'text-sky-800' : 'text-slate-400'}`}>
+                        IBAN Rekeningnummer:
+                      </label>
+                      <input
+                        type="text"
+                        value={accountFormData.iban}
+                        onChange={(e) => setAccountFormData({ ...accountFormData, iban: e.target.value })}
+                        className={`w-full px-4 py-2.5 rounded-xl border font-mono text-xs focus:outline-none ${
+                          theme === 'light'
+                            ? 'bg-sky-50/60 border-sky-300 text-sky-950 focus:border-emerald-500'
+                            : 'bg-slate-950 border-slate-800 text-white focus:border-emerald-400'
+                        }`}
+                        placeholder="NL91 ABNA 0412 8891 00"
+                        required
+                      />
+                    </div>
+
+                    <div className="sm:col-span-1">
+                      <label className={`block text-xs font-mono mb-1.5 ${theme === 'light' ? 'text-sky-800' : 'text-slate-400'}`}>
+                        BIC / SWIFT Code:
+                      </label>
+                      <input
+                        type="text"
+                        value={accountFormData.bic}
+                        onChange={(e) => setAccountFormData({ ...accountFormData, bic: e.target.value })}
+                        className={`w-full px-4 py-2.5 rounded-xl border font-mono text-xs focus:outline-none ${
+                          theme === 'light'
+                            ? 'bg-sky-50/60 border-sky-300 text-sky-950 focus:border-emerald-500'
+                            : 'bg-slate-950 border-slate-800 text-white focus:border-emerald-400'
+                        }`}
+                        placeholder="ABNANL2A"
+                      />
+                    </div>
+                  </div>
+
+                  {/* INTERACTIEVE DIVIDEND UITBETALINGSVOORKEUR */}
+                  <div className="space-y-3">
+                    <label className={`block text-xs font-mono font-bold uppercase tracking-wider ${
+                      theme === 'light' ? 'text-sky-900' : 'text-slate-300'
+                    }`}>
+                      Dividend Allocatie Methode:
+                    </label>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* OPTIE 1: SEPA UITBETALING */}
+                      <div
+                        onClick={() => setAccountFormData({ ...accountFormData, payoutPreference: 'SEPA' })}
+                        className={`p-5 rounded-2xl border-2 transition-all cursor-pointer relative ${
+                          accountFormData.payoutPreference === 'SEPA'
+                            ? 'border-emerald-500 bg-emerald-500/10 shadow-lg shadow-emerald-500/10'
+                            : theme === 'light'
+                            ? 'border-sky-200 bg-sky-50/40 hover:border-sky-300'
+                            : 'border-slate-800 bg-slate-950/60 hover:border-slate-700'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400">
+                              <CreditCard className="w-5 h-5" />
+                            </div>
+                            <div>
+                              <h4 className="text-sm font-bold">SEPA Instant Bankoverschrijving</h4>
+                              <span className="text-[10px] text-emerald-400 font-mono font-bold">Directe uitkering via SABI Clearing</span>
+                            </div>
+                          </div>
+                          <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                            accountFormData.payoutPreference === 'SEPA'
+                              ? 'border-emerald-500 bg-emerald-500 text-slate-950'
+                              : 'border-slate-600'
+                          }`}>
+                            {accountFormData.payoutPreference === 'SEPA' && <Check className="w-3 h-3 stroke-[3]" />}
+                          </span>
+                        </div>
+                        <p className={`text-xs mt-3 ${theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}`}>
+                          Uw maandelijkse dividendrendement (€{(currentUser.sharesOwned * SHARE_PRICE_CURRENT * ANNUAL_DIVIDEND_PERCENT / 100 / 12).toLocaleString('nl-NL', { minimumFractionDigits: 2 })}/mnd) wordt direct bijgeschreven op uw opgegeven IBAN.
+                        </p>
+                      </div>
+
+                      {/* OPTIE 2: DRIP HERINVESTERING */}
+                      <div
+                        onClick={() => setAccountFormData({ ...accountFormData, payoutPreference: 'DRIP' })}
+                        className={`p-5 rounded-2xl border-2 transition-all cursor-pointer relative ${
+                          accountFormData.payoutPreference === 'DRIP'
+                            ? 'border-cyan-500 bg-cyan-500/10 shadow-lg shadow-cyan-500/10'
+                            : theme === 'light'
+                            ? 'border-sky-200 bg-sky-50/40 hover:border-sky-300'
+                            : 'border-slate-800 bg-slate-950/60 hover:border-slate-700'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2.5 rounded-xl bg-cyan-500/20 text-cyan-400">
+                              <RefreshCw className="w-5 h-5" />
+                            </div>
+                            <div>
+                              <h4 className="text-sm font-bold">DRIP Herinvestering (Compound Growth)</h4>
+                              <span className="text-[10px] text-cyan-400 font-mono font-bold">Automatisch extra aandelen bijkopen</span>
+                            </div>
+                          </div>
+                          <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                            accountFormData.payoutPreference === 'DRIP'
+                              ? 'border-cyan-500 bg-cyan-500 text-slate-950'
+                              : 'border-slate-600'
+                          }`}>
+                            {accountFormData.payoutPreference === 'DRIP' && <Check className="w-3 h-3 stroke-[3]" />}
+                          </span>
+                        </div>
+                        <p className={`text-xs mt-3 ${theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}`}>
+                          Herinvesteer uw periodieke dividend automatisch tegen preferente tranchekoers zonder commissiekosten. Hierdoor maximaliseert u de compound rente en equity opbouw voor de IPO.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* UITBETALINGSFREQUENTIE & ESCROW STATUS */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <div>
+                      <label className={`block text-xs font-mono mb-1.5 ${theme === 'light' ? 'text-sky-800' : 'text-slate-400'}`}>
+                        Uitbetalingscyclus:
+                      </label>
+                      <select
+                        value={accountFormData.payoutFrequency}
+                        onChange={(e) => setAccountFormData({ ...accountFormData, payoutFrequency: e.target.value as any })}
+                        className={`w-full px-4 py-2.5 rounded-xl border font-mono text-xs focus:outline-none cursor-pointer ${
+                          theme === 'light'
+                            ? 'bg-sky-50/60 border-sky-300 text-sky-950 focus:border-emerald-500'
+                            : 'bg-slate-950 border-slate-800 text-white focus:border-emerald-400'
+                        }`}
+                      >
+                        <option value="monthly">Maandelijks (Elke 1e werkdag van de maand)</option>
+                        <option value="quarterly">Per Kwartaal (Conform IFRS audit cyclus)</option>
+                      </select>
+                    </div>
+
+                    <div className={`p-3.5 rounded-xl border flex items-center justify-between ${
+                      theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
+                    }`}>
+                      <div>
+                        <span className={`text-[11px] block font-mono ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                          Stichting Derdengelden Custody:
+                        </span>
+                        <span className="text-xs font-mono font-bold text-emerald-400">
+                          SABI-ESCROW-NL-7721-00
+                        </span>
+                      </div>
+                      <span className="px-2 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold">
+                        DNB / FCA OK
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+                    <button
+                      type="submit"
+                      className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-lg shadow-emerald-500/20 transition-all cursor-pointer"
+                    >
+                      <Check className="w-4 h-4" />
+                      <span>Bank- & Dividendinstellingen Opslaan</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* SUB-TAB 3: ECOSYSTEEM RECHTEN & DEELNEMINGEN (4 COMPONENTEN)             */}
+          {/* ========================================================================= */}
+          {accountSubTab === 'ecosysteem' && (
+            <div className="space-y-6">
+              <div className={`p-4 rounded-2xl border text-xs flex items-center justify-between gap-3 ${
+                theme === 'light' ? 'bg-sky-50 border-sky-200 text-sky-950' : 'bg-cyan-500/10 border-cyan-500/30 text-cyan-200'
+              }`}>
+                <div className="flex items-center gap-2.5">
+                  <Network className="w-4 h-4 text-cyan-400 shrink-0" />
+                  <span>
+                    Als QuantumInitium aandeelhouder heeft u automatische aandeelhoudersvoordelen en directe rechten binnen de 4 operationele componenten en 12 entiteiten.
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setInternalView('integrations')}
+                  className="px-3 py-1 rounded-lg bg-cyan-500 text-slate-950 font-bold text-[11px] whitespace-nowrap hover:bg-cyan-400 cursor-pointer"
+                >
+                  Bekijk Alle 12 Entiteiten
+                </button>
+              </div>
+
+              {/* PIJLER 1: WONINGVRY PROPTECH PARTICIPATIE */}
+              <div className={`p-6 sm:p-8 rounded-3xl border shadow-lg space-y-6 ${
+                theme === 'light' ? 'bg-white border-sky-200 text-sky-950' : 'bg-slate-900/60 border-slate-800 text-white'
+              }`}>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-2xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/30">
+                      <Home className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-base font-bold">WoningVry Ltd & Afterstudenthousing</h3>
+                        <span className="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 text-[10px] font-mono font-bold">
+                          woningvry.nl
+                        </span>
+                      </div>
+                      <p className="text-xs text-indigo-400/90 font-medium">
+                        Zonder BKR. Zonder hypotheek. Wél een woning — Woningen van €200k tot €650k
+                      </p>
+                    </div>
+                  </div>
+
+                  <span className="px-3 py-1.5 rounded-xl bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-mono font-bold flex items-center gap-1.5">
+                    <BadgeCheck className="w-4 h-4 text-indigo-400" />
+                    <span>Ronde 1: Gereserveerd (Plek #42 van 500)</span>
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className={`p-4 rounded-xl border space-y-1 ${
+                    theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
+                  }`}>
+                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Woning Type Voorkeur:</span>
+                    <input
+                      type="text"
+                      value={accountFormData.woningType}
+                      onChange={(e) => setAccountFormData({ ...accountFormData, woningType: e.target.value })}
+                      className={`w-full bg-transparent font-bold text-xs font-mono focus:outline-none ${
+                        theme === 'light' ? 'text-indigo-950' : 'text-white'
+                      }`}
+                    />
+                  </div>
+
+                  <div className={`p-4 rounded-xl border space-y-1 ${
+                    theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
+                  }`}>
+                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Regio / Locatie Voorkeur:</span>
+                    <input
+                      type="text"
+                      value={accountFormData.woningLocatie}
+                      onChange={(e) => setAccountFormData({ ...accountFormData, woningLocatie: e.target.value })}
+                      className={`w-full bg-transparent font-bold text-xs font-mono focus:outline-none ${
+                        theme === 'light' ? 'text-indigo-950' : 'text-white'
+                      }`}
+                    />
+                  </div>
+
+                  <div className={`p-4 rounded-xl border space-y-1 ${
+                    theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
+                  }`}>
+                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Doelwaarde Tranche:</span>
+                    <input
+                      type="text"
+                      value={accountFormData.woningBudget}
+                      onChange={(e) => setAccountFormData({ ...accountFormData, woningBudget: e.target.value })}
+                      className={`w-full bg-transparent font-bold text-xs font-mono focus:outline-none ${
+                        theme === 'light' ? 'text-indigo-950' : 'text-white'
+                      }`}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
+                  <p className={`text-xs ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                    Als aandeelhouder ontvangt u voorrangstoewijzing op gerenoveerde residentiële units en expat transithousing, zonder hypotheekaanvraag of BKR-registratie.
+                  </p>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => handleSaveAccountData()}
+                      className="px-4 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-slate-950 font-bold text-xs transition-all cursor-pointer"
+                    >
+                      Voorkeur Opslaan
+                    </button>
+                    <a
+                      href="https://woningvry.nl/account.html"
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`px-4 py-2 rounded-xl border font-bold text-xs flex items-center gap-1.5 transition-all ${
+                        theme === 'light' ? 'bg-sky-50 hover:bg-sky-100 border-sky-300 text-sky-950' : 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-white'
+                      }`}
+                    >
+                      <span>WoningVry Portal</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* PIJLER 2: BOOSTPLUG CLOUD COMPUTE & MINING NODE */}
+              <div className={`p-6 sm:p-8 rounded-3xl border shadow-lg space-y-6 ${
+                theme === 'light' ? 'bg-white border-sky-200 text-sky-950' : 'bg-slate-900/60 border-slate-800 text-white'
+              }`}>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+                      <Cpu className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-base font-bold">BoostPlug Ltd</h3>
+                        <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400 text-[10px] font-mono font-bold">
+                          boostplug.one
+                        </span>
+                      </div>
+                      <p className="text-xs text-cyan-400/90 font-medium">
+                        Streaming & Reviews Growth Platform — Hardware Mining Node Netwerk
+                      </p>
+                    </div>
+                  </div>
+
+                  <span className="px-3 py-1.5 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-bold flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                    <span>Node: BP-NODE-8842 (Online)</span>
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className={`p-4 rounded-xl border space-y-1 ${
+                    theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
+                  }`}>
+                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Toegewezen Compute Cluster:</span>
+                    <span className="text-xs font-bold font-mono text-cyan-400">5x High-Performance GPU Nodes</span>
+                  </div>
+
+                  <div className={`p-4 rounded-xl border space-y-1 ${
+                    theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
+                  }`}>
+                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Drip-feed Algoritme Status:</span>
+                    <span className="text-xs font-bold font-mono text-emerald-400">Actief & Beschermd</span>
+                  </div>
+
+                  <div className={`p-4 rounded-xl border space-y-1 ${
+                    theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
+                  }`}>
+                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Verwachte Maandopbrengst:</span>
+                    <span className="text-xs font-bold font-mono text-amber-400">€1.000 GPU + €500 Stream Pts</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
+                  <p className={`text-xs ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                    Uw hardware node deelt in de verhuuropbrengsten van de streaming aggregatie en levert een stabiel nevenrendement bovenop uw reguliere dividenden.
+                  </p>
+                  <a
+                    href="https://boostplug.one"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-all shrink-0 cursor-pointer"
+                  >
+                    <span>Naar BoostPlug Member Hub</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </div>
+
+              {/* PIJLERS 3 & 4: LOGS.RENT & SPONTIVA WCO */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className={`p-6 rounded-3xl border shadow-lg space-y-4 ${
+                  theme === 'light' ? 'bg-white border-sky-200 text-sky-950' : 'bg-slate-900/60 border-slate-800 text-white'
+                }`}>
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                    <div className="flex items-center gap-2.5">
+                      <HardDrive className="w-5 h-5 text-emerald-400" />
+                      <h4 className="font-bold text-sm">Logs.rent Digital Asset Exchange</h4>
+                    </div>
+                    <span className="text-[10px] font-mono text-emerald-400 font-bold">logs.rent</span>
+                  </div>
+                  <p className={`text-xs ${theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}`}>
+                    Professionele accountmarktplaats en cloud compute settlements. Orderboeken direct gesynchroniseerd via Investbotiq AI matching feed.
+                  </p>
+                  <div className="flex items-center justify-between pt-2 text-xs font-mono">
+                    <span className={theme === 'light' ? 'text-sky-800/70' : 'text-slate-500'}>Broker Status:</span>
+                    <span className="text-emerald-400 font-bold">Gevalideerd • 0% Commissie</span>
+                  </div>
+                </div>
+
+                <div className={`p-6 rounded-3xl border shadow-lg space-y-4 ${
+                  theme === 'light' ? 'bg-white border-sky-200 text-sky-950' : 'bg-slate-900/60 border-slate-800 text-white'
+                }`}>
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                    <div className="flex items-center gap-2.5">
+                      <Zap className="w-5 h-5 text-amber-400" />
+                      <h4 className="font-bold text-sm">Spontiva Ltd (TGC & WCO)</h4>
+                    </div>
+                    <span className="text-[10px] font-mono text-amber-400 font-bold">spontiva.nl</span>
+                  </div>
+                  <p className={`text-xs ${theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}`}>
+                    TIME GAP CASHFLOW — Werkkapitaal Optimalisatie tussen T=0 en T=1. Direct aangesloten op de holding liquiditeitsbuffer.
+                  </p>
+                  <div className="flex items-center justify-between pt-2 text-xs font-mono">
+                    <span className={theme === 'light' ? 'text-sky-800/70' : 'text-slate-500'}>WCO Treasury Feed:</span>
+                    <span className="text-amber-400 font-bold">Synchroon • SABI Escrow</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* SUB-TAB 4: DOCUMENTEN & FISCALE KLUIS                                     */}
+          {/* ========================================================================= */}
+          {accountSubTab === 'documenten' && (
+            <div className="space-y-6">
+              <div className={`p-5 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 ${
+                theme === 'light'
+                  ? 'bg-amber-50/70 border-amber-200 text-amber-950'
+                  : 'bg-amber-500/10 border-amber-500/30 text-amber-200'
+              }`}>
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-400 shrink-0">
+                    <FileText className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold">Officiële Aandeelhouders & Fiscale Kluis</h4>
+                    <p className="text-xs opacity-85 mt-0.5">
+                      Alle notariële akten, deponeringen bij Companies House en fiscale jaaropgaven zijn cryptografisch verzegeld conform SHA-256 standaarden.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleDownloadVaultDocument('Volledig Aandeelhouders Dossier', 'QI_Aandeelhoudersdossier_Compleet.zip')}
+                  className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-2 shrink-0 cursor-pointer shadow-lg shadow-amber-500/20"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Download Compleet Archief (ZIP)</span>
+                </button>
+              </div>
+
+              {/* GRID VAN DOCUMENTEN */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {vaultDocuments.map((doc) => (
+                  <div
+                    key={doc.id}
+                    className={`p-5 rounded-2xl border flex flex-col justify-between space-y-4 shadow-md transition-all hover:border-amber-400/40 ${
+                      theme === 'light' ? 'bg-white border-sky-200 text-sky-950' : 'bg-slate-900/70 border-slate-800 text-white'
+                    }`}
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className={`px-2.5 py-0.5 rounded-full border text-[10px] font-mono font-bold ${doc.badgeColor}`}>
+                          {doc.badge}
+                        </span>
+                        <span className={`text-[10px] font-mono ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-500'}`}>
+                          {doc.size}
+                        </span>
+                      </div>
+                      <h4 className="text-sm font-bold leading-snug">{doc.title}</h4>
+                      <p className={`text-xs ${theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}`}>
+                        {doc.description}
+                      </p>
+                    </div>
+
+                    <div className="pt-3 border-t border-slate-800/80 space-y-2.5">
+                      <div className="flex justify-between items-center text-[10px] font-mono">
+                        <span className={theme === 'light' ? 'text-sky-800/70' : 'text-slate-500'}>Datum: {doc.date}</span>
+                        <span className="text-amber-400 font-bold">{doc.hash}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleDownloadVaultDocument(doc.title, doc.filename)}
+                        className={`w-full py-2 rounded-xl text-xs font-bold font-mono flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                          theme === 'light'
+                            ? 'bg-sky-50 hover:bg-sky-100 text-sky-950 border border-sky-200'
+                            : 'bg-slate-950 hover:bg-slate-850 text-amber-300 border border-slate-800 hover:border-amber-500/40'
+                        }`}
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        <span>Download PDF ({doc.filename})</span>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* SUB-TAB 5: BEVEILIGING & GEMACHTIGDEN                                     */}
+          {/* ========================================================================= */}
+          {accountSubTab === 'beveiliging' && (
+            <div className="space-y-6">
+              {/* 2FA & SECURITY STATUS */}
+              <div className={`p-6 sm:p-8 rounded-3xl border shadow-lg space-y-6 ${
+                theme === 'light' ? 'bg-white border-sky-200 text-sky-950' : 'bg-slate-900/60 border-slate-800 text-white'
+              }`}>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+                  <div>
+                    <h3 className="text-base font-bold flex items-center gap-2">
+                      <ShieldCheck className="w-5 h-5 text-teal-400" />
+                      <span>Toegangsbeveiliging & Twee-Staps Verificatie (2FA)</span>
+                    </h3>
+                    <p className={`text-xs ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                      Bescherming van transacties, aandeelhoudersrechten en uitbetalingsopdrachten.
+                    </p>
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-teal-500/10 text-teal-300 border border-teal-500/30 text-xs font-mono font-bold">
+                    MFA Status: Actief
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className={`p-4 rounded-xl border space-y-2 ${
+                    theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
+                  }`}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold">Authenticator App (TOTP)</span>
+                      <Check className="w-4 h-4 text-emerald-400" />
+                    </div>
+                    <p className={`text-[11px] ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                      Google Authenticator / YubiKey FIDO2 geactiveerd.
+                    </p>
+                  </div>
+
+                  <div className={`p-4 rounded-xl border space-y-2 ${
+                    theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
+                  }`}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold">Wachtwoordencryptie</span>
+                      <Lock className="w-4 h-4 text-cyan-400" />
+                    </div>
+                    <p className={`text-[11px] ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                      Argon2id hashing conform Britse FCA & IFRS standaarden.
+                    </p>
+                  </div>
+
+                  <div className={`p-4 rounded-xl border flex flex-col justify-between space-y-2 ${
+                    theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
+                  }`}>
+                    <span className="text-xs font-bold">Wachtwoord Bijwerken</span>
+                    <button
+                      type="button"
+                      onClick={() => setShowPasswordChangeModal(true)}
+                      className="px-3 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-950 text-xs font-bold cursor-pointer"
+                    >
+                      Wachtwoord Wijzigen
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* GEMACHTIGDEN & MEDE REKENINGHOUDERS (CRUD) */}
+              <div className={`p-6 sm:p-8 rounded-3xl border shadow-lg space-y-5 ${
+                theme === 'light' ? 'bg-white border-sky-200 text-sky-950' : 'bg-slate-900/60 border-slate-800 text-white'
+              }`}>
+                <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+                  <div>
+                    <h4 className="text-base font-bold flex items-center gap-2">
+                      <Shield className="w-4 h-4 text-emerald-400" />
+                      <span>Gemachtigden & Mede Aandeelhouders</span>
+                    </h4>
+                    <p className={`text-xs ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                      Personen die statutair bevoegd zijn tot inzage, overdracht of medeondertekening.
+                    </p>
                   </div>
                   <button
                     type="button"
-                    onClick={() => handleDeleteAuthorizedPerson(person.id)}
-                    className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-mono flex items-center gap-1 cursor-pointer"
-                    title="Verwijderen uit account"
+                    onClick={() => setShowAddPersonModal(true)}
+                    className="px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-bold text-xs flex items-center gap-1.5 cursor-pointer"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span>Verwijderen (Delete)</span>
+                    <PlusCircle className="w-3.5 h-3.5" />
+                    <span>Nieuwe Gemachtigde Toevoegen</span>
                   </button>
                 </div>
-              ))}
+
+                <div className="space-y-3">
+                  {authorizedPersons.map((person) => (
+                    <div
+                      key={person.id}
+                      className={`p-4 rounded-xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
+                        theme === 'light' ? 'bg-sky-50/70 border-sky-200' : 'bg-slate-950 border-slate-800'
+                      }`}
+                    >
+                      <div>
+                        <div className="text-sm font-bold flex items-center gap-2">
+                          <span>{person.name}</span>
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-mono">
+                            Bevoegd
+                          </span>
+                        </div>
+                        <div className="text-xs text-amber-400 font-mono">{person.relation}</div>
+                        <div className={`text-xs font-mono mt-1 ${theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'}`}>
+                          {person.email} • {person.phone}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteAuthorizedPerson(person.id)}
+                        className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-mono flex items-center gap-1 cursor-pointer"
+                        title="Verwijderen uit aandeelhoudersregister"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Verwijderen</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* ACTIEVE SESSIES & AUDIT TRAIL */}
+              <div className={`p-6 sm:p-8 rounded-3xl border shadow-lg space-y-5 ${
+                theme === 'light' ? 'bg-white border-sky-200 text-sky-950' : 'bg-slate-900/60 border-slate-800 text-white'
+              }`}>
+                <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+                  <div>
+                    <h4 className="text-base font-bold flex items-center gap-2">
+                      <Smartphone className="w-4 h-4 text-cyan-400" />
+                      <span>Actieve Inlogsessies & Apparaten</span>
+                    </h4>
+                    <p className={`text-xs ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                      Bekijk alle apparaten die momenteel ingelogd zijn op uw aandeelhoudersaccount.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleTerminateOtherSessions}
+                    className="px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 font-bold text-xs flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Power className="w-3.5 h-3.5" />
+                    <span>Beëindig Alle Overige Sessies</span>
+                  </button>
+                </div>
+
+                <div className="space-y-2.5">
+                  {activeSessions.map((sess) => (
+                    <div
+                      key={sess.id}
+                      className={`p-3.5 rounded-xl border flex items-center justify-between ${
+                        sess.current
+                          ? 'border-emerald-500/40 bg-emerald-500/10'
+                          : theme === 'light'
+                          ? 'bg-sky-50/50 border-sky-200'
+                          : 'bg-slate-950 border-slate-800'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className={`w-2.5 h-2.5 rounded-full ${sess.current ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'}`} />
+                        <div>
+                          <div className="text-xs font-bold flex items-center gap-2">
+                            <span>{sess.device}</span>
+                            {sess.current && (
+                              <span className="px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 text-[9px] font-mono font-bold">
+                                Huidig Apparaat
+                              </span>
+                            )}
+                          </div>
+                          <span className={`text-[10px] font-mono ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                            IP: {sess.ip} • Locatie: {sess.location}
+                          </span>
+                        </div>
+                      </div>
+                      <span className={`text-[11px] font-mono ${sess.current ? 'text-emerald-400 font-bold' : (theme === 'light' ? 'text-sky-800/70' : 'text-slate-400')}`}>
+                        {sess.lastActive}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 
@@ -3230,6 +4294,88 @@ export default function InvestorDashboard({
                   className="flex-1 py-2 rounded-xl bg-emerald-500 text-slate-950 text-xs font-bold"
                 >
                   Toevoegen
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* MODAL: WACHTWOORD WIJZIGEN                                               */}
+      {/* ========================================================================= */}
+      {showPasswordChangeModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="glass-panel w-full max-w-md p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl space-y-5">
+            <div className="flex justify-between items-start pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-teal-500/10 text-teal-400">
+                  <Lock className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white">Aandeelhouderswachtwoord Wijzigen</h3>
+                  <p className="text-xs text-slate-400">Versleuteld volgens Argon2id cryptografie</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPasswordChangeModal(false)}
+                className="text-slate-400 hover:text-white cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleChangePassword} className="space-y-4">
+              <div>
+                <label className="block text-xs font-mono text-slate-400 mb-1">Huidig Wachtwoord:</label>
+                <input
+                  type="password"
+                  value={passwordChangeState.current}
+                  onChange={(e) => setPasswordChangeState({ ...passwordChangeState, current: e.target.value })}
+                  placeholder="••••••••••••"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-xs focus:border-teal-400 focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-slate-400 mb-1">Nieuw Wachtwoord:</label>
+                <input
+                  type="password"
+                  value={passwordChangeState.next}
+                  onChange={(e) => setPasswordChangeState({ ...passwordChangeState, next: e.target.value })}
+                  placeholder="Minimaal 8 tekens, cijfers & symbolen"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-xs focus:border-teal-400 focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono text-slate-400 mb-1">Bevestig Nieuw Wachtwoord:</label>
+                <input
+                  type="password"
+                  value={passwordChangeState.confirm}
+                  onChange={(e) => setPasswordChangeState({ ...passwordChangeState, confirm: e.target.value })}
+                  placeholder="Herhaal nieuw wachtwoord"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-xs focus:border-teal-400 focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div className="pt-3 border-t border-slate-800 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowPasswordChangeModal(false)}
+                  className="flex-1 py-2.5 rounded-xl bg-slate-900 text-slate-300 text-xs font-bold hover:bg-slate-800 cursor-pointer"
+                >
+                  Annuleren
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 text-xs font-bold cursor-pointer transition-all"
+                >
+                  Wachtwoord Bijwerken
                 </button>
               </div>
             </form>

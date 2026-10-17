@@ -60,7 +60,20 @@ export interface AuthUser {
   city?: string;
   country?: string;
   iban?: string;
+  bic?: string;
+  bankName?: string;
+  payoutPreference?: 'sepa' | 'drip' | 'SEPA' | 'DRIP';
+  payoutFrequency?: 'monthly' | 'quarterly';
   taxId?: string;
+  nationality?: string;
+  dateOfBirth?: string;
+  kycLevel?: string;
+  woningType?: string;
+  woningLocatie?: string;
+  woningBudget?: string;
+  woningRonde?: string;
+  boostplugNodeId?: string;
+  boostplugNodeStatus?: string;
   authorizedPersons?: AuthorizedPerson[];
   notifications?: NotificationSettings;
 }
@@ -131,7 +144,20 @@ export const DEMO_INVESTOR: AuthUser = {
   city: 'Amsterdam',
   country: 'Nederland',
   iban: 'NL91 ABNA 0412 8891 00',
+  bic: 'ABNANN2A',
+  bankName: 'ABN AMRO Bank N.V.',
+  payoutPreference: 'sepa',
+  payoutFrequency: 'monthly',
   taxId: 'NL884291882B01',
+  nationality: 'Nederlandse',
+  dateOfBirth: '1984-06-18',
+  kycLevel: 'Tier 2 (Volledig Geverifieerd)',
+  woningType: 'Rijwoning',
+  woningLocatie: 'Amsterdam (Zuid / Centrum)',
+  woningBudget: '€450.000',
+  woningRonde: 'Ronde 1 (500 plekken)',
+  boostplugNodeId: 'BP-NODE-8842',
+  boostplugNodeStatus: 'Actief (Online)',
   authorizedPersons: [
     {
       id: 'AP 1',
