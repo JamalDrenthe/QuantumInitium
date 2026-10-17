@@ -941,7 +941,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                     Fintech Clearing en Compliance
                   </div>
                   <div className="text-base text-slate-200 font-semibold">
-                    {fintechOpmData.sabiRol}
+                    {fintechOpmData.xabiWorldRol}
                   </div>
                   <ul className="text-sm text-slate-300 space-y-3.5 pt-1">
                     <li className="flex items-start gap-3">

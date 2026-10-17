@@ -164,7 +164,7 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
               <span className="text-[11px] font-mono text-blue-400 font-bold tracking-wider">SUBHOLDING 02 • FINTECH & LIQUIDITY</span>
               <h4 className="font-bold text-white text-base tracking-tight">Xabi World Ltd</h4>
               <p className="text-sm text-slate-400 leading-relaxed">
-                Gespecialiseerde clearing hub (SABI betaalrails), escrow liquiditeitsretentie en realtime split payments zonder traditioneel bancair balansrisico.
+                Gespecialiseerde clearing hub (Xabi World betaalrails), escrow liquiditeitsretentie en realtime split payments zonder traditioneel bancair balansrisico.
               </p>
               <div className="text-xs font-mono text-blue-300 pt-1">Belang: 100% eigendom via Moederholding</div>
             </div>
@@ -235,7 +235,7 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
               <div className="bg-slate-900/90 p-5 rounded-xl border border-slate-800 space-y-2">
                 <span className="text-[11px] font-mono text-amber-400 font-bold tracking-wider block">CLEARING LAAG</span>
                 <h5 className="font-bold text-white text-sm">Xabi World Escrow & Afwikkeling</h5>
-                <p className="text-xs text-slate-400 leading-relaxed">Directe saldering en distributie over werkmaatschappijen (SABI clearing).</p>
+                <p className="text-xs text-slate-400 leading-relaxed">Directe saldering en distributie over werkmaatschappijen (Xabi World clearing).</p>
               </div>
             </div>
           </div>
@@ -391,7 +391,7 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
               Time Gap Cashflow & Xabi World Clearing
             </h2>
             <p className="text-sm lg:text-base text-slate-300 max-w-3xl leading-relaxed">
-              Spontiva Ltd overbrugt betaaltermijnen via WCO (Working Capital Optimization). Xabi World Ltd zorgt voor instant escrow split payments via de SABI infrastructuur.
+              Spontiva Ltd overbrugt betaaltermijnen via WCO (Working Capital Optimization). Xabi World Ltd zorgt voor instant escrow split payments via de Xabi World infrastructuur.
             </p>
           </div>
 

@@ -2891,7 +2891,7 @@ export const EcosystemCanvas = forwardRef<EcosystemCanvasHandle, EcosystemCanvas
                 foundHoveredLtd = {
                   name: 'Xabi World ⇄ Investbotiq',
                   role: 'Directe Clearing en Autonome AI Executie',
-                  desc: 'Directe financiële integratie tussen de SABI clearing rails van Xabi World en de autonome AI executie en kasstroomverdeling van Investbotiq.',
+                  desc: 'Directe financiële integratie tussen de Xabi World clearing rails en de autonome AI executie en kasstroomverdeling van Investbotiq.',
                   holdco: 'Fintech'
                 };
                 isInteractive = true;

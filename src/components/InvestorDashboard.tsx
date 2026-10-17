@@ -357,18 +357,18 @@ export default function InvestorDashboard({
       domain: 'xabi.world',
       email: 'info@xabi.world',
       holdingKey: 'sub2',
-      holdingName: 'Subholding 2: Fintech & SABI Liquidity',
+      holdingName: 'Subholding 2: Fintech & Xabi World Liquidity',
       category: 'fintech',
-      type: 'Clearing & SABI Escrow Rails',
-      tagline: 'Meer overzicht voor de volgende stap — Financiële helderheid en SABI clearing',
-      obligationReason: 'Cruciale clearing hub voor SABI rails, escrow split payments, BaaS EMI integraties en directe SEPA dividend transfers.',
-      protocol: 'SABI Rails / ISO 20022',
+      type: 'Clearing & Xabi World Escrow Rails',
+      tagline: 'Meer overzicht voor de volgende stap — Financiële helderheid en Xabi World clearing',
+      obligationReason: 'Cruciale clearing hub voor Xabi World rails, escrow split payments, BaaS EMI integraties en directe SEPA dividend transfers.',
+      protocol: 'Xabi World Rails / ISO 20022',
       endpoint: 'https://clearing.xabi.world/v2/escrow',
       status: 'connected',
       lastSync: '2 minuten geleden',
       latency: '9ms',
-      apiKey: 'XABI_SABI_CLEARING_8842',
-      dataStreams: ['SABI Escrow Clearing', 'Directe SEPA Dividend Rails', 'Liquidity Pool Verificatie'],
+      apiKey: 'XABI_WORLD_CLEARING_8842',
+      dataStreams: ['Xabi World Escrow Clearing', 'Directe SEPA Dividend Rails', 'Liquidity Pool Verificatie'],
       color: 'border-blue-500/40 text-blue-400 bg-blue-500/10',
       autoSync: true
     },
@@ -404,7 +404,7 @@ export default function InvestorDashboard({
       holdingName: 'Subholding 3: Talent & Gateway',
       category: 'talent',
       type: 'B2B IT Detachering & Flexibele Pool',
-      tagline: 'Next-Gen B2B IT Detachering & Flexibele Pool — Directe SABI Rails clearing',
+      tagline: 'Next-Gen B2B IT Detachering & Flexibele Pool — Directe Xabi World Rails clearing',
       obligationReason: 'Directe feed van internationale IT plaatsingen en resourcing marges voor aandeelhouders dividend allocatie.',
       protocol: 'REST Event Webhook',
       endpoint: 'https://feed.djobba.works/v1/placements',
@@ -516,7 +516,7 @@ export default function InvestorDashboard({
       type: 'Working Capital Optimization (WCO)',
       tagline: 'TIME GAP CASHFLOW — Sluit direct aan op hoe geld door jouw bedrijf beweegt',
       obligationReason: 'Fintech werkkapitaal structurering, Time Gap cashflow optimalisatie en debiteuren escrow audits.',
-      protocol: 'SABI Treasury Direct API',
+      protocol: 'Xabi World Treasury Direct API',
       endpoint: 'https://treasury.spontiva.nl/v1/wco/stream',
       status: 'connected',
       lastSync: '5 minuten geleden',
@@ -562,7 +562,7 @@ export default function InvestorDashboard({
     {
       id: 'log_2',
       entity: 'Xabi World Ltd',
-      action: 'SABI Escrow dividend clearing geverifieerd (€1.520,00)',
+      action: 'Xabi World Escrow dividend clearing geverifieerd (€1.520,00)',
       timestamp: '2 minuten geleden',
       status: 'success',
       badge: 'Fintech Clearing'
@@ -993,9 +993,9 @@ export default function InvestorDashboard({
     },
     {
       id: 'doc_6',
-      title: 'SABI Escrow & Derdengelden Overeenkomst (Xabi World)',
+      title: 'Xabi World Escrow & Derdengelden Overeenkomst',
       description: 'DNB & FCA conforme rekeningafsplitsing via Stichting Derdengelden voor gegarandeerde dividend payouts.',
-      filename: 'SABI_Derdengelden_Escrow_Custody.pdf',
+      filename: 'Xabi_World_Derdengelden_Escrow_Custody.pdf',
       size: '1.1 MB',
       date: '20 januari 2025',
       hash: 'SHA256: 9e02...55ad',
@@ -1069,7 +1069,7 @@ export default function InvestorDashboard({
     {
       id: 'account' as InternalView,
       title: 'Account Centrum',
-      subtitle: 'KYC dossier, bank & SABI rails, ecosysteem rechten & documenten',
+      subtitle: 'KYC dossier, bank & Xabi World rails, ecosysteem rechten & documenten',
       icon: User,
       color: 'text-indigo-400'
     },
@@ -2514,7 +2514,7 @@ export default function InvestorDashboard({
                 <div className={`p-3 rounded-xl border ${
                   theme === 'light' ? 'bg-white/80 border-sky-200' : 'bg-slate-900/80 border-slate-800'
                 }`}>
-                  <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>SABI Clearing</span>
+                  <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Xabi World Clearing</span>
                   <span className="text-xs font-bold text-emerald-400 font-mono">Xabi Rails Escrow</span>
                 </div>
                 <div className={`p-3 rounded-xl border ${
@@ -2536,7 +2536,7 @@ export default function InvestorDashboard({
             <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-6 mt-6 border-t border-slate-800/60">
               {[
                 { id: 'profiel' as const, label: 'Identiteit & KYC Dossier', icon: User, color: 'text-indigo-400' },
-                { id: 'bank' as const, label: 'Bank, Dividend & SABI Rails', icon: Landmark, color: 'text-emerald-400' },
+                { id: 'bank' as const, label: 'Bank, Dividend & Xabi World Rails', icon: Landmark, color: 'text-emerald-400' },
                 { id: 'ecosysteem' as const, label: 'Ecosysteem Rechten (4 Pijlers)', icon: Network, color: 'text-cyan-400' },
                 { id: 'documenten' as const, label: `Documenten Kluis (${vaultDocuments.length})`, icon: FileText, color: 'text-amber-400' },
                 { id: 'beveiliging' as const, label: 'Beveiliging & Gemachtigden', icon: ShieldCheck, color: 'text-teal-400' }
@@ -2818,7 +2818,7 @@ export default function InvestorDashboard({
           )}
 
           {/* ========================================================================= */}
-          {/* SUB-TAB 2: BANK, DIVIDEND & SABI RAILS                                    */}
+          {/* SUB-TAB 2: BANK, DIVIDEND & XABI WORLD RAILS                               */}
           {/* ========================================================================= */}
           {accountSubTab === 'bank' && (
             <div className="space-y-6">
@@ -2829,7 +2829,7 @@ export default function InvestorDashboard({
                   <div>
                     <h3 className="text-base font-bold flex items-center gap-2">
                       <Landmark className="w-5 h-5 text-emerald-400" />
-                      <span>Tegenrekening & SABI Rails Clearing Hub</span>
+                      <span>Tegenrekening & Xabi World Rails Clearing Hub</span>
                     </h3>
                     <p className={`text-xs ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
                       Koppeling met Xabi World Ltd rails en Stichting Derdengelden escrow voor directe SEPA dividenduitbetalingen.
@@ -2837,7 +2837,7 @@ export default function InvestorDashboard({
                   </div>
                   <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-mono font-bold flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>SABI Rails: Live</span>
+                    <span>Xabi World Rails: Live</span>
                   </span>
                 </div>
 
@@ -2924,7 +2924,7 @@ export default function InvestorDashboard({
                             </div>
                             <div>
                               <h4 className="text-sm font-bold">SEPA Instant Bankoverschrijving</h4>
-                              <span className="text-[10px] text-emerald-400 font-mono font-bold">Directe uitkering via SABI Clearing</span>
+                              <span className="text-[10px] text-emerald-400 font-mono font-bold">Directe uitkering via Xabi World Clearing</span>
                             </div>
                           </div>
                           <span className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
@@ -3004,7 +3004,7 @@ export default function InvestorDashboard({
                           Stichting Derdengelden Custody:
                         </span>
                         <span className="text-xs font-mono font-bold text-emerald-400">
-                          SABI-ESCROW-NL-7721-00
+                          XABI-WORLD-ESCROW-NL-7721-00
                         </span>
                       </div>
                       <span className="px-2 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold">
@@ -3252,7 +3252,7 @@ export default function InvestorDashboard({
                   </p>
                   <div className="flex items-center justify-between pt-2 text-xs font-mono">
                     <span className={theme === 'light' ? 'text-sky-800/70' : 'text-slate-500'}>WCO Treasury Feed:</span>
-                    <span className="text-amber-400 font-bold">Synchroon • SABI Escrow</span>
+                    <span className="text-amber-400 font-bold">Synchroon • Xabi World Escrow</span>
                   </div>
                 </div>
               </div>
@@ -3689,7 +3689,7 @@ export default function InvestorDashboard({
                   12 Entiteiten Ecosysteem Integratie Hub
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                  Conform de statuten en aandeelhoudersovereenkomst van QuantumInitium Ltd zijn alle gecertificeerde aandeelhouders verplicht een actieve data en escrow koppeling te onderhouden met alle 12 operationele entiteiten. Dit garandeert geautomatiseerde dividenduitkeringen, realtime SABI escrow clearing, IFRS cap table synchronisatie en transparante audit trails.
+                  Conform de statuten en aandeelhoudersovereenkomst van QuantumInitium Ltd zijn alle gecertificeerde aandeelhouders verplicht een actieve data en escrow koppeling te onderhouden met alle 12 operationele entiteiten. Dit garandeert geautomatiseerde dividenduitkeringen, realtime Xabi World escrow clearing, IFRS cap table synchronisatie en transparante audit trails.
                 </p>
               </div>
 
@@ -3736,7 +3736,7 @@ export default function InvestorDashboard({
               </div>
 
               <div className="p-3.5 rounded-2xl bg-slate-950/70 border border-amber-500/20">
-                <span className="text-[10px] font-mono uppercase text-slate-400 block">SABI Escrow Clearing</span>
+                <span className="text-[10px] font-mono uppercase text-slate-400 block">Xabi World Escrow Clearing</span>
                 <span className="text-base sm:text-lg font-black text-amber-300 mt-0.5 block">
                   Actief & Live
                 </span>

@@ -130,8 +130,8 @@ const allEntitiesList: EntityItem[] = [
     holdingName: 'Subholding 2: Fintech & Liquidity',
     category: 'fintech',
     type: 'Clearing & Escrow',
-    tagline: 'Meer overzicht voor de volgende stap — Financiële helderheid en SABI clearing',
-    role: 'Fintech clearing hub (SABI rails), BaaS/EMI integraties en Stichting Derdengelden escrow voor realtime split payments.',
+    tagline: 'Meer overzicht voor de volgende stap — Financiële helderheid en Xabi World clearing',
+    role: 'Fintech clearing hub (Xabi World rails), BaaS/EMI integraties en Stichting Derdengelden escrow voor realtime split payments.',
     color: 'text-blue-400 bg-blue-500/10 border-blue-500/30'
   },
   {
@@ -156,8 +156,8 @@ const allEntitiesList: EntityItem[] = [
     holdingName: 'Subholding 3: Talent & Gateway',
     category: 'talent',
     type: 'B2B IT Detachering',
-    tagline: 'Next-Gen B2B IT Detachering & Flexibele Pool — Directe SABI Rails clearing',
-    role: 'Supabase-achtig B2B IT platform voor flexibele gigs en vaste IT detachering met directe uitbetaling en SABI Rails clearing.',
+    tagline: 'Next-Gen B2B IT Detachering & Flexibele Pool — Directe Xabi World Rails clearing',
+    role: 'Supabase-achtig B2B IT platform voor flexibele gigs en vaste IT detachering met directe uitbetaling en Xabi World Rails clearing.',
     color: 'text-amber-400 bg-amber-500/10 border-amber-500/30'
   },
   {
@@ -299,7 +299,7 @@ const subholdingMatrix: Record<string, SubholdingNode> = {
       {
         name: 'Xabi World Ltd',
         type: 'Clearing & Escrow',
-        role: 'Fintech clearing hub (SABI rails), BaaS en EMI integraties en realtime split payments.'
+        role: 'Fintech clearing hub (Xabi World rails), BaaS en EMI integraties en realtime split payments.'
       }
     ]
   },
@@ -491,7 +491,7 @@ export const subholdingCardsData: SubholdingCardData[] = [
     iconName: 'Wallet',
     entitiesCount: 1,
     entityNames: ['Xabi World Ltd'],
-    focus: 'Robuuste SABI betaalrails, geautomatiseerde clearing en veilige derdengeldenscheiding',
+    focus: 'Robuuste Xabi World betaalrails, geautomatiseerde clearing en veilige derdengeldenscheiding',
     firewall: 'Geen eigen bankbalansrisico, 100% escrow gescheiden via Stichting Derdengelden',
     substance: 'Gecertificeerde BaaS en EMI partners zoals Wallester en Swan',
     model: 'Transactievergoedingen, clearingcontracten en liquiditeitsretentie'

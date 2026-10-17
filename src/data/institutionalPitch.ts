@@ -202,7 +202,7 @@ export const driejarigeGroeiprojecties: GrowthProjection[] = [
 ];
 
 export const fintechOpmData = {
-  sabiRol: 'Xabi World Ltd fungeert als clearing hub en beheert de betaalinfrastructuur (SABI rails), maar draagt geen bancair balansrisico.',
+  xabiWorldRol: 'Xabi World Ltd fungeert als clearing hub en beheert de betaalinfrastructuur (Xabi World rails), maar draagt geen bancair balansrisico.',
   banklicentieVrij: 'Geen eigen banklicentie benodigd. Geen blootstelling aan traditionele bankrisicos.',
   baasPartners: 'BaaS en EMI Partners (bijvoorbeeld Wallester, Swan). Volledig operationeel onder gecertificeerde externe vergunningen.',
   stichtingDerdengelden: 'Volledige derdengeldenscheiding via Stichting Derdengelden (Escrow). Vooruitontvangen gelden blijven strikt afgeschermd totdat de prestatie geleverd is.',
@@ -230,7 +230,7 @@ export const infiniteLoopSteps: InfiniteLoopStep[] = [
     stapNummer: 2,
     knooppunt: 'Knooppunt 2 (Retentie)',
     titel: 'Betaalinfrastructuur en Vasthouden Middelen',
-    entiteiten: 'Xabi World Ltd (SABI Clearing)',
+    entiteiten: 'Xabi World Ltd (Xabi World Clearing)',
     mechanisme: 'Beheert de betaalrails; middelen blijven binnen het ecosysteem behouden.'
   },
   {

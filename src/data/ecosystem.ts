@@ -102,15 +102,15 @@ export const ecosystemData: Record<string, NodeData> = {
     entities: [
       {
         name: 'Xabi World Ltd',
-        role: 'Clearing en Betaalinfrastructuur (SABI Clearing Rails / Geen Eigen Banklicentie)',
-        tagline: 'Meer overzicht voor de volgende stap — Financiële helderheid en SABI clearing',
-        desc: 'Xabi World Ltd beheert de SABI betaalinfrastructuur en liquiditeitsretentie. Werkt exclusief via gecertificeerde BaaS en EMI partners (Wallester, Swan) en Stichting Derdengelden (Escrow rails).',
+        role: 'Clearing en Betaalinfrastructuur (Xabi World Clearing Rails / Geen Eigen Banklicentie)',
+        tagline: 'Meer overzicht voor de volgende stap — Financiële helderheid en Xabi World clearing',
+        desc: 'Xabi World Ltd beheert de Xabi World betaalinfrastructuur en liquiditeitsretentie. Werkt exclusief via gecertificeerde BaaS en EMI partners (Wallester, Swan) en Stichting Derdengelden (Escrow rails).',
         shape: 'cylinder',
         color: '#10b981',
         type: 'Werkmaatschappij',
         compliance: '100% dekkend voor DNB, FCA en UK GDPR (KYC en AML)',
         synergyWith: 'DJOBBA Ltd, Spontiva Ltd, Investbotiq Ltd',
-        synergyEffect: 'Houdt kapitaal binnen de gesloten cyclus van € 66.000 per 99 leden en verzorgt realtime SABI clearing voor AI executie',
+        synergyEffect: 'Houdt kapitaal binnen de gesloten cyclus van € 66.000 per 99 leden en verzorgt realtime Xabi World clearing voor AI executie',
         website: 'https://xabi.world',
         domain: 'xabi.world',
         email: 'info@xabi.world'
@@ -149,14 +149,14 @@ export const ecosystemData: Record<string, NodeData> = {
       {
         name: 'DJOBBA Ltd',
         role: 'B2B IT Detachering & Flexibele Pool',
-        tagline: 'Next-Gen B2B IT Detachering & Flexibele Pool — Directe SABI Rails clearing',
-        desc: 'Het Supabase-achtige B2B IT platform voor flexibele gigs en vaste IT contracten. Koppelt detacheringskasstromen met directe uitbetaling en SABI Rails clearing aan het ecosysteem.',
+        tagline: 'Next-Gen B2B IT Detachering & Flexibele Pool — Directe Xabi World Rails clearing',
+        desc: 'Het Supabase-achtige B2B IT platform voor flexibele gigs en vaste IT contracten. Koppelt detacheringskasstromen met directe uitbetaling en Xabi World Rails clearing aan het ecosysteem.',
         shape: 'diamond',
         color: '#60a5fa',
         type: 'Werkmaatschappij',
         financialContribution: 'Start Knooppunt 1 van de Infinite Loop van kapitaalrotatie',
         synergyWith: 'Xabi World Ltd, VVC Ltd, Spontiva Ltd',
-        synergyEffect: 'Koppelt detacheringskasstromen direct aan Time Gap Cashflow werkkapitaal optimalisatie en SABI clearing',
+        synergyEffect: 'Koppelt detacheringskasstromen direct aan Time Gap Cashflow werkkapitaal optimalisatie en Xabi World clearing',
         website: 'https://djobba.works',
         domain: 'djobba.works',
         email: 'info@djobba.works'
