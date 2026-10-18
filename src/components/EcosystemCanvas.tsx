@@ -1061,7 +1061,7 @@ export const EcosystemCanvas = forwardRef<EcosystemCanvasHandle, EcosystemCanvas
       /* 6. Holografisch synergie tekstlabel zwevend in het midden */
       boostplugSpontivaLabel = createSynergyConnectionLabel(
         'Boostplug ⇄ Spontiva',
-        'Directe GPU Compute en Time Gap Cashflow Synergie',
+        'Directe Distributie en Time Gap Cashflow Synergie',
         '#c084fc'
       );
       boostplugSpontivaLabel.userData = {
@@ -1412,7 +1412,7 @@ export const EcosystemCanvas = forwardRef<EcosystemCanvasHandle, EcosystemCanvas
       /* 6. Holografisch synergie tekstlabel zwevend in het midden */
       boostplugZheavenzyLabel = createSynergyConnectionLabel(
         'Boostplug ⇄ Zheavenzy',
-        'GPU Compute en Media Streaming Bandbreedte',
+        'Streaming Distributie en Media Bereik',
         '#ec4899'
       );
       boostplugZheavenzyLabel.userData = {
@@ -1529,7 +1529,7 @@ export const EcosystemCanvas = forwardRef<EcosystemCanvasHandle, EcosystemCanvas
       /* 6. Holografisch synergie tekstlabel zwevend in het midden */
       boostplugLogsLabel = createSynergyConnectionLabel(
         'Boostplug ⇄ Logs.rent',
-        'Directe GPU Capaciteit en Compute Marketplace Verhuur',
+        'Directe Distributie- en Account Marketplace Verhuur',
         '#c084fc'
       );
       boostplugLogsLabel.userData = {
@@ -2900,8 +2900,8 @@ export const EcosystemCanvas = forwardRef<EcosystemCanvasHandle, EcosystemCanvas
               if (curr.userData?.isBoostplugLogsSynergy) {
                 foundHoveredLtd = {
                   name: 'Boostplug ⇄ Logs.rent',
-                  role: 'Directe GPU Capaciteit en Compute Marketplace Verhuur',
-                  desc: 'Directe koppeling tussen de mining clusters van Boostplug en het geautomatiseerde account en rekenkracht verhuurplatform Logs.rent.',
+                  role: 'Directe Distributie- en Account Marketplace Verhuur',
+                  desc: 'Directe koppeling tussen de streaming en review bundels van Boostplug en de geautomatiseerde account- en assetverhuur van Logs.rent.',
                   holdco: 'Compute'
                 };
                 isInteractive = true;
@@ -2910,8 +2910,8 @@ export const EcosystemCanvas = forwardRef<EcosystemCanvasHandle, EcosystemCanvas
               if (curr.userData?.isBoostplugZheavenzySynergy) {
                 foundHoveredLtd = {
                   name: 'Boostplug ⇄ Zheavenzy',
-                  role: 'GPU Compute en Media Streaming Bandbreedte',
-                  desc: 'High performance GPU rekenkracht en stream point netwerkbandbreedte van Boostplug voeden de muziekproductie en streaming distributie van Zheavenzy.',
+                  role: 'Streaming Distributie en Media Bereik',
+                  desc: 'Groeicampagnes en streamingdistributie van Boostplug versterken de releases van onafhankelijke artiesten op Zheavenzy.',
                   holdco: 'Compute'
                 };
                 isInteractive = true;
@@ -2940,8 +2940,8 @@ export const EcosystemCanvas = forwardRef<EcosystemCanvasHandle, EcosystemCanvas
               if (curr.userData?.isBoostplugSpontivaSynergy) {
                 foundHoveredLtd = {
                   name: 'Boostplug ⇄ Spontiva',
-                  role: 'Directe GPU Compute en Time Gap Cashflow Synergie',
-                  desc: 'GPU cluster infrastructuur van Boostplug gekoppeld aan Spontiva voor directe liquiditeitsallocatie en werkkapitaal financiering.',
+                  role: 'Directe Distributie en Time Gap Cashflow Synergie',
+                  desc: 'Distributie- en reviewopbrengsten van Boostplug gekoppeld aan Spontiva voor continue werkkapitaal-optimalisatie en liquide doorstroming.',
                   holdco: 'Compute'
                 };
                 isInteractive = true;

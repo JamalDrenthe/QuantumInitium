@@ -84,7 +84,7 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
               <span className="text-xs text-slate-400 font-mono font-semibold uppercase tracking-wider">JAAR 1 TARGET</span>
               <div className="text-3xl font-black text-amber-400 font-mono tracking-tight"><PrivateAmount value="€ 20,4M" /></div>
               <p className="text-xs text-slate-400 leading-relaxed pt-1">
-                Gebaseerd op 100 actieve leden en de Reeks van Gauss (78 cumulatieve cycli).
+                Gebaseerd op 100 actieve aangesloten partners en 12-maandse cohortopbouw (78 cumulatieve cycli).
               </p>
             </div>
             <div className="glass-card p-6 rounded-2xl border-l-4 border-l-yellow-400 space-y-2">
@@ -102,13 +102,13 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
             </h3>
             <ul className="text-sm text-slate-300 space-y-3 list-disc pl-5 leading-relaxed">
               <li>
-                <strong>Invoer & Verificatie:</strong> Immigratiepunt Ltd en VVC Ltd garanderen continue instroom van hooggekwalificeerde kennismigranten.
+                <strong>Invoer & Verificatie:</strong> Immigratiepunt Ltd en VVC Ltd faciliteren de instroom en verificatie van gekwalificeerde IT- en salestalenten.
               </li>
               <li>
-                <strong>Algoritmische Executie:</strong> Investbotiq Ltd herverdeelt opdrachten en kapitaal direct over Boostplug (GPU), WoningVry (PropTech) en Spontiva (Fintech).
+                <strong>Geautomatiseerde Executie:</strong> Investbotiq Ltd alloceert opdrachten en kasstromen direct over Boostplug (Media & Distributie), WoningVry (PropTech) en Spontiva (Fintech).
               </li>
               <li>
-                <strong>Wiskundige Voorspelbaarheid:</strong> De Reeks van Gauss formuleert exacte omzetontwikkeling zonder traditionele frictie.
+                <strong>Gestructureerde Cohortopbouw:</strong> Maandelijkse capaciteitsopbouw resulteert in een transparante en voorspelbare omzetbasis per aangesloten partner.
               </li>
             </ul>
           </div>
@@ -182,7 +182,7 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
               <span className="text-[11px] font-mono text-emerald-400 font-bold tracking-wider">SUBHOLDING 04 • COMPUTE & MEDIA</span>
               <h4 className="font-bold text-white text-base tracking-tight">Boostplug Ltd, Logs.rent & Spontiva Ltd</h4>
               <p className="text-sm text-slate-400 leading-relaxed">
-                GPU AI mining clusters, streaming bandbreedte monetarisering en de working capital optimalisatie motor.
+                Streaming en verified review distributie, veilige account- en assetverhuur via Logs.rent en working capital optimalisatie via Spontiva.
               </p>
               <div className="text-xs font-mono text-emerald-300 pt-1">Belang: 100% eigendom via Moederholding</div>
             </div>
@@ -295,7 +295,7 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
               <Bookmark className="w-3.5 h-3.5" /> HOOFDSTUK 05 • REKENMODEL
             </div>
             <h2 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-white leading-tight">
-              Het Gauss Rekenmodel
+              Het 12-Maandse Cohort Rekenmodel
             </h2>
             <p className="text-sm lg:text-base text-slate-300 max-w-3xl leading-relaxed">
               Cumulatieve maandopbouw: 12 maanden × <PrivateAmount value="€ 2.625" /> × (12 × 13 / 2 = 78 cycli) = <PrivateAmount value="€ 204.750" /> bruto omzet per actief lid per jaar.
@@ -304,10 +304,10 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="glass-card p-6 rounded-2xl border-l-4 border-l-cyan-500 space-y-3">
-              <span className="text-xs font-bold text-cyan-400 uppercase font-mono tracking-wider">COMPUTE TAK</span>
+              <span className="text-xs font-bold text-cyan-400 uppercase font-mono tracking-wider">MEDIA & REVIEW DISTRIBUTIE</span>
               <div className="text-2xl font-black text-white font-mono tracking-tight"><PrivateAmount value="€ 1.500 per maand" /></div>
               <p className="text-sm text-slate-400 leading-relaxed">
-                GPU Mining (<PrivateAmount value="€1.000" />) via Boostplug 5 node cluster + Stream Point Mining (<PrivateAmount value="€500" />) via bandbreedte monetarisering.
+                Streaming Distributie (<PrivateAmount value="€1.000" />) via Boostplug Spotify/Apple Music netwerk + Review & Account Bundels (<PrivateAmount value="€500" />) via Logs.rent.
               </p>
             </div>
             <div className="glass-card p-6 rounded-2xl border-l-4 border-l-emerald-500 space-y-3">

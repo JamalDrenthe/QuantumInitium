@@ -143,8 +143,8 @@ const allEntitiesList: EntityItem[] = [
     holdingName: 'Subholding 3: Talent & Gateway',
     category: 'talent',
     type: 'Gateway & Partnernetwerk',
-    tagline: 'Join the Money Movement — €50k-€100k OTE + Passief inkomen als partner',
-    role: 'Verdienende Vrienden Club: exclusief ecosysteem voor high-ticket sales talent, closers en ondernemende partners.',
+    tagline: 'Commercieel Partner- & Groeinetwerk — Prestatiegerichte sales en partnermodellen',
+    role: 'Verdienende Vrienden Club: exclusief netwerk voor high-ticket sales professionals, deal sourcing en ondernemende groeipartners.',
     color: 'text-amber-400 bg-amber-500/10 border-amber-500/30'
   },
   {
@@ -194,9 +194,9 @@ const allEntitiesList: EntityItem[] = [
     holdingKey: 'sub4',
     holdingName: 'Subholding 4: Compute & Media',
     category: 'compute',
-    type: 'Growth Platform & Hardware Mining',
-    tagline: 'Streaming & Reviews Growth Platform & Mining Node Network',
-    role: 'Verhoogt streams en verified reviews (Spotify, Apple Music, Trustpilot) met drip-feed algoritmebescherming en hardware mining nodes.',
+    type: 'Streaming & Reviews Platform',
+    tagline: 'Streaming & Reviews Growth Platform — Geverifieerde luisteraars & reputatieversterking',
+    role: 'Optimaliseert streamingbereik en verified reviews (Spotify, Apple Music, Trustpilot, Google Maps) met organische drip-feed algoritmebescherming.',
     color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
   },
   {
@@ -335,8 +335,8 @@ const subholdingMatrix: Record<string, SubholdingNode> = {
     entities: [
       {
         name: 'Boostplug Ltd',
-        type: 'Hardware & Mining',
-        role: 'Exclusieve GPU mining clusters en stream point bandbreedte.'
+        type: 'Streaming & Reviews',
+        role: 'Groeiversneller voor streams (Spotify, Apple Music) en Trustpilot reviews.'
       },
       {
         name: 'Logs.rent',
@@ -368,7 +368,7 @@ const chapterList = [
   { num: 2, tag: '02', title: 'ORGANISATIE', desc: '5 Subholdings & 12 Entiteiten' },
   { num: 3, tag: '03', title: 'TECHNOLOGIE', desc: 'Investbotiq AI Executie Engine' },
   { num: 4, tag: '04', title: 'INTEGRATIE', desc: 'Operationele Synergie Matrix' },
-  { num: 5, tag: '05', title: 'REKENMODEL', desc: 'Gauss Rekenmodel' },
+  { num: 5, tag: '05', title: 'REKENMODEL', desc: 'Cohort Rekenmodel' },
   { num: 6, tag: '06', title: 'GROEI', desc: 'Schaalbaarheid en groeiprojecties' },
   { num: 7, tag: '07', title: 'LIQUIDITEIT', desc: 'Time Gap Cashflow & Xabi World' },
   { num: 8, tag: '08', title: 'KAPITAALMARKT', desc: 'Beursgang & Cap Table' },
@@ -523,9 +523,9 @@ export const subholdingCardsData: SubholdingCardData[] = [
     archKey: 'sub4',
     numberTag: 'SUB 04',
     title: 'Compute & Media Holdco',
-    subTitle: 'High Performance GPU AI & Stream Monetarisering',
-    sector: 'Hardware & Compute Marketplace',
-    desc: 'Infrastructuur voor high performance GPU AI inferentie, hardware mining clusters, streaming bandbreedte en accountverhuur.',
+    subTitle: 'Streaming Aggregatie & Digital Asset Marketplace',
+    sector: 'Media Distributie & Asset Exchange',
+    desc: 'Infrastructuur voor streaming aggregatie, geverifieerde reviewbundels, veilige accountverhuur en geautomatiseerde marktplaats settlements.',
     colorHex: '#a855f7',
     textColor: 'text-purple-400',
     badgeClass: 'text-purple-400 bg-purple-500/10 border-purple-500/30',
@@ -535,10 +535,10 @@ export const subholdingCardsData: SubholdingCardData[] = [
     iconName: 'Server',
     entitiesCount: 2,
     entityNames: ['Boostplug Ltd', 'Logs.rent'],
-    focus: 'GPU rekenkracht en accountverhuur marketplace',
-    firewall: 'Hardware activa en verhuurcontracten afzonderlijk geborgd per werkmaatschappij',
-    substance: 'Eigen fysieke en cloud compute clusters met geregistreerde hardware contracten',
-    model: 'Compute verhuur, hash rate commissies en werkkapitaal optimalisatie marges'
+    focus: 'Streaming aggregatie en veilige accountverhuur marketplace',
+    firewall: 'Digitale assets en verhuurcontracten juridisch geïsoleerd per werkmaatschappij',
+    substance: 'Geregistreerde platforms, API integraties en formele exploitatiecontracten',
+    model: 'Streaming fee distributie, review aggregatiemarges en veilige accountverhuur'
   },
   {
     id: 'RealEstate',
@@ -862,12 +862,12 @@ export function App() {
     if (talentType === 'expat_it') {
       newLogs.push(
         `[${timestamp}] [SPONTIVA] Triggered TGC cashflow advance for relocation package.`,
-        `[${timestamp}] [BOOSTPLUG] Assigned 5x GPU node cluster to Logs.rent account.`,
+        `[${timestamp}] [BOOSTPLUG] Streaming & review distributiecampagne gekoppeld via Logs.rent account.`,
         `[${timestamp}] [WONINGVRY] Automated LongStay tenancy agreement generated.`
       );
     } else if (talentType === 'gpu_engineer') {
       newLogs.push(
-        `[${timestamp}] [BOOSTPLUG] High density GPU cluster initialized with stream point mining.`,
+        `[${timestamp}] [BOOSTPLUG] Groeicampagne en geautomatiseerde streamallocatie geactiveerd.`,
         `[${timestamp}] [XABI WORLD] Clearing account activated for compute rental payouts.`,
         `[${timestamp}] [WONINGVRY] BnB short stay assigned during onboarding phase.`
       );
@@ -888,7 +888,7 @@ export function App() {
     setSimLogs((prev) => [...newLogs, ...prev]);
   };
 
-  // Gauss calculation outputs
+  // 12-Month Cohort calculation outputs (78 cycles * €2.625)
   const revPerMember = 204750; // 78 cycli * €2.625
   const totalRevenue = calcMembers * revPerMember;
   const valuation = totalRevenue * 4.0;
@@ -1008,11 +1008,11 @@ export function App() {
     },
     {
       id: 'calculator' as const,
-      label: language === 'en' ? 'Gauss Financial Model' : 'Gauss Rekenmodel',
-      shortLabel: language === 'en' ? 'Gauss Model' : 'Gauss Model',
+      label: language === 'en' ? 'Cohort Financial Model' : 'Cohort Rekenmodel',
+      shortLabel: language === 'en' ? 'Cohort Model' : 'Cohort Model',
       description: language === 'en'
-        ? 'Mathematical compound scaling model over 78 strategic cycles'
-        : 'Wiskundig samengesteld groeimodel over 78 strategische cycli',
+        ? 'Strategic cohort compounding model over 12 rolling months'
+        : 'Strategisch cohort-accumulatiemodel over 12 opeenvolgende maanden',
       icon: Calculator,
       badge: language === 'en' ? '78 Cycles' : '78 Cycli',
       badgeColor: 'text-amber-400 bg-amber-500/10 border-amber-500/25',
@@ -1111,7 +1111,7 @@ export function App() {
                   </span>
                 </div>
                 <p className="text-xs text-slate-400 hidden lg:block leading-tight mt-0.5">
-                  5 Subholdings • Centrale AI Executiemotor • Gauss Reeks
+                  5 Subholdings • Centrale AI Executiemotor • 11 Entiteiten
                 </p>
               </div>
             </div>
@@ -2424,21 +2424,21 @@ export function App() {
                       onClick={handleRunSimulation}
                       className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-cyan-500/20 cursor-pointer"
                     >
-                      <Zap className="w-4 h-4" /> Trigger IQ Bot Executie Sequence
+                      <Zap className="w-4 h-4" /> Voer Automatische Ecosysteem-Allocatie Uit
                     </button>
                   </div>
 
                   {/* Status Monitor */}
                   <div className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-2.5">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-slate-400">IQ Bot Status:</span>
+                      <span className="text-slate-400">Investbotiq Workflow Engine:</span>
                       <span className="font-mono text-emerald-400 font-bold flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> ACTIEF / AUTONOOM
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> OPERATIONEEL
                       </span>
                     </div>
                     <div className="text-xs font-mono text-slate-400 leading-normal">
-                      Latency: <span className="text-cyan-400">12ms</span> • Verification Gate:{' '}
-                      <span className="text-emerald-400">PASSED</span>
+                      Verwerking: <span className="text-cyan-400">Realtime API</span> • Compliance Status:{' '}
+                      <span className="text-emerald-400">GEVALIDEERD</span>
                     </div>
                   </div>
                 </div>
@@ -2534,33 +2534,33 @@ export function App() {
             </div>
           )}
 
-          {/* TAB 3: GAUSS CALCULATOR & FINANCIAL ENGINE */}
+          {/* TAB 3: COHORT CALCULATOR & FINANCIAL ENGINE */}
           {activeTab === 'calculator' && (
             <div className="flex-1 overflow-y-auto p-5 lg:p-8 space-y-8">
               <div className="glass-panel p-7 rounded-2xl border border-amber-500/30 gold-glow space-y-2">
                 <div className="flex items-center gap-2 text-amber-400 font-mono text-xs font-bold uppercase tracking-widest">
-                  <Calculator className="w-4 h-4" /> Wiskundige Cumulatie
+                  <Calculator className="w-4 h-4" /> Financiële Modelprojectie
                 </div>
-                <h2 className="text-2xl lg:text-3xl font-extrabold text-white tracking-tight leading-tight">De Reeks van Gauss Simulator</h2>
+                <h2 className="text-2xl lg:text-3xl font-extrabold text-white tracking-tight leading-tight">12-Maandse Cohort-Accumulatie & Verdienmodel</h2>
                 <p className="text-sm text-slate-300 max-w-3xl leading-relaxed">
-                  Formule: <span className="font-mono text-amber-400 font-bold">n × (n + 1) / 2</span>. Over 12 maanden genereert één actief lid <strong>78 cumulatieve maandcycli</strong> (12 × 13 / 2 = 78), wat neerkomt op exact <strong><PrivateAmount value="€ 204.750 jaaromzet per lid" /></strong>.
+                  Formule: <strong>78 cumulatieve maandcycli per lid</strong> over 12 maanden (sommatie 1 t/m 12), wat neerkomt op een geprojecteerd jaarvolume van <strong><PrivateAmount value="€ 204.750 per lid" /></strong>.
                 </p>
               </div>
 
               {/* 4 Component Breakdown Cards conform bijlage */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="glass-card p-5 rounded-xl border-l-4 border-l-cyan-500 space-y-1.5">
-                  <span className="text-[10px] font-mono uppercase text-cyan-400 font-bold tracking-wider">COMPUTE (GPU)</span>
-                  <div className="font-bold text-white text-sm">Boostplug Mining</div>
+                  <span className="text-[10px] font-mono uppercase text-cyan-400 font-bold tracking-wider">MEDIA (STREAMING)</span>
+                  <div className="font-bold text-white text-sm">Boostplug Streaming Distributie</div>
                   <div className="text-2xl font-black text-cyan-400 font-mono"><PrivateAmount value="€ 1.000 / mnd" /></div>
-                  <p className="text-xs text-slate-400 leading-normal">Inzet van 5 GPU nodes voor AI inferentie.</p>
+                  <p className="text-xs text-slate-400 leading-normal">Grootschalige organische streamingcampagnes (Spotify, Apple Music).</p>
                 </div>
 
                 <div className="glass-card p-5 rounded-xl border-l-4 border-l-emerald-500 space-y-1.5">
-                  <span className="text-[10px] font-mono uppercase text-emerald-400 font-bold tracking-wider">COMPUTE (STREAM)</span>
-                  <div className="font-bold text-white text-sm">Boostplug Stream Point</div>
+                  <span className="text-[10px] font-mono uppercase text-emerald-400 font-bold tracking-wider">MEDIA (REVIEWS & ACCOUNTS)</span>
+                  <div className="font-bold text-white text-sm">Boostplug Reviews & Accounts</div>
                   <div className="text-2xl font-black text-emerald-400 font-mono"><PrivateAmount value="€ 500 / mnd" /></div>
-                  <p className="text-xs text-slate-400 leading-normal">Datastroom & bandbreedte monetarisering.</p>
+                  <p className="text-xs text-slate-400 leading-normal">Geverifieerde Trustpilot/Google reviews en accountallocatie via Logs.rent.</p>
                 </div>
 
                 <div className="glass-card p-5 rounded-xl border-l-4 border-l-amber-500 space-y-1.5">
@@ -2647,7 +2647,7 @@ export function App() {
                       <div className="text-2xl lg:text-3xl font-black text-emerald-400 font-mono mt-1 tracking-tight">
                         <PrivateAmount value={`€ ${totalRevenue.toLocaleString('nl-NL')}`} />
                       </div>
-                      <div className="text-[11px] text-slate-400 mt-1">Jaarbasis via Gauss</div>
+                      <div className="text-[11px] text-slate-400 mt-1">Jaarbasis via 12-mnd cohort</div>
                     </div>
                     <div className="bg-slate-900/90 p-5 rounded-xl border border-slate-800">
                       <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">BEOOGDE WAARDERING (4.0x)</span>

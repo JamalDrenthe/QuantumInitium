@@ -382,8 +382,8 @@ export default function InvestorDashboard({
       holdingName: 'Subholding 3: Talent & Gateway',
       category: 'talent',
       type: 'Gateway Hub & Partnernetwerk',
-      tagline: 'Join the Money Movement — €50k-€100k OTE + Passief inkomen als partner',
-      obligationReason: 'Verplichte aandeelhouders onboarding verificatie, governance community toegang en strategisch partnernetwerk.',
+      tagline: 'Commercieel Partner- & Groeinetwerk — Prestatiegerichte sales en partnermodellen',
+      obligationReason: 'Aandeelhouders onboarding verificatie, governance community toegang en strategisch partnernetwerk.',
       protocol: 'OAuth 2.0 / REST',
       endpoint: 'https://gateway.vvc.works/api/v1/auth',
       status: 'connected',
@@ -469,16 +469,16 @@ export default function InvestorDashboard({
       holdingKey: 'sub4',
       holdingName: 'Subholding 4: Compute & Media',
       category: 'compute',
-      type: 'Hardware & GPU Mining Clusters',
-      tagline: 'Streaming & Reviews Growth Platform & Mining Node Network',
-      obligationReason: 'Realtime hashrate data feed en bandbreedte monetarisering yield verificatie van high performance compute clusters.',
-      protocol: 'Stratum v2 / Telemetry API',
-      endpoint: 'https://telemetry.boostplug.one/v1/yield',
+      type: 'Streaming & Reviews Growth Platform',
+      tagline: 'Streaming & Reviews Growth Platform — Geverifieerde luisteraars & reputatieversterking',
+      obligationReason: 'Realtime streaming analytics, review metrics en reputatie-auditing van de actieve accounts.',
+      protocol: 'REST API / Telemetry Engine',
+      endpoint: 'https://telemetry.boostplug.one/v1/metrics',
       status: 'connected',
       lastSync: '3 minuten geleden',
       latency: '8ms',
-      apiKey: 'BOOST_GPU_CLUSTER_9948',
-      dataStreams: ['GPU Hashrate Yield', 'Bandbreedte Opbrengsten', 'Cluster Status Telemetrie'],
+      apiKey: 'BOOST_GROWTH_ENGINE_9948',
+      dataStreams: ['Streaming Play Counts', 'Geverifieerde Review Audits', 'Campagne Allocatie Status'],
       color: 'border-emerald-500/40 text-emerald-400 bg-emerald-500/10',
       autoSync: true
     },
@@ -578,10 +578,10 @@ export default function InvestorDashboard({
     {
       id: 'log_4',
       entity: 'Boostplug Ltd',
-      action: 'GPU cluster hashrate yield registratie verwerkt',
+      action: 'Streaming & review campagne volume distributie verwerkt',
       timestamp: '5 minuten geleden',
       status: 'success',
-      badge: 'Compute Mining'
+      badge: 'Media Distributie'
     },
     {
       id: 'log_5',
@@ -982,13 +982,13 @@ export default function InvestorDashboard({
     },
     {
       id: 'doc_5',
-      title: 'BoostPlug Compute Node Protocol Licentieovereenkomst',
-      description: 'Smart contract exploitatieovereenkomst voor de 5 GPU mining clusters (BP-NODE-8842) en yield allocatie.',
-      filename: 'BoostPlug_Hardware_Node_Protocol_License.pdf',
+      title: 'BoostPlug Streaming & Review Distributieovereenkomst',
+      description: 'Institutionele exploitatieovereenkomst voor streaming bereikscampagnes, reputatiebundels en opbrengstverdeling.',
+      filename: 'BoostPlug_Streaming_Review_Distribution_Agreement.pdf',
       size: '2.1 MB',
       date: '10 februari 2025',
       hash: 'SHA256: b349...881c',
-      badge: 'Hardware Node',
+      badge: 'Distributie Bundels',
       badgeColor: 'border-cyan-500/40 text-cyan-400 bg-cyan-500/10'
     },
     {
@@ -1823,8 +1823,8 @@ export default function InvestorDashboard({
                 {currentUser.walletAddress || '0x71C84B29E30A149F'}
               </div>
               <div className="text-xs font-mono text-slate-400 flex items-center justify-between pt-2 border-t border-slate-800">
-                <span>Netwerk:</span>
-                <span className="text-cyan-300">Quantum Vault Ledger</span>
+                <span>Custodiabewaring:</span>
+                <span className="text-cyan-300">Stichting Custody QI (Londen)</span>
               </div>
             </div>
           </div>
@@ -3149,7 +3149,7 @@ export default function InvestorDashboard({
                 </div>
               </div>
 
-              {/* PIJLER 2: BOOSTPLUG CLOUD COMPUTE & MINING NODE */}
+              {/* PIJLER 2: BOOSTPLUG STREAMING & REVIEWS ENGINE */}
               <div className={`p-6 sm:p-8 rounded-3xl border shadow-lg space-y-6 ${
                 theme === 'light' ? 'bg-white border-sky-200 text-sky-950' : 'bg-slate-900/60 border-slate-800 text-white'
               }`}>
@@ -3166,14 +3166,14 @@ export default function InvestorDashboard({
                         </span>
                       </div>
                       <p className="text-xs text-cyan-400/90 font-medium">
-                        Streaming & Reviews Growth Platform — Hardware Mining Node Netwerk
+                        Streaming & Reviews Growth Platform — Digitale Distributie & Reputatie Engine
                       </p>
                     </div>
                   </div>
 
                   <span className="px-3 py-1.5 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-bold flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                    <span>Node: BP-NODE-8842 (Online)</span>
+                    <span>Campagne-ID: BP-DIST-8842 (Actief)</span>
                   </span>
                 </div>
 
@@ -3181,28 +3181,28 @@ export default function InvestorDashboard({
                   <div className={`p-4 rounded-xl border space-y-1 ${
                     theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
                   }`}>
-                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Toegewezen Compute Cluster:</span>
-                    <span className="text-xs font-bold font-mono text-cyan-400">5x High-Performance GPU Nodes</span>
+                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Toegewezen Campagnecapaciteit:</span>
+                    <span className="text-xs font-bold font-mono text-cyan-400">10 Actieve Distributie Slots</span>
                   </div>
 
                   <div className={`p-4 rounded-xl border space-y-1 ${
                     theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
                   }`}>
-                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Drip-feed Algoritme Status:</span>
-                    <span className="text-xs font-bold font-mono text-emerald-400">Actief & Beschermd</span>
+                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Drip-feed Bescherming:</span>
+                    <span className="text-xs font-bold font-mono text-emerald-400">Actief (Spotify & Trustpilot)</span>
                   </div>
 
                   <div className={`p-4 rounded-xl border space-y-1 ${
                     theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
                   }`}>
-                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Verwachte Maandopbrengst:</span>
-                    <span className="text-xs font-bold font-mono text-amber-400">€1.000 GPU + €500 Stream Pts</span>
+                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Verwachte Maandallocatie:</span>
+                    <span className="text-xs font-bold font-mono text-amber-400">€ 1.000 Distributie + € 500 Review Bundels</span>
                   </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
                   <p className={`text-xs ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
-                    Uw hardware node deelt in de verhuuropbrengsten van de streaming aggregatie en levert een stabiel nevenrendement bovenop uw reguliere dividenden.
+                    Uw aandeelhoudersaccount deelt direct mee in de gegenereerde volumes van streaming distributie en geverifieerde reviewbundels via geautomatiseerde dividendallocatie.
                   </p>
                   <a
                     href="https://boostplug.one"

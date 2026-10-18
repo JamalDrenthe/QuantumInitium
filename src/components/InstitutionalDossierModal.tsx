@@ -102,8 +102,8 @@ const TABS: TabItem[] = [
   {
     id: 'calculator',
     chapterNumber: '05',
-    label: 'Viercomponentenmotor en Gauss Model',
-    shortLabel: 'Gauss Calculator',
+    label: 'Viercomponentenmodel en Cohort-Calculatie',
+    shortLabel: 'Cohort Calculator',
     category: 'Rekenmodel',
     icon: Calculator
   },
@@ -118,7 +118,7 @@ const TABS: TabItem[] = [
   {
     id: 'infiniteLoop',
     chapterNumber: '07',
-    label: 'Infinite Loop en Time Gap Cashflow',
+    label: 'Gesloten Kapitaalcyclus en Time Gap Cashflow',
     shortLabel: 'Kapitaalrotatie',
     category: 'Liquiditeit',
     icon: Repeat
@@ -162,7 +162,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
 
   if (!isOpen && !isInline) return null;
 
-  // Wiskundige Reeks van Gauss berekening
+  // 12-Maandse Cohort-Accumulatie berekening (78 maandcycli per lid)
   const cyclesPerMember = 78;
   const cycleRevenue = 2625;
   const priceToSalesMultiple = 4.0;
@@ -311,9 +311,9 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
               {activeTab === 'entities' && 'Gedetailleerd overzicht van de moederholding, de 5 operationele werkmaatschappijen en de 5 flankerende modules.'}
               {activeTab === 'aiGateway' && 'De frictieloze toevoer van internationaal talent en de autonome executiekracht van de Investbotiq motor.'}
               {activeTab === 'synergy' && 'Wederzijdse versnelling tussen kernentiteiten en gespecialiseerde modules zonder logistieke vertraging.'}
-              {activeTab === 'calculator' && 'Wiskundige cumulatie via de Reeks van Gauss en de gestandaardiseerde Viercomponentenoutput.'}
+              {activeTab === 'calculator' && 'Gestructureerde cumulatie via de 12-maandse cohort-accumulatiecyclus en gestandaardiseerde Viercomponentenoutput.'}
               {activeTab === 'projections' && 'Driejarige groeitrajecten en capaciteitsschaling van de geconsolideerde jaaromzet.'}
-              {activeTab === 'infiniteLoop' && 'Maximale Velocity of Money via Time Gap Cashflow en prudentieel escrowbeheer zonder extern schuldrisico.'}
+              {activeTab === 'infiniteLoop' && 'Maximale omloopsnelheid van werkkapitaal via Time Gap Cashflow en prudentieel escrowbeheer zonder extern schuldrisico.'}
               {activeTab === 'ipoRoadmap' && 'Beoogde beursintroductie en gedisciplineerde aandelenverdeling.'}
               {activeTab === 'allocation' && 'Doelgerichte aanwending van het netto beurskapitaal over infrastructuur, licenties en groei.'}
               {activeTab === 'governance' && 'UK Substance vereisten in Londen, onafhankelijke raad van commissarissen en juridische risico isolatie.'}
@@ -345,7 +345,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                     AI Executie Engine
                   </div>
                   <p className="text-sm text-slate-400 leading-relaxed">
-                    Volledige automatisering van kapitaal, compute en vastgoedstromen via Investbotiq Ltd (IQ Bot en Agent).
+                    Volledige automatisering van workflows, media distributie en vastgoedstromen via Investbotiq Ltd.
                   </p>
                 </div>
 
@@ -357,7 +357,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                     Eerstejaars Target
                   </div>
                   <p className="text-sm text-slate-400 leading-relaxed">
-                    Geconsolideerde omzet gebaseerd op 100 actieve leden en wiskundige cumulatie via de Reeks van Gauss.
+                    Geconsolideerde jaaromzet gebaseerd op een cohort van 100 actieve leden en 12-maandse cumulatie.
                   </p>
                 </div>
 
@@ -378,11 +378,11 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
               <div className="p-10 sm:p-12 rounded-3xl bg-slate-900/70 border border-amber-400/25 space-y-8">
                 <div className="flex items-center gap-3.5 text-amber-400 font-bold text-lg sm:text-xl">
                   <Building2 className="w-6 h-6 shrink-0" />
-                  <span>Strategisch Perspectief: Een Gedetermineerd Groeimodel</span>
+                  <span>Strategisch Perspectief: Een Gedisciplineerd Groeimodel</span>
                 </div>
 
                 <p className="text-base sm:text-lg text-slate-200 leading-relaxed sm:leading-8">
-                  QuantumInitium Ltd overstijgt het traditionele conglomeraat. Het fungeert als een wiskundig gedetermineerde, gesloten economische motor waarin gecontroleerde talentinvoer direct wordt omgezet in autonome, inkomstengenererende opdrachten over compute, fintech en vastgoed.
+                  QuantumInitium Ltd fungeert als een geïntegreerde holdingstructuur en gesloten economisch ecosysteem, waarin talentontwikkeling via gestandaardiseerde workflows direct wordt vertaald naar inkomstengenererende diensten in digitale media, fintech en vastgoed.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
@@ -644,15 +644,15 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
             </div>
           )}
 
-          {/* HOOFDSTUK 5: VIERCOMPONENTENMOTOR & GAUSS CALCULATOR */}
+          {/* HOOFDSTUK 5: VIERCOMPONENTENMODEL & COHORT CALCULATOR */}
           {activeTab === 'calculator' && (
             <div className="space-y-10">
               <div className="text-center max-w-2xl mx-auto space-y-2 pb-2">
                 <h2 className="text-2xl sm:text-3xl font-bold text-white">
-                  De Viercomponentenmotor: Gestandaardiseerde Waardecreatie
+                  Het Viercomponentenmodel: Gestandaardiseerde Waardecreatie
                 </h2>
                 <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
-                  Eén geactiveerd lid staat gelijk aan een gestandaardiseerde wiskundige output motor van exact <PrivateAmount value="€ 2.625" /> bruto per maand.
+                  Eén geactiveerd lid vertegenwoordigt een gestandaardiseerde dienstverleningscapaciteit van exact <PrivateAmount value="€ 2.625" /> bruto per maand.
                 </p>
               </div>
 
@@ -693,16 +693,16 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
                 </div>
               </div>
 
-              {/* Interactieve Gauss Calculator Simulator */}
+              {/* Interactieve Cohort Calculator Simulator */}
               <div className="p-10 sm:p-12 rounded-3xl bg-slate-900/70 border border-white/10 space-y-8">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
                   <div>
                     <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-3">
                       <Calculator className="w-6 h-6 text-amber-400 shrink-0" />
-                      <span>Wiskundige Cumulatie: De Reeks van Gauss Simulator</span>
+                      <span>12-Maandse Cohort-Accumulatie Simulator</span>
                     </h3>
                     <p className="text-sm text-slate-400 mt-1.5 leading-relaxed">
-                      Formule: n(n + 1) / 2 met 78 actieve cumulatieve cycli per lid over 12 maanden (12 × 13 / 2 = 78).
+                      Cumulatieve cohort-berekening: 78 maandcycli per lid over een 12-maands horizon (sommatie 1 t/m 12 maanden).
                     </p>
                   </div>
                   <div className="text-xs font-mono text-amber-300 bg-black/40 px-4 py-2.5 rounded-xl border border-amber-400/30 shrink-0 self-start sm:self-auto font-semibold">
@@ -884,10 +884,10 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
             <div className="space-y-10">
               <div className="text-center max-w-2xl mx-auto space-y-2 pb-2">
                 <h2 className="text-2xl sm:text-3xl font-bold text-white">
-                  De Infinite Loop van Kapitaalrotatie en Time Gap Cashflow
+                  Gesloten Kapitaalcyclus en Time Gap Cashflow
                 </h2>
                 <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
-                  Gesloten cyclusvolume van <PrivateAmount value="€ 66.000" /> per 99 leden; maximale Velocity of Money zonder extern schuldrisico.
+                  Gesloten cyclusvolume van <PrivateAmount value="€ 66.000" /> per 99 leden; maximale werkkapitaal-omloopsnelheid zonder extern schuldrisico.
                 </p>
               </div>
 

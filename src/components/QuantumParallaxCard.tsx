@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { 
   ShieldCheck, 
-  Wifi, 
   Copy, 
   Check, 
   Eye, 
@@ -9,11 +8,11 @@ import {
   Lock, 
   Unlock, 
   Sparkles, 
-  CreditCard, 
+  FileCheck, 
   Layers, 
-  Smartphone,
   ExternalLink,
-  ChevronRight
+  Building2,
+  Award
 } from 'lucide-react';
 
 export interface CardEdition {
@@ -21,10 +20,10 @@ export interface CardEdition {
   name: string;
   badge: string;
   tier: string;
-  cardPrefix: string;
-  cardSuffix: string;
-  cvv: string;
-  expiry: string;
+  certPrefix: string;
+  certSuffix: string;
+  depotRef: string;
+  regQuarter: string;
   themeStyle: {
     background: string;
     borderColor: string;
@@ -40,13 +39,13 @@ export interface CardEdition {
 export const QUANTUM_CARD_EDITIONS: CardEdition[] = [
   {
     id: 'obsidian',
-    name: 'Quantum Obsidian Sovereign',
-    badge: 'TITANIUM BLACK',
-    tier: 'Series A Institutional Tier',
-    cardPrefix: '5428 9012',
-    cardSuffix: '8820',
-    cvv: '849',
-    expiry: '10/29',
+    name: 'Obsidian Institutional Pass',
+    badge: 'INSTITUTIONAL SERIE A',
+    tier: 'Serie A Preferred Shareholder',
+    certPrefix: 'QI-2027-SH',
+    certSuffix: '08820',
+    depotRef: 'London Register of Members',
+    regQuarter: '2026-Q4',
     themeStyle: {
       background: 'linear-gradient(135deg, #0a0c13 0%, #151a28 50%, #06080e 100%)',
       borderColor: 'rgba(217, 119, 6, 0.45)',
@@ -60,13 +59,13 @@ export const QUANTUM_CARD_EDITIONS: CardEdition[] = [
   },
   {
     id: 'gold',
-    name: 'Quantum Imperial Bullion',
-    badge: '24K GOLD BULLION',
-    tier: 'Founding Partner Edition',
-    cardPrefix: '5519 3301',
-    cardSuffix: '7741',
-    cvv: '912',
-    expiry: '04/30',
+    name: 'Founding Sovereign Bullion',
+    badge: 'FOUNDING PARTNER',
+    tier: 'Oprichters- & Strategische Participatie',
+    certPrefix: 'QI-FOUND-2027',
+    certSuffix: '07741',
+    depotRef: 'Stichting Custody QI',
+    regQuarter: '2026-Q3',
     themeStyle: {
       background: 'linear-gradient(135deg, #2a1b04 0%, #452a07 30%, #78470a 70%, #1f1302 100%)',
       borderColor: 'rgba(251, 191, 36, 0.7)',
@@ -80,13 +79,13 @@ export const QUANTUM_CARD_EDITIONS: CardEdition[] = [
   },
   {
     id: 'sapphire',
-    name: 'Quantum Cyber Sapphire',
-    badge: 'CYBER SAPPHIRE',
-    tier: 'Quantum Vault Protocol',
-    cardPrefix: '4920 1883',
-    cardSuffix: '4409',
-    cvv: '633',
-    expiry: '08/29',
+    name: 'Sapphire Treasury Pass',
+    badge: 'STRATEGIC EQUITY',
+    tier: 'Institutionele Kapitaalallocatie',
+    certPrefix: 'QI-TRS-2027',
+    certSuffix: '04409',
+    depotRef: 'UK Substance Escrow',
+    regQuarter: '2026-Q4',
     themeStyle: {
       background: 'linear-gradient(135deg, #031429 0%, #06264d 50%, #020b18 100%)',
       borderColor: 'rgba(56, 189, 248, 0.55)',
@@ -100,13 +99,13 @@ export const QUANTUM_CARD_EDITIONS: CardEdition[] = [
   },
   {
     id: 'emerald',
-    name: 'Quantum Emerald Sovereign',
-    badge: 'EMERALD RESERVE',
-    tier: 'Private Syndicate Edition',
-    cardPrefix: '5204 7715',
-    cardSuffix: '9931',
-    cvv: '704',
-    expiry: '12/29',
+    name: 'Emerald Syndicate Pass',
+    badge: 'SYNDICATE RESERVE',
+    tier: 'Gekwalificeerd Syndicaatscertificaat',
+    certPrefix: 'QI-SYND-2027',
+    certSuffix: '09931',
+    depotRef: 'London Custody Nominee',
+    regQuarter: '2027-Q1',
     themeStyle: {
       background: 'linear-gradient(135deg, #021a11 0%, #063825 50%, #01110a 100%)',
       borderColor: 'rgba(52, 211, 153, 0.55)',
@@ -129,24 +128,24 @@ interface SingleParallaxCardProps {
   isFrozen: boolean;
   isSelected?: boolean;
   onSelect?: () => void;
-  width?: number; // default 340px
-  height?: number; // default 215px
+  width?: number;
+  height?: number;
   theme?: 'dark' | 'light';
 }
 
-/* Individuele 3D Parallax Card volgens de exacte ATV-Img specificaties */
+/* Individuele 3D Parallax Aandeelhouderspas */
 export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
   edition,
   holderName,
   shares,
-  cashBalance,
+  cashBalance: _cashBalance,
   isRevealed,
   isFrozen,
   isSelected = false,
   onSelect,
   width = 340,
   height = 215,
-  theme = 'dark'
+  theme: _theme = 'dark'
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -158,11 +157,7 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
 
   const [copied, setCopied] = useState(false);
 
-  // Exacte ATV-Img wiskundige berekening
-  const processMovement = (
-    e: MouseEvent | TouchEvent,
-    isTouch: boolean
-  ) => {
+  const processMovement = (e: MouseEvent | TouchEvent, isTouch: boolean) => {
     const card = cardRef.current;
     const container = containerRef.current;
     const shine = shineRef.current;
@@ -171,7 +166,6 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
 
     if (!card || !container || !shine || !shadow) return;
 
-    const win = window;
     const doc = document;
     const bdst = doc.body.scrollTop || doc.documentElement.scrollTop;
     const bdsl = doc.body.scrollLeft || doc.documentElement.scrollLeft;
@@ -211,20 +205,16 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
       angle += 360;
     }
 
-    // Schaal en diepte bij hover
     imgCSS += ' scale3d(1.06, 1.06, 1.06)';
     container.style.transform = imgCSS;
 
-    // Dynamische lichtinval (shine gradient)
     const shineOpacity = Math.min(0.65, Math.max(0.1, ((pageY - offsets.top - bdst) / h) * 0.55));
     shine.style.background = `linear-gradient(${angle}deg, rgba(255,255,255,${shineOpacity}) 0%, rgba(255,255,255,0) 80%)`;
     shine.style.transform = `translateX(${(offsetX * 3) - 0.1}px) translateY(${(offsetY * 3) - 0.1}px)`;
 
-    // Dynamische schaduwverschuiving
     shadow.style.transform = `translateX(${-dx * 0.15}px) translateY(${-dy * 0.15}px) scale(1.04)`;
     shadow.style.boxShadow = `0 ${20 + Math.abs(dy) * 0.25}px ${45 + Math.abs(dy) * 0.4}px ${edition.themeStyle.glowColor}, 0 10px 25px rgba(0,0,0,0.6)`;
 
-    // Individuele dieptelagen laten differentiëren (parallaxe)
     const totalLayers = 3;
     let revNum = totalLayers;
     for (let ly = 0; ly < totalLayers; ly++) {
@@ -289,7 +279,6 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
     card.addEventListener('touchstart', handleTouchStart, { passive: true });
     card.addEventListener('touchend', handleTouchEnd);
 
-    // Initialiseer perspective
     const w = card.clientWidth || width;
     card.style.transform = `perspective(${w * 3}px)`;
 
@@ -303,17 +292,17 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
     };
   }, [width, height, edition]);
 
-  const handleCopyCardNumber = (e: React.MouseEvent) => {
+  const handleCopyCertNumber = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const fullNumber = `${edition.cardPrefix} 4920 ${edition.cardSuffix}`.replace(/\s+/g, '');
-    navigator.clipboard.writeText(fullNumber);
+    const fullCertId = `${edition.certPrefix}-${edition.certSuffix}`;
+    navigator.clipboard.writeText(fullCertId);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const cardNumberDisplay = isRevealed 
-    ? `${edition.cardPrefix} 4920 ${edition.cardSuffix}`
-    : `${edition.cardPrefix} •••• •••• ${edition.cardSuffix}`;
+  const certNumberDisplay = isRevealed 
+    ? `${edition.certPrefix}-${edition.certSuffix}`
+    : `${edition.certPrefix}-••••`;
 
   return (
     <div
@@ -327,7 +316,6 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
       }}
       onClick={onSelect}
     >
-      {/* ATV-Img root element met transform-style preserve-3d */}
       <div
         ref={cardRef}
         className="atvImg w-full h-full rounded-2xl relative"
@@ -336,7 +324,6 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
           WebkitTapHighlightColor: 'rgba(0,0,0,0)'
         }}
       >
-        {/* ATV-Img Dynamic Shadow */}
         <div
           ref={shadowRef}
           className="atvImg-shadow rounded-2xl pointer-events-none transition-transform duration-200"
@@ -352,7 +339,6 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
           }}
         />
 
-        {/* ATV-Img Container */}
         <div
           ref={containerRef}
           className="atvImg-container w-full h-full rounded-2xl relative overflow-hidden transition-transform duration-100 ease-out"
@@ -363,7 +349,6 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
             zIndex: 2
           }}
         >
-          {/* Lagen Container */}
           <div
             className="atvImg-layers w-full h-full relative overflow-hidden rounded-2xl"
             style={{
@@ -371,7 +356,7 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
               borderRadius: '16px'
             }}
           >
-            {/* LAAG 0: Diepte-achtergrond, gradiënt & guilloche micro-lijnen */}
+            {/* LAAG 0: Achtergrond, guilloche patroon & micro-grid */}
             <div
               ref={layer0Ref}
               className="atvImg-rendered-layer absolute inset-0 rounded-2xl transition-transform duration-100 ease-out"
@@ -380,7 +365,6 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
                 zIndex: 1
               }}
             >
-              {/* Guilloche / Micro-circuit SVG watermerk */}
               <div 
                 className="absolute inset-0 opacity-20 pointer-events-none"
                 style={{
@@ -398,7 +382,7 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
               </svg>
             </div>
 
-            {/* LAAG 1: Holografische circuits, QI Monogram Watermerk & Badge */}
+            {/* LAAG 1: Institutioneel Zegel, Aandeelhoudersdata & Paspoortdetails */}
             <div
               ref={layer1Ref}
               className="atvImg-rendered-layer absolute inset-0 p-5 flex flex-col justify-between rounded-2xl transition-transform duration-100 ease-out pointer-events-none"
@@ -406,12 +390,11 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
                 zIndex: 2
               }}
             >
-              {/* Subtiel groot QI logo op de achtergrond */}
               <div className="absolute right-3 top-6 font-mono font-black text-7xl select-none opacity-10 tracking-tighter" style={{ color: edition.themeStyle.accentColor }}>
                 QI
               </div>
 
-              {/* Bovenste rij: QuantumInitium merk & Contactless NFC */}
+              {/* Bovenste rij: QuantumInitium merk & Custody Badge */}
               <div className="flex items-center justify-between z-10">
                 <div className="flex items-center gap-2">
                   <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 p-0.5 flex items-center justify-center shadow-md">
@@ -419,7 +402,7 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
                   </div>
                   <div>
                     <div className="font-extrabold text-xs tracking-wider uppercase" style={{ color: edition.themeStyle.textColor }}>
-                      QUANTUMINITIUM
+                      QUANTUMINITIUM LTD
                     </div>
                     <div className="text-[9px] font-mono uppercase tracking-widest font-semibold" style={{ color: edition.themeStyle.accentColor }}>
                       {edition.badge}
@@ -428,18 +411,18 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Wifi className="w-4 h-4 rotate-90" style={{ color: edition.themeStyle.subtextColor }} />
+                  <Building2 className="w-4 h-4" style={{ color: edition.themeStyle.subtextColor }} />
                   <span className="px-2 py-0.5 rounded text-[8px] font-mono font-bold border" style={{
                     borderColor: edition.themeStyle.borderColor,
                     color: edition.themeStyle.accentColor,
                     backgroundColor: 'rgba(0,0,0,0.3)'
                   }}>
-                    VAULT
+                    CUSTODY
                   </span>
                 </div>
               </div>
 
-              {/* Midden: EMV Gouden Hologram Chip & Series Ticker */}
+              {/* Midden: Institutioneel Zegel & Aandelenregister Ticker */}
               <div className="flex items-center justify-between z-10 my-auto pt-2">
                 <div 
                   className="w-10 h-7 rounded-md shadow-inner flex items-center justify-center relative overflow-hidden border border-amber-300/40"
@@ -447,17 +430,12 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
                     background: edition.themeStyle.chipGradient
                   }}
                 >
-                  {/* Chip circuitslijnen */}
-                  <div className="w-full h-[1px] bg-slate-900/40 absolute top-2" />
-                  <div className="w-full h-[1px] bg-slate-900/40 absolute bottom-2" />
-                  <div className="h-full w-[1px] bg-slate-900/40 absolute left-3" />
-                  <div className="h-full w-[1px] bg-slate-900/40 absolute right-3" />
-                  <div className="w-3 h-3 rounded-sm border border-slate-900/40" />
+                  <Award className="w-4 h-4 text-slate-950" />
                 </div>
 
                 <div className="text-right">
                   <div className="text-[8px] font-mono uppercase tracking-wider text-slate-400">
-                    QI.NL
+                    AANDEELHOUDERSPAS
                   </div>
                   <div className="text-[10px] font-mono font-bold" style={{ color: edition.themeStyle.accentColor }}>
                     {shares.toLocaleString('nl-NL')} AANDELEN
@@ -465,43 +443,43 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
                 </div>
               </div>
 
-              {/* Onderste blok: Kaartnummer, Naam, Verval & CVV */}
+              {/* Onderste blok: Certificaat-ID, Aandeelhouder, Registratie & Depot */}
               <div className="space-y-1.5 z-10">
                 <div className="font-mono text-sm tracking-widest font-bold flex items-center justify-between" style={{ color: edition.themeStyle.textColor, textShadow: '0 2px 4px rgba(0,0,0,0.6)' }}>
-                  <span>{cardNumberDisplay}</span>
+                  <span>{certNumberDisplay}</span>
                   {isFrozen && (
                     <span className="text-[9px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 flex items-center gap-1 font-sans">
-                      <Lock className="w-2.5 h-2.5" /> BEVROREN
+                      <Lock className="w-2.5 h-2.5" /> VERGRENDELD
                     </span>
                   )}
                 </div>
 
                 <div className="flex items-end justify-between text-[9px] font-mono pt-1">
                   <div>
-                    <span className="text-slate-400 block text-[8px] uppercase">Kaarthouder</span>
+                    <span className="text-slate-400 block text-[8px] uppercase">Aandeelhouder</span>
                     <span className="font-bold uppercase tracking-wider truncate max-w-[150px] block" style={{ color: edition.themeStyle.textColor }}>
                       {holderName || 'INVESTEERDER'}
                     </span>
                   </div>
 
                   <div className="text-center">
-                    <span className="text-slate-400 block text-[8px] uppercase">Geldig Tot</span>
+                    <span className="text-slate-400 block text-[8px] uppercase">Registratie</span>
                     <span className="font-bold" style={{ color: edition.themeStyle.textColor }}>
-                      {edition.expiry}
+                      {edition.regQuarter}
                     </span>
                   </div>
 
                   <div className="text-right">
-                    <span className="text-slate-400 block text-[8px] uppercase">CVV</span>
-                    <span className="font-bold" style={{ color: edition.themeStyle.accentColor }}>
-                      {isRevealed ? edition.cvv : '•••'}
+                    <span className="text-slate-400 block text-[8px] uppercase">Depot</span>
+                    <span className="font-bold truncate max-w-[100px] block" style={{ color: edition.themeStyle.accentColor }}>
+                      {isRevealed ? edition.depotRef.split(' ')[0] : 'VERIFIEER'}
                     </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* LAAG 2: Holografische Glans Seal & Zilver/Goud Visa Badge */}
+            {/* LAAG 2: Institutioneel Holografisch Zegel */}
             <div
               ref={layer2Ref}
               className="atvImg-rendered-layer absolute inset-0 pointer-events-none rounded-2xl transition-transform duration-100 ease-out"
@@ -509,7 +487,6 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
                 zIndex: 3
               }}
             >
-              {/* Holografische beveiligingscirkel rechtsonder */}
               <div 
                 className="absolute right-4 bottom-3 w-8 h-8 rounded-full border border-white/20 opacity-80 flex items-center justify-center shadow-lg"
                 style={{
@@ -520,7 +497,7 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
               </div>
             </div>
 
-            {/* ATV-Img Dynamic Parallax Shine Layer */}
+            {/* Parallax Shine Layer */}
             <div
               ref={shineRef}
               className="atvImg-shine pointer-events-none rounded-2xl"
@@ -540,13 +517,12 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
         </div>
       </div>
 
-      {/* Snelle knoppen bij hoveren over de kaart */}
       <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
         <button
           type="button"
-          onClick={handleCopyCardNumber}
+          onClick={handleCopyCertNumber}
           className="p-1.5 rounded-lg bg-slate-900/90 text-white hover:text-amber-400 border border-slate-700 shadow-md cursor-pointer transition-colors"
-          title="Kopieer Kaartnummer"
+          title="Kopieer Certificaat ID"
         >
           {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
         </button>
@@ -555,10 +531,6 @@ export const SingleParallaxCard: React.FC<SingleParallaxCardProps> = ({
   );
 };
 
-/* Volledig interactieve Wallet Card Showcase:
-   - Toont de 4 QuantumInitium edities (zoals in de codepen container)
-   - Biedt opties om kaartgegevens te verbergen/tonen, te bevriezen, of toe te voegen aan Apple/Google Wallet
-*/
 interface QuantumWalletCardsProps {
   holderName: string;
   shares: number;
@@ -592,7 +564,6 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
         ? 'bg-gradient-to-br from-white via-sky-50/50 to-blue-50/30 border-sky-200 text-sky-950 shadow-xl shadow-sky-500/5'
         : 'glass-panel border-slate-800 bg-[#070b14]/90 text-white shadow-2xl'
     }`}>
-      {/* Subtiel decoratief achtergrondgrid */}
       <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full bg-amber-500/5 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-cyan-500/5 blur-3xl pointer-events-none" />
 
@@ -601,26 +572,25 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/30">
-              <CreditCard className="w-4 h-4" />
+              <FileCheck className="w-4 h-4" />
             </span>
             <span className="text-xs font-mono uppercase tracking-widest font-bold text-amber-400">
-              QuantumInitium Digital Vault Card
+              QuantumInitium Shareholder Custody
             </span>
             <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-              Actief • 3D Parallaxe
+              Geverifieerd • Register of Members
             </span>
           </div>
           <h3 className={`text-xl sm:text-2xl font-black ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>
-            Institutionele Investeerders Pas
+            Institutionele Aandeelhouderspas & Custody ID
           </h3>
           <p className={`text-xs ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
-            Beweeg uw muis of vinger over de kaart(en) om het dynamische 3D-licht en gelaagde parallaxe effect te ervaren.
+            Officieel geregistreerd aandeelhouderscertificaat en bewaarbewijs voor QuantumInitium Ltd participaties.
           </p>
         </div>
 
-        {/* Bedieningselementen: Weergave (4 kaarten container vs Focus) & Gegevens Beveiliging */}
+        {/* Bedieningselementen: Weergave & Vertrouwelijke Gegevens */}
         <div className="flex items-center gap-2 flex-wrap">
-          {/* Gegevens verbergen / tonen */}
           <button
             type="button"
             onClick={() => setIsRevealed(!isRevealed)}
@@ -631,13 +601,12 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
                 ? 'bg-white hover:bg-sky-50 border-sky-200 text-sky-900'
                 : 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white'
             }`}
-            title={isRevealed ? 'Verberg gevoelige gegevens' : 'Toon volledige kaartgegevens'}
+            title={isRevealed ? 'Verberg vertrouwelijke depotgegevens' : 'Toon volledige registergegevens'}
           >
             {isRevealed ? <EyeOff className="w-3.5 h-3.5 text-amber-400" /> : <Eye className="w-3.5 h-3.5" />}
-            <span>{isRevealed ? 'Verberg Gegevens' : 'Toon Gegevens'}</span>
+            <span>{isRevealed ? 'Verberg Depot' : 'Toon Depot'}</span>
           </button>
 
-          {/* Kaart Bevriezen Toggle */}
           <button
             type="button"
             onClick={() => setIsFrozen(!isFrozen)}
@@ -648,13 +617,12 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
                 ? 'bg-white hover:bg-sky-50 border-sky-200 text-sky-900'
                 : 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white'
             }`}
-            title={isFrozen ? 'Deblokkeer Pas' : 'Tijdelijk Bevriezen'}
+            title={isFrozen ? 'Deblokkeer Pas' : 'Tijdelijk Vergrendelen'}
           >
             {isFrozen ? <Unlock className="w-3.5 h-3.5 text-rose-400" /> : <Lock className="w-3.5 h-3.5 text-slate-400" />}
-            <span>{isFrozen ? 'Bevroren (Deblokkeer)' : 'Pas Bevriezen'}</span>
+            <span>{isFrozen ? 'Vergrendeld' : 'Pas Vergrendelen'}</span>
           </button>
 
-          {/* Switch tussen Collectie (4 kaarten) en Enkele kaart */}
           <div className="flex items-center rounded-xl p-1 bg-slate-900 border border-slate-800">
             <button
               type="button"
@@ -677,14 +645,13 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              <CreditCard className="w-3 h-3" />
+              <FileCheck className="w-3 h-3" />
               <span className="hidden sm:inline">Focus Pas</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* FEEDBACK BERICHT KOPIËREN */}
       {copiedSuccess && (
         <div className="mb-4 p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-mono font-bold flex items-center gap-2 animate-fade-in">
           <Check className="w-4 h-4" />
@@ -692,10 +659,9 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
         </div>
       )}
 
-      {/* WEERGAVE OPTIE 1: DE 4 QUANTUMINITIUM EDITIES (CONTAINER UIT DE CODEPEN VOORBEELDCODE) */}
+      {/* WEERGAVE OPTIE 1: DE 4 PARTICIPATIE EDITIES */}
       {viewMode === 'collection' && (
         <div className="space-y-6">
-          {/* De interactieve container met de 4 kaarten */}
           <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 py-4">
             {QUANTUM_CARD_EDITIONS.map((edition) => (
               <div key={edition.id} className="flex flex-col items-center">
@@ -724,7 +690,7 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
                   }`}
                 >
                   <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: edition.themeStyle.accentColor }} />
-                  <span>{edition.name.split(' ')[1]}</span>
+                  <span>{edition.name.split(' ')[0]}</span>
                   {selectedCardId === edition.id && <Check className="w-3 h-3 text-amber-400" />}
                 </button>
               </div>
@@ -733,10 +699,9 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
         </div>
       )}
 
-      {/* WEERGAVE OPTIE 2: FOCUSED WEERGAVE MET UITGEBREIDE PASDETAILS & SNELACTIES */}
+      {/* WEERGAVE OPTIE 2: FOCUSED WEERGAVE MET UITGEBREIDE DEPOTDETAILS */}
       {viewMode === 'focused' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center py-4">
-          {/* Grote Parallax Card in de spotlight */}
           <div className="lg:col-span-6 flex justify-center items-center">
             <SingleParallaxCard
               edition={activeCard}
@@ -752,7 +717,6 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
             />
           </div>
 
-          {/* Rechterpaneel: Pasdetails, Koppelingsstatus & Systeemacties */}
           <div className="lg:col-span-6 space-y-4">
             <div className={`p-5 rounded-2xl border ${
               theme === 'light' ? 'bg-white border-sky-200 shadow-sm' : 'bg-slate-900/80 border-slate-800'
@@ -769,17 +733,17 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
                 </span>
               </div>
 
-              {/* Grid met pasgegevens */}
+              {/* Grid met officiële registergegevens */}
               <div className="grid grid-cols-2 gap-3 text-xs font-mono">
                 <div className={`p-2.5 rounded-xl border ${theme === 'light' ? 'bg-sky-50/60 border-sky-100' : 'bg-slate-950/60 border-slate-800/80'}`}>
-                  <span className="text-slate-400 block text-[10px]">Kaartnummer</span>
+                  <span className="text-slate-400 block text-[10px]">Certificaatnummer</span>
                   <div className="flex items-center justify-between mt-0.5">
                     <span className={`font-bold ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>
-                      {isRevealed ? `${activeCard.cardPrefix} 4920 ${activeCard.cardSuffix}` : `•••• ${activeCard.cardSuffix}`}
+                      {isRevealed ? `${activeCard.certPrefix}-${activeCard.certSuffix}` : `${activeCard.certPrefix}-••••`}
                     </span>
                     <button
                       type="button"
-                      onClick={() => handleCopy(`${activeCard.cardPrefix}4920${activeCard.cardSuffix}`, 'Kaartnummer')}
+                      onClick={() => handleCopy(`${activeCard.certPrefix}-${activeCard.certSuffix}`, 'Certificaat ID')}
                       className="text-amber-400 hover:text-amber-300 cursor-pointer"
                     >
                       <Copy className="w-3 h-3" />
@@ -788,14 +752,14 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
                 </div>
 
                 <div className={`p-2.5 rounded-xl border ${theme === 'light' ? 'bg-sky-50/60 border-sky-100' : 'bg-slate-950/60 border-slate-800/80'}`}>
-                  <span className="text-slate-400 block text-[10px]">Vervaldatum & CVV</span>
+                  <span className="text-slate-400 block text-[10px]">Depot & Bewaring</span>
                   <div className="flex items-center justify-between mt-0.5">
-                    <span className={`font-bold ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>
-                      {activeCard.expiry} • {isRevealed ? activeCard.cvv : '•••'}
+                    <span className={`font-bold truncate ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>
+                      {isRevealed ? activeCard.depotRef : 'Geregistreerd Depot'}
                     </span>
                     <button
                       type="button"
-                      onClick={() => handleCopy(activeCard.cvv, 'CVV Code')}
+                      onClick={() => handleCopy(activeCard.depotRef, 'Depot Referentie')}
                       className="text-amber-400 hover:text-amber-300 cursor-pointer"
                     >
                       <Copy className="w-3 h-3" />
@@ -804,14 +768,14 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
                 </div>
 
                 <div className={`p-2.5 rounded-xl border ${theme === 'light' ? 'bg-sky-50/60 border-sky-100' : 'bg-slate-950/60 border-slate-800/80'}`}>
-                  <span className="text-slate-400 block text-[10px]">Gekoppeld Aandelen Saldo</span>
+                  <span className="text-slate-400 block text-[10px]">Aandelenbezit</span>
                   <span className="text-cyan-400 font-bold block mt-0.5">
-                    {shares.toLocaleString('nl-NL')} aandelen
+                    {shares.toLocaleString('nl-NL')} aandelen (€ 8,20)
                   </span>
                 </div>
 
                 <div className={`p-2.5 rounded-xl border ${theme === 'light' ? 'bg-sky-50/60 border-sky-100' : 'bg-slate-950/60 border-slate-800/80'}`}>
-                  <span className="text-slate-400 block text-[10px]">Beschikbaar Saldo</span>
+                  <span className="text-slate-400 block text-[10px]">Liquiditeitssaldo</span>
                   <span className="text-emerald-400 font-bold block mt-0.5">
                     €{cashBalance.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}
                   </span>
@@ -819,7 +783,6 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
               </div>
             </div>
 
-            {/* Wisselknoppen voor de 4 edities in focus weergave */}
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono text-slate-400">Selecteer Editie:</span>
               <div className="flex items-center gap-1.5 flex-wrap">
@@ -836,7 +799,7 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
                         : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
                     }`}
                   >
-                    {ed.name.split(' ')[1]}
+                    {ed.name.split(' ')[0]}
                   </button>
                 ))}
               </div>
@@ -845,46 +808,31 @@ export const QuantumWalletCards: React.FC<QuantumWalletCardsProps> = ({
         </div>
       )}
 
-      {/* FOOTER MET INTEGRATIES (APPLE PAY, GOOGLE WALLET, VEILIGHEIDSLINK) */}
+      {/* FOOTER MET CUSTODY & GOVERNANCE INFORMATIE */}
       <div className="mt-6 pt-5 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-4 text-xs">
         <div className="flex items-center gap-3 flex-wrap">
-          {/* Apple Pay Knop */}
           <button
             type="button"
-            onClick={() => handleCopy(`${activeCard.cardPrefix}4920${activeCard.cardSuffix}`, 'Apple Wallet Token')}
+            onClick={() => handleCopy(`${activeCard.certPrefix}-${activeCard.certSuffix}`, 'Certificaat Referentie')}
             className={`px-3 py-2 rounded-xl border flex items-center gap-2 font-semibold transition-all cursor-pointer ${
               theme === 'light'
                 ? 'bg-white hover:bg-sky-50 text-sky-950 border-sky-200 shadow-sm'
                 : 'bg-slate-800/90 hover:bg-slate-700 text-white border-slate-700'
             }`}
           >
-            <Smartphone className={`w-3.5 h-3.5 ${theme === 'light' ? 'text-sky-950' : 'text-white'}`} />
-            <span>Koppel Apple Pay</span>
-          </button>
-
-          {/* Google Wallet Knop */}
-          <button
-            type="button"
-            onClick={() => handleCopy(`${activeCard.cardPrefix}4920${activeCard.cardSuffix}`, 'Google Pay Token')}
-            className={`px-3 py-2 rounded-xl border flex items-center gap-2 font-semibold transition-all cursor-pointer ${
-              theme === 'light'
-                ? 'bg-white hover:bg-sky-50 text-sky-950 border-sky-200 shadow-sm'
-                : 'bg-slate-900 hover:bg-slate-850 text-white border-slate-800'
-            }`}
-          >
-            <CreditCard className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Koppel Google Wallet</span>
+            <FileCheck className="w-3.5 h-3.5 text-amber-400" />
+            <span>Kopieer Certificaat ID</span>
           </button>
 
           <span className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            <span>256-bit Quantum Hardware Encryption • FCA / AFM Compliant</span>
+            <span>Officiële UK Substance & IFRS Governance • Companies House London</span>
           </span>
         </div>
 
         <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-          <span>Custody Vault: </span>
-          <strong className="text-amber-400">QI-VAULT-LONDON-88</strong>
+          <span>Custody Depot: </span>
+          <strong className="text-amber-400">QI-CUSTODY-LONDON-01</strong>
         </div>
       </div>
     </div>

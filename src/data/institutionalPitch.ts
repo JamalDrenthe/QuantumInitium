@@ -11,13 +11,13 @@ import {
 
 export const pitchExecutiveSummary = {
   bedrijfsnaam: 'QuantumInitium Ltd',
-  hoofdtitel: 'De Algoritmische Groeimotor',
-  ondertitel: 'Geautomatiseerde Executie en Maximale Velocity of Money voor Institutionele Kapitaalgroei',
+  hoofdtitel: 'Institutionele Deelnemingenstructuur & Kapitaalgroei',
+  ondertitel: 'Geconsolideerde Holding, Geautomatiseerde Kapitaalallocatie & Werkkapitaal-Optimalisatie',
   vertrouwelijkheidslabel: 'Confidential en Proprietary | Pre-IPO Briefing',
   kernStatistieken: {
     aantalEntiteiten: 12,
     entiteitenVerdeling: '1 Moederholding, 6 Gespecialiseerde Werkmaatschappijen en 5 Flankerende Bedrijfsmodules',
-    centraleEngine: '1 AI Executiemotor (Investbotiq Ltd / IQ Bot en Agent)',
+    centraleEngine: '1 Centrale Executiemotor (Investbotiq Ltd — Automated Cashflow Platform)',
     eerstejaarsTargetOmzet: 20475000,
     eerstejaarsTargetOmzetLabel: '€ 20.475.000',
     ledenBasisJaar1: 100,
@@ -57,38 +57,38 @@ export const talentGatewayFlow = [
     stapNummer: 1,
     titel: 'Stap 1: Invoer (Immigratiepunt Ltd)',
     type: 'Flankerende module voor visumaanvragen en internationale relocatie',
-    beschrijving: 'Levert een gegarandeerde, continue instroom van gekwalificeerde internationale kennismigranten zonder logistieke wrijving.'
+    beschrijving: 'Faciliteert een gestroomlijnde instroom van gekwalificeerde internationale IT professionals en kennismigranten.'
   },
   {
     stapNummer: 2,
     titel: 'Stap 2: Hub en Onboarding (VVC Ltd)',
     type: 'Centrale Gateway en Partnernetwerk',
-    beschrijving: 'Geen passief beleggingsinstrument. Beloning uitsluitend gekoppeld aan gerealiseerde, gecontracteerde B2B transacties.'
+    beschrijving: 'Exclusief netwerk voor high-ticket sales talent en B2B partners. Beloning uitsluitend gekoppeld aan gecontracteerde prestaties.'
   },
   {
     stapNummer: 3,
-    titel: 'Stap 3: Autorisatie (API Koppeling en Verification Gate)',
-    type: 'Beveiligde Doorstroom naar Centrale AI Engine',
-    beschrijving: 'Geverifieerd talent wordt via beveiligde datastromen direct als brandstof doorgegeven aan Investbotiq voor autonome activatie.'
+    titel: 'Stap 3: Autorisatie & API Verificatie',
+    type: 'Beveiligde Doorstroom naar Centrale Executie Engine',
+    beschrijving: 'Geverifieerde professionals worden via beveiligde datastromen direct gekoppeld aan actieve projecten binnen de holding.'
   }
 ];
 
 export const investbotiqEngineFlow = {
-  titel: 'Investbotiq Ltd (IQ Bot en Agent)',
-  rol: 'Centrale AI Executiemotor en Autonome Waarde Activatie',
-  invoer: 'Ontvangt geverifieerde talentstroom van VVC Ltd en artiesten van Zheavenzy Ltd, berekent capaciteitsbehoefte en activeert autonome executie triggers.',
+  titel: 'Investbotiq Ltd (Automated Cashflow Platform)',
+  rol: 'Centrale Executie- en Allocatie-Engine',
+  invoer: 'Ontvangt geverifieerde talent- en transactiestromen van VVC Ltd en Zheavenzy Ltd, berekent capaciteitsbehoefte en activeert geautomatiseerde workflows.',
   uitvoerSporen: [
     {
       sector: 'Fintech (Spontiva Ltd)',
-      functie: 'Activeert kasstromen en TGC structuren; levert directe financiering aan clearing (Xabi World Ltd) en recruitment (DJOBBA Ltd).'
+      functie: 'Activeert kasstromen en TGC structuren; levert directe werkkapitaal-liquiditeit aan clearing (Xabi World Ltd) en detachering (DJOBBA Ltd).'
     },
     {
-      sector: 'Compute en Cloud (Boostplug Ltd)',
-      functie: 'Initieert GPU rekenkracht opdrachten en stream point monetarisering die de accountmarktplaats Logs.rent voeden.'
+      sector: 'Media & Distributie (Boostplug Ltd)',
+      functie: 'Initieert streaming- en reviewcampagnes en digitale accountverdeling die via Logs.rent worden afgewikkeld.'
     },
     {
       sector: 'Vastgoed (WoningVry Ltd)',
-      functie: 'Start geautomatiseerde workflows voor bezetting van huurwoningen, met latere doorstroom naar upscale huisvesting via Afterstudenthousing Ltd.'
+      functie: 'Start geautomatiseerde workflows voor bezetting van huurwoningen, met doorstroom naar Afterstudenthousing Ltd.'
     }
   ]
 };
@@ -103,43 +103,43 @@ export const operationalSynergyMatrix: SynergyItem[] = [
   {
     kernEntiteit: 'VVC Ltd, DJOBBA Ltd, Immigratiepunt Ltd',
     flankerendeModule: 'CRMos Ltd',
-    synergetischeVersnelling: 'Triple Enablement via AI outreach, recruitment ATS, dialers en geautomatiseerd contractbeheer (de technologische lijm).',
+    synergetischeVersnelling: 'Triple Enablement via B2B sales outreach, recruitment ATS, dialers en geautomatiseerd contractbeheer.',
     effectType: 'Software en procesoptimalisatie'
   },
   {
     kernEntiteit: 'WoningVry Ltd',
     flankerendeModule: 'Afterstudenthousing Ltd',
-    synergetischeVersnelling: 'Directe upscale fase voor jonge professionals en starters; waarborgt een structureel hogere bezettingsgraad en huurdersretentie.',
+    synergetischeVersnelling: 'Doorgroeifase voor jonge professionals en starters; waarborgt een structureel hogere bezettingsgraad en huurdersretentie.',
     effectType: 'Levenscyclus verlenging en bezetting'
   },
   {
     kernEntiteit: 'Boostplug Ltd',
     flankerendeModule: 'Logs.rent',
-    synergetischeVersnelling: 'Gesloten marktplaats die de eigen GPU infrastructuur direct transformeert in liquide verhandelbare accountcapaciteit.',
+    synergetischeVersnelling: 'Digitale marktplaats die streaming accounts en distributiecapaciteit direct liquide verhandelbaar maakt via realtime orderboeken.',
     effectType: 'Directe asset monetarisering'
   },
   {
     kernEntiteit: 'Zheavenzy Ltd',
     flankerendeModule: 'Boostplug Ltd, VVC Ltd',
-    synergetischeVersnelling: 'Muzieklabel en artiestentalent portaal; benut medianetwerk bandbreedte van Boostplug en talent onboarding van VVC voor streaming distributie en royalty monetarisering.',
+    synergetischeVersnelling: 'Muzieklabel en artiestentalent portaal; benut medianetwerk distributie van Boostplug en talent onboarding van VVC voor streaming en royalty exploitatie.',
     effectType: 'Media distributie en artistiek talent'
   }
 ];
 
 export const viercomponentenmotor: FourComponentItem[] = [
   {
-    naam: 'Boostplug GPU Mining',
+    naam: 'Boostplug Streaming Distributie',
     bedrag: 1000,
-    omschrijving: 'Inzet van 5 GPU nodes voor AI inferentie, rendering en rekenintensieve zakelijke applicaties.',
+    omschrijving: 'Grootschalige streaming- en audiodistributiecampagnes op Spotify en Apple Music met veilige algoritmebescherming.',
     detail: '€ 1.000 per maand per actief lid',
-    categorie: 'High Performance Compute'
+    categorie: 'Digital Media & Distributie'
   },
   {
-    naam: 'Boostplug Stream Point Mining',
+    naam: 'Boostplug Review & Account Bundels',
     bedrag: 500,
-    omschrijving: 'Datastroom optimalisatie en bandbreedte monetarisering via het gedistribueerde medianetwerk.',
+    omschrijving: 'Geverifieerde reviewcampagnes en geautomatiseerde accountcapaciteit via het gedistribueerde medianetwerk en Logs.rent.',
     detail: '€ 500 per maand per actief lid',
-    categorie: 'Data en Bandbreedte'
+    categorie: 'Reviews & Account Supply'
   },
   {
     naam: 'WoningVry LongStay',
@@ -159,13 +159,13 @@ export const viercomponentenmotor: FourComponentItem[] = [
 
 export const gaussReeksGegevens = {
   formule: 'n(n + 1) / 2',
-  uitlegMechanisme: 'Leden voegen maandelijks nieuwe capaciteit toe. Cycli accumuleren in 12 maanden tot 78 actieve cycli per lid (12 × 13 / 2 = 78).',
+  uitlegMechanisme: 'Maandelijkse cohort-accumulatie: aangesloten partners bouwen maandelijks opeenvolgende cycli op (som van maand 1 t/m 12 = 78 actieve maandcycli per jaarlid).',
   waardePerLidPerJaar: 204750,
-  waardeBerekening: '78 cycli × € 2.625 = € 204.750 economische waarde per lid op jaarbasis.',
+  waardeBerekening: '78 cycli × € 2.625 = € 204.750 geprojecteerde economische waarde per lid op jaarbasis.',
   eersteTargetLeden: 100,
   eersteTargetCycli: 7800,
   geconsolideerdeJaaromzet: 20475000,
-  jaar1Berekening: '100 actieve leden × 78 cycli = 7.800 totale cycli × € 2.625 = € 20.475.000 omzet.'
+  jaar1Berekening: '100 actieve leden × 78 cycli = 7.800 totale cycli × € 2.625 = € 20.475.000 omzetprojectie.'
 };
 
 export const driejarigeGroeiprojecties: GrowthProjection[] = [
@@ -215,7 +215,7 @@ export const timeGapCashflowData = {
   t0: 'T=0: Ontvangst gelden (Escrow / Stichting Derdengelden)',
   t1: 'T=1: Uiteindelijke verplichting (Fysieke uitstroom van fondsen)',
   mechanisme: 'Spontiva Ltd structureert het tijdsverschil tussen vooruitontvangen middelen (zoals ticketverkoop en contractreserveringen) en de uiteindelijke uitstroom.',
-  prudentieelBeheer: 'Fondsen blijven strikt afgeschermd in escrow totdat de tegenprestatie geleverd is, wat risicoloze, tijdelijke liquiditeit genereert (Other Platforms Money / OPM).'
+  prudentieelBeheer: 'Fondsen blijven strikt afgeschermd in escrow totdat de tegenprestatie geleverd is, wat geoptimaliseerde werkkapitaal-liquiditeit genereert via Stichting Derdengelden (Working Capital Float).'
 };
 
 export const infiniteLoopSteps: InfiniteLoopStep[] = [
@@ -238,26 +238,26 @@ export const infiniteLoopSteps: InfiniteLoopStep[] = [
     knooppunt: 'Knooppunt 3 (Motor)',
     titel: 'Activatie Time Gap Cashflow en Toewijzing',
     entiteiten: 'Spontiva Ltd en Investbotiq Ltd',
-    mechanisme: 'Spontiva activeert tijdelijke liquiditeit uit vooruitontvangen gelden (OPM); Investbotiq wijst WCO kapitaal toe.'
+    mechanisme: 'Spontiva structureert tijdelijke werkkapitaal-liquiditeit uit vooruitontvangen gelden; Investbotiq wijst WCO kapitaal toe.'
   },
   {
     stapNummer: 4,
     knooppunt: 'Knooppunt 4 (Herinvestering)',
-    titel: 'Omzetting in Fysieke Productieve Assets',
+    titel: 'Omzetting in Productieve Activa & Capaciteit',
     entiteiten: 'Boostplug Ltd en WoningVry Ltd',
-    mechanisme: 'Vrijgekomen werkkapitaal wordt direct, zonder externe financiering, omgezet in hardware (GPU servers) en residentieel vastgoed.'
+    mechanisme: 'Vrijgekomen werkkapitaal wordt direct aangewend voor productieve capaciteitsuitbreiding in media-infrastructuur en residentieel vastgoed.'
   },
   {
     stapNummer: 5,
     knooppunt: 'Knooppunt 5 (Expansie)',
-    titel: 'Nieuwe Output Cycli per Lid',
+    titel: 'Nieuwe Output Cycli per Partner',
     entiteiten: 'Ecosysteem Brede Output',
-    mechanisme: 'Nieuwe assets genereren direct nieuwe € 2.625 maandcycli, wat een continu herhalende groeicyclus aandrijft zonder externe verwatering.'
+    mechanisme: 'Nieuwe capaciteit genereert direct nieuwe € 2.625 maandcycli, wat een continue geconsolideerde groeicyclus ondersteunt.'
   }
 ];
 
 export const ipoHorizonData = {
-  waarderingTitel: 'Aandelenstructuur en Wiskundig Onderbouwde Introductiewaarding',
+  waarderingTitel: 'Aandelenstructuur en Introductiewaardering',
   omzetDoelJaar1: 20475000,
   omzetDoelJaar1Label: '€ 20.475.000',
   multipleLabel: '4,0x Price to Sales (P/S)',
@@ -334,8 +334,8 @@ export const kapitaalallocatieNettoBeursopbrengst: CapitalAllocationItem[] = [
     categorie: 'Capaciteit en Infrastructuur',
     percentage: 35,
     bedrag: '€ 7,70M (€ 7.700.000)',
-    doel: 'Aanschaf GPU mining servers, hardwareclusters en residentiële inrichting vastgoed.',
-    toelichting: 'Directe aanschaf van fysieke GPU clusters en inrichting van WoningVry residenties voor expats.'
+    doel: 'Aanschaf streaming- en mediatechnologie, serverclusters en inrichting van vastgoed.',
+    toelichting: 'Directe schaling van mediadistributie en inrichting van WoningVry residenties voor expats.'
   },
   {
     categorie: 'Marketing en Expansie',
@@ -370,35 +370,35 @@ export const kapitaalallocatieNettoBeursopbrengst: CapitalAllocationItem[] = [
 export const institutioneleVierPijlers: GovernancePillar[] = [
   {
     nummer: 1,
-    titel: 'AI Gedreven Automatisering',
-    ondertitel: 'Volledige executie zonder menselijke wrijving',
-    inhoud: 'Investbotiq zet de gekwalificeerde talentinstroom onmiddellijk om in autonome, inkomstengenererende opdrachten in compute, fintech en vastgoed.',
+    titel: 'Geautomatiseerde Workflow- en Orderallocatie',
+    ondertitel: 'Efficiënte executie en data-orkestratie',
+    inhoud: 'Investbotiq orkestreert gekwalificeerde talent- en transactiestromen efficiënt over de operationele dochterondernemingen in fintech, media en vastgoed.',
     garanties: [
-      'Directe allocatie van opdrachten zonder menselijke vertraging',
+      'Directe allocatie van opdrachten zonder administratieve vertraging',
       'Geautomatiseerde monitoring van capaciteit en bezetting',
       'Naadloze datakoppelingen tussen alle 11 entiteiten'
     ]
   },
   {
     nummer: 2,
-    titel: 'Voorspelbare Wiskunde',
-    ondertitel: 'Gedetermineerde omzetbasis via Gauss',
-    inhoud: 'De wiskundige synergie van de Viercomponentenmotor en de Reeks van Gauss garandeert een sluitende, transparante en voorspelbare omzetbasis (€ 20,4M bij slechts 100 leden).',
+    titel: 'Transparant Cohort- en Verdienmodel',
+    ondertitel: 'Gedisciplineerde omzetprojectie per partner',
+    inhoud: 'De gecombineerde output van de vier pijlers en de 12-maandse cohort-accumulatie vormt een heldere, modelmatige omzetbasis (€ 20,4M bij 100 actieve partners).',
     garanties: [
       'Vaste brutomarge van € 2.625 per maand per actief lid',
-      'Reeks van Gauss n(n+1)/2 creëert 78 cycli per lid per jaar',
-      'Wiskundig getoetste schaling richting € 1,87 miljard in Jaar 3'
+      '12-maandse cohortopbouw resulteert in 78 cycli per lid per jaar',
+      'Modelmatig onderbouwde schaling richting Jaar 3 doelstellingen'
     ]
   },
   {
     nummer: 3,
-    titel: 'Kapitaalefficiënte Synergie',
-    ondertitel: 'Herinvestering zonder externe verwatering',
-    inhoud: 'Gespecialiseerde flankerende modules verhogen de marges, terwijl Time Gap Cashflow een gesloten Infinite Loop aandrijft die continu assets financiert zonder extern risicokapitaal.',
+    titel: 'Gedisciplineerde Werkkapitaal-Optimalisatie',
+    ondertitel: 'Herinvestering via gesloten kasstroomcyclus',
+    inhoud: 'Gespecialiseerde flankerende modules versterken de marges, terwijl Time Gap Cashflow werkkapitaal binnen de groep behoudt en continu assets financiert.',
     garanties: [
       'Gesloten cyclusvolume van € 66.000 per 99 leden',
-      'Prudentieel escrow beheer van vooruitontvangen middelen (OPM)',
-      'Directe autonome herinvestering in hardware en vastgoed'
+      'Prudentieel escrow beheer van vooruitontvangen middelen via Stichting Derdengelden',
+      'Directe herinvestering in operationele capaciteit en vastgoed'
     ]
   },
   {
