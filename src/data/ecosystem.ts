@@ -209,13 +209,13 @@ export const ecosystemData: Record<string, NodeData> = {
     entities: [
       {
         name: 'Boostplug Ltd',
-        role: 'Streaming & Reviews Growth Platform',
-        tagline: 'Streaming & Reviews Growth Platform — Drip-feed algoritmebescherming & Cloud Tracking',
-        desc: 'Verhoogt streams, followers en reviews op Spotify, Apple Music, Google Maps en Trustpilot met veilige drip-feed algoritmebescherming en cloud tracking.',
+        role: 'Streaming & Reviews Growth Platform (Verkoop & Generatie)',
+        tagline: 'Streaming & Reviews Growth Platform — Klanten Kopen, Leden Genereren',
+        desc: 'Combinatie van verkoop en generatie: Zakelijke klanten kopen streaminggroei en geverifieerde reviews (Spotify, Apple Music, Trustpilot, Google Maps), terwijl aangesloten leden de daadwerkelijke streams, engagement en reviews genereren met organische drip-feed algoritmebescherming.',
         shape: 'cube',
         color: '#a855f7',
         type: 'Werkmaatschappij',
-        financialContribution: 'Genereert € 1.500 / maand per actief lid binnen de Viercomponentenmotor via streaming & review bundels',
+        financialContribution: 'Duaal verkoop- en generatiemodel van € 1.500 / maand per actief lid binnen de Viercomponentenmotor (€ 1.000 streaming + € 500 reviews)',
         synergyWith: 'Logs.rent, Spontiva Ltd, Zheavenzy Ltd',
         synergyEffect: 'Directe liquiditeitsallocatie, realtime cloud tracking en streaming distributie voor artiesten en ondernemingen',
         website: 'https://boostplug.one',

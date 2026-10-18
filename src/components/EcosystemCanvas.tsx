@@ -2901,7 +2901,7 @@ export const EcosystemCanvas = forwardRef<EcosystemCanvasHandle, EcosystemCanvas
                 foundHoveredLtd = {
                   name: 'Boostplug ⇄ Logs.rent',
                   role: 'Directe Distributie- en Account Marketplace Verhuur',
-                  desc: 'Directe koppeling tussen de streaming en review bundels van Boostplug en de geautomatiseerde account- en assetverhuur van Logs.rent.',
+                  desc: 'Verkoop- & generatiesynergie: Zakelijke klanten kopen distributiecampagnes op Boostplug, terwijl Logs.rent geautomatiseerde accounts levert waarmee leden de benodigde streams en reviews genereren.',
                   holdco: 'Compute'
                 };
                 isInteractive = true;

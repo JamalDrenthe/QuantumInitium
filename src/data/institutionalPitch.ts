@@ -84,7 +84,7 @@ export const investbotiqEngineFlow = {
     },
     {
       sector: 'Media & Distributie (Boostplug Ltd)',
-      functie: 'Initieert streaming- en reviewcampagnes en digitale accountverdeling die via Logs.rent worden afgewikkeld.'
+      functie: 'Duaal model van verkoop & generatie: Klanten kopen streamingbereik en reviewcampagnes; aangesloten netwerkleden genereren de streams en geverifieerde reviews via gedistribueerde accounts en Logs.rent.'
     },
     {
       sector: 'Vastgoed (WoningVry Ltd)',
@@ -115,8 +115,8 @@ export const operationalSynergyMatrix: SynergyItem[] = [
   {
     kernEntiteit: 'Boostplug Ltd',
     flankerendeModule: 'Logs.rent',
-    synergetischeVersnelling: 'Digitale marktplaats die streaming accounts en distributiecapaciteit direct liquide verhandelbaar maakt via realtime orderboeken.',
-    effectType: 'Directe asset monetarisering'
+    synergetischeVersnelling: 'Verkoop- & generatiekoppeling: Commerciële klanten kopen campagnes op Boostplug, terwijl Logs.rent veilige accountsupply levert waarmee leden de benodigde streams en reviews genereren.',
+    effectType: 'Verkoop- & Generatiesynergie'
   },
   {
     kernEntiteit: 'Zheavenzy Ltd',
@@ -130,15 +130,15 @@ export const viercomponentenmotor: FourComponentItem[] = [
   {
     naam: 'Boostplug Streaming Distributie',
     bedrag: 1000,
-    omschrijving: 'Grootschalige streaming- en audiodistributiecampagnes op Spotify en Apple Music met veilige algoritmebescherming.',
-    detail: '€ 1.000 per maand per actief lid',
+    omschrijving: 'Combinatie van verkoop en generatie: Klanten kopen Spotify/Apple Music streaminggroei; netwerkleden genereren de streams en luisteraars met algoritmebescherming.',
+    detail: '€ 1.000 per maand per actief lid (Klantverkoop & Ledengeneratie)',
     categorie: 'Digital Media & Distributie'
   },
   {
     naam: 'Boostplug Review & Account Bundels',
     bedrag: 500,
-    omschrijving: 'Geverifieerde reviewcampagnes en geautomatiseerde accountcapaciteit via het gedistribueerde medianetwerk en Logs.rent.',
-    detail: '€ 500 per maand per actief lid',
+    omschrijving: 'Klanten kopen geverifieerde Trustpilot- en Google-reviews; leden genereren de interacties via gecontroleerde accountverhuur via Logs.rent.',
+    detail: '€ 500 per maand per actief lid (Klantverkoop & Ledengeneratie)',
     categorie: 'Reviews & Account Supply'
   },
   {

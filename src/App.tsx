@@ -195,8 +195,8 @@ const allEntitiesList: EntityItem[] = [
     holdingName: 'Subholding 4: Compute & Media',
     category: 'compute',
     type: 'Streaming & Reviews Platform',
-    tagline: 'Streaming & Reviews Growth Platform — Geverifieerde luisteraars & reputatieversterking',
-    role: 'Optimaliseert streamingbereik en verified reviews (Spotify, Apple Music, Trustpilot, Google Maps) met organische drip-feed algoritmebescherming.',
+    tagline: 'Streaming & Reviews Growth Platform — Klanten Kopen, Leden Genereren',
+    role: 'Combinatie van verkoop en generatie: Zakelijke klanten kopen streaminggroei en reviews (Spotify, Apple Music, Trustpilot, Google Maps); aangesloten leden genereren de streams en engagement met drip-feed bescherming.',
     color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30'
   },
   {
@@ -336,7 +336,7 @@ const subholdingMatrix: Record<string, SubholdingNode> = {
       {
         name: 'Boostplug Ltd',
         type: 'Streaming & Reviews',
-        role: 'Groeiversneller voor streams (Spotify, Apple Music) en Trustpilot reviews.'
+        role: 'Verkoop & generatie: Klanten kopen streaminggroei & reviews; leden genereren de streams en geverifieerde interacties.'
       },
       {
         name: 'Logs.rent',
@@ -535,10 +535,10 @@ export const subholdingCardsData: SubholdingCardData[] = [
     iconName: 'Server',
     entitiesCount: 2,
     entityNames: ['Boostplug Ltd', 'Logs.rent'],
-    focus: 'Streaming aggregatie en veilige accountverhuur marketplace',
+    focus: 'Streamingverkoop aan klanten en netwerkgeneratie van streams en accounts',
     firewall: 'Digitale assets en verhuurcontracten juridisch geïsoleerd per werkmaatschappij',
     substance: 'Geregistreerde platforms, API integraties en formele exploitatiecontracten',
-    model: 'Streaming fee distributie, review aggregatiemarges en veilige accountverhuur'
+    model: 'Duaal model: Commerciële klantverkoop van streaming & reviewcampagnes gecombineerd met netwerkkracht van leden die de streams en reviews genereren'
   },
   {
     id: 'RealEstate',
@@ -2470,18 +2470,18 @@ export function App() {
                       </div>
                     </div>
 
-                    {/* Spoor 2: Compute */}
+                    {/* Spoor 2: Media & Distributie */}
                     <div className="bg-slate-900/90 p-5 rounded-xl border border-slate-800 space-y-2.5">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono text-cyan-400 font-bold tracking-wider">2. COMPUTE</span>
+                        <span className="text-[10px] font-mono text-cyan-400 font-bold tracking-wider">2. MEDIA & DISTRIBUTIE</span>
                         <Cpu className="w-4 h-4 text-cyan-400" />
                       </div>
                       <h4 className="font-bold text-white text-xs tracking-tight">Boostplug Ltd</h4>
                       <p className="text-xs text-slate-400 leading-relaxed">
-                        Initieert 5 GPU nodes rekenkracht; gegenereerde capaciteit voedt exclusief accountmarktplaats Logs.rent.
+                        Combinatie van verkoop en generatie: Klanten kopen streaminggroei en reviewcampagnes; aangesloten leden genereren de streams en interacties via Logs.rent accountcapaciteit.
                       </p>
                       <div className="pt-2 border-t border-slate-800 text-xs font-mono text-cyan-300 font-bold">
-                        <PrivateAmount value="€ 1.500 / mnd (GPU + Stream)" />
+                        <PrivateAmount value="€ 1.500 / mnd (Verkoop & Generatie)" />
                       </div>
                     </div>
 
@@ -2550,17 +2550,17 @@ export function App() {
               {/* 4 Component Breakdown Cards conform bijlage */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="glass-card p-5 rounded-xl border-l-4 border-l-cyan-500 space-y-1.5">
-                  <span className="text-[10px] font-mono uppercase text-cyan-400 font-bold tracking-wider">MEDIA (STREAMING)</span>
+                  <span className="text-[10px] font-mono uppercase text-cyan-400 font-bold tracking-wider">MEDIA (STREAMING VERKOOP & GENERATIE)</span>
                   <div className="font-bold text-white text-sm">Boostplug Streaming Distributie</div>
                   <div className="text-2xl font-black text-cyan-400 font-mono"><PrivateAmount value="€ 1.000 / mnd" /></div>
-                  <p className="text-xs text-slate-400 leading-normal">Grootschalige organische streamingcampagnes (Spotify, Apple Music).</p>
+                  <p className="text-xs text-slate-400 leading-normal">Klanten kopen Spotify/Apple Music streams; leden genereren luisteraars & play counts.</p>
                 </div>
 
                 <div className="glass-card p-5 rounded-xl border-l-4 border-l-emerald-500 space-y-1.5">
-                  <span className="text-[10px] font-mono uppercase text-emerald-400 font-bold tracking-wider">MEDIA (REVIEWS & ACCOUNTS)</span>
+                  <span className="text-[10px] font-mono uppercase text-emerald-400 font-bold tracking-wider">MEDIA (REVIEWS & ACCOUNT BUNDELS)</span>
                   <div className="font-bold text-white text-sm">Boostplug Reviews & Accounts</div>
                   <div className="text-2xl font-black text-emerald-400 font-mono"><PrivateAmount value="€ 500 / mnd" /></div>
-                  <p className="text-xs text-slate-400 leading-normal">Geverifieerde Trustpilot/Google reviews en accountallocatie via Logs.rent.</p>
+                  <p className="text-xs text-slate-400 leading-normal">Klanten kopen Trustpilot/Google reviews; leden genereren interacties via gecontroleerde accounts op Logs.rent.</p>
                 </div>
 
                 <div className="glass-card p-5 rounded-xl border-l-4 border-l-amber-500 space-y-1.5">

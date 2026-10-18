@@ -469,9 +469,9 @@ export default function InvestorDashboard({
       holdingKey: 'sub4',
       holdingName: 'Subholding 4: Compute & Media',
       category: 'compute',
-      type: 'Streaming & Reviews Growth Platform',
-      tagline: 'Streaming & Reviews Growth Platform — Geverifieerde luisteraars & reputatieversterking',
-      obligationReason: 'Realtime streaming analytics, review metrics en reputatie-auditing van de actieve accounts.',
+      type: 'Streaming & Reviews Platform',
+      tagline: 'Streaming & Reviews Growth Platform — Klanten Kopen, Leden Genereren',
+      obligationReason: 'Duaal model verificatie: realtime tracking van commerciële klantorders en door leden gegenereerde streaming/review volumes.',
       protocol: 'REST API / Telemetry Engine',
       endpoint: 'https://telemetry.boostplug.one/v1/metrics',
       status: 'connected',
@@ -3166,7 +3166,7 @@ export default function InvestorDashboard({
                         </span>
                       </div>
                       <p className="text-xs text-cyan-400/90 font-medium">
-                        Streaming & Reviews Growth Platform — Digitale Distributie & Reputatie Engine
+                        Streaming & Reviews Growth Platform — Klanten Kopen, Leden Genereren
                       </p>
                     </div>
                   </div>
@@ -3181,28 +3181,28 @@ export default function InvestorDashboard({
                   <div className={`p-4 rounded-xl border space-y-1 ${
                     theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
                   }`}>
-                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Toegewezen Campagnecapaciteit:</span>
-                    <span className="text-xs font-bold font-mono text-cyan-400">10 Actieve Distributie Slots</span>
+                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Klantverkoop (Demand):</span>
+                    <span className="text-xs font-bold font-mono text-cyan-400">Zakelijke Klantorders</span>
                   </div>
 
                   <div className={`p-4 rounded-xl border space-y-1 ${
                     theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
                   }`}>
-                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Drip-feed Bescherming:</span>
-                    <span className="text-xs font-bold font-mono text-emerald-400">Actief (Spotify & Trustpilot)</span>
+                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Ledengeneratie (Supply):</span>
+                    <span className="text-xs font-bold font-mono text-emerald-400">Leden Genereren Streams & Reviews</span>
                   </div>
 
                   <div className={`p-4 rounded-xl border space-y-1 ${
                     theme === 'light' ? 'bg-sky-50/60 border-sky-200' : 'bg-slate-950 border-slate-800'
                   }`}>
-                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Verwachte Maandallocatie:</span>
-                    <span className="text-xs font-bold font-mono text-amber-400">€ 1.000 Distributie + € 500 Review Bundels</span>
+                    <span className={`text-[10px] font-mono block ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>Verwachte Maandwaarde:</span>
+                    <span className="text-xs font-bold font-mono text-amber-400">€ 1.000 Streams + € 500 Reviews</span>
                   </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
                   <p className={`text-xs ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
-                    Uw aandeelhoudersaccount deelt direct mee in de gegenereerde volumes van streaming distributie en geverifieerde reviewbundels via geautomatiseerde dividendallocatie.
+                    BoostPlug combineert externe verkoop met interne generatie: betalende klanten kopen streamingbereik en reputatiebundels, terwijl onze netwerkleden de daadwerkelijke streams en reviews genereren via gedistribueerde accounts.
                   </p>
                   <a
                     href="https://boostplug.one"

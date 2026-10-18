@@ -304,10 +304,10 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="glass-card p-6 rounded-2xl border-l-4 border-l-cyan-500 space-y-3">
-              <span className="text-xs font-bold text-cyan-400 uppercase font-mono tracking-wider">MEDIA & REVIEW DISTRIBUTIE</span>
+              <span className="text-xs font-bold text-cyan-400 uppercase font-mono tracking-wider">MEDIA & REVIEW DISTRIBUTIE (VERKOOP & GENERATIE)</span>
               <div className="text-2xl font-black text-white font-mono tracking-tight"><PrivateAmount value="€ 1.500 per maand" /></div>
               <p className="text-sm text-slate-400 leading-relaxed">
-                Streaming Distributie (<PrivateAmount value="€1.000" />) via Boostplug Spotify/Apple Music netwerk + Review & Account Bundels (<PrivateAmount value="€500" />) via Logs.rent.
+                Combinatie van verkoop en generatie: Klanten kopen streamingcampagnes (<PrivateAmount value="€1.000" />) en reviewbundels (<PrivateAmount value="€500" />), terwijl actieve leden de streams, luisteraars en reviews genereren via gedistribueerde accounts en Logs.rent.
               </p>
             </div>
             <div className="glass-card p-6 rounded-2xl border-l-4 border-l-emerald-500 space-y-3">
