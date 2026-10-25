@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <!-- Background Gradient: Obsidian Deep Emerald -->
+    <linearGradient id="xabi-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#142620" />
+      <stop offset="50%" stop-color="#0b1714" />
+      <stop offset="100%" stop-color="#040807" />
+    </linearGradient>
+
+    <!-- Subtle Border Stroke Gradient -->
+    <linearGradient id="xabi-stroke" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9fe870" stop-opacity="0.45" />
+      <stop offset="100%" stop-color="#2ead4b" stop-opacity="0.1" />
+    </linearGradient>
+
+    <!-- Slanted Pills Gradient -->
+    <linearGradient id="xabi-lime" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b6f788" />
+      <stop offset="40%" stop-color="#9fe870" />
+      <stop offset="100%" stop-color="#3cb958" />
+    </linearGradient>
+
+    <!-- Soft Glow Filter -->
+    <filter id="xabi-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Squircle Base -->
+  <rect
+    x="32"
+    y="32"
+    width="448"
+    height="448"
+    rx="116"
+    fill="url(#xabi-bg)"
+    stroke="url(#xabi-stroke)"
+    stroke-width="6"
+  />
+
+  <!-- Subtle Radial Inner Highlight -->
+  <circle cx="256" cy="180" r="180" fill="#9fe870" opacity="0.07" filter="blur(30px)" />
+
+  <!-- The Iconic Slanted 3-Bar Xabi Logo Mark -->
+  <g transform="translate(256, 256) skewX(-22) translate(-256, -256)" filter="url(#xabi-glow)">
+    <!-- Left Bar (Medium: 160px) -->
+    <rect x="153" y="176" width="46" height="160" rx="23" fill="url(#xabi-lime)" />
+    <!-- Center Bar (Tallest: 240px) -->
+    <rect x="233" y="136" width="46" height="240" rx="23" fill="url(#xabi-lime)" />
+    <!-- Right Bar (Shortest: 126px) -->
+    <rect x="313" y="193" width="46" height="126" rx="23" fill="url(#xabi-lime)" />
+  </g>
+</svg>

@@ -39,6 +39,7 @@ import {
 import { PrivateAmount, useAmountPrivacy } from '../lib/amountPrivacy';
 import { SingleParallaxCard, QUANTUM_CARD_EDITIONS } from './QuantumParallaxCard';
 import type { SubholdingCardData } from '../App';
+import { other11Companies, getCompanyLogo } from '../data/companyLogos';
 
 export type AppTabId =
   | 'landing'
@@ -881,6 +882,145 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </section>
 
         {/* ================================================================= */}
+        {/* SECTION 1.5: THE 11 PORTFOLIO COMPANIES (OFFICIAL LOGOS & SHOWCASE) */}
+        {/* ================================================================= */}
+        <section className="space-y-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="space-y-2 max-w-2xl">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#2997ff] font-semibold block">
+                {language === 'en' ? 'Portfolio Architecture • 11 Companies' : 'Gevalideerde Portefeuille • 11 Bedrijven'}
+              </span>
+              <h2
+                style={{ fontSize: 'clamp(1.65rem, 1.2rem + 2vw, 2.75rem)' }}
+                className="font-semibold tracking-[-0.03em] leading-[1.08] apple-heading-gradient"
+              >
+                {language === 'en'
+                  ? 'The 11 Operating Companies in the Ecosystem'
+                  : 'De 11 Bedrijven binnen het Ecosysteem'}
+              </h2>
+              <p className="text-xs sm:text-sm text-[#86868b] leading-relaxed">
+                {language === 'en'
+                  ? 'Beside the London parent holding QuantumInitium Ltd, these 11 dedicated companies operate across 5 ring-fenced subholdings — each with its own cashflow, proprietary technology, and operational leadership.'
+                  : 'Naast de centrale moederholding QuantumInitium Ltd (Londen) opereren deze 11 gespecialiseerde bedrijven binnen 5 ring-fenced subholdings — elk met eigen kasstromen, intellectueel eigendom en directie.'}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => onNavigateTab('architecture')}
+              className="apple-btn-secondary px-4 py-2 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 self-start md:self-auto cursor-pointer"
+            >
+              <span>{language === 'en' ? 'View Structure' : 'Bekijk Holdingstructuur'}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {/* Interactive Logo Marquee Banner */}
+          <div className="relative overflow-hidden rounded-3xl apple-glass border border-white/10 py-4 px-2">
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-black via-black/80 to-transparent z-10" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-black via-black/80 to-transparent z-10" />
+
+            <div className="flex items-center gap-3 sm:gap-4 overflow-x-auto no-scrollbar py-1 px-4">
+              {other11Companies.map((comp) => (
+                <a
+                  key={comp.id}
+                  href={comp.website}
+                  target="_blank"
+                  rel="noreferrer"
+                  title={`${comp.name} — ${comp.tagline}`}
+                  className="group shrink-0 flex items-center gap-3 px-4 py-2 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-cyan-400/40 transition-all duration-200 cursor-pointer"
+                >
+                  <div className="w-8 h-8 rounded-xl bg-white/[0.08] border border-white/10 p-1.5 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                    <img
+                      src={comp.logoUrl}
+                      alt={comp.name}
+                      className="w-full h-full object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="text-left">
+                    <div className="text-xs font-semibold text-white group-hover:text-cyan-300 transition-colors flex items-center gap-1">
+                      <span>{comp.name}</span>
+                      <ExternalLink className="w-2.5 h-2.5 text-[#86868b] group-hover:text-cyan-400 opacity-60" />
+                    </div>
+                    <div className="text-[10px] font-mono text-[#86868b]">
+                      {comp.domain}
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* 11 Company Bento Showcase Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {other11Companies.map((comp, idx) => (
+              <motion.div
+                key={comp.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-20px' }}
+                transition={{ duration: 0.45, delay: idx * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                className="apple-glass-card rounded-3xl p-5 flex flex-col justify-between space-y-4 hover:border-cyan-400/35 transition-all group"
+              >
+                <div className="space-y-3">
+                  {/* Brand Logo + Subholding Badge */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="w-12 h-12 rounded-2xl bg-white/[0.08] border border-white/12 p-2 flex items-center justify-center shadow-md group-hover:border-cyan-400/50 group-hover:bg-white/[0.14] group-hover:scale-105 transition-all">
+                      <img
+                        src={comp.logoUrl}
+                        alt={`${comp.name} logo`}
+                        className="w-full h-full object-contain"
+                        loading="lazy"
+                      />
+                    </div>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.06] text-[#2997ff] border border-white/10 shrink-0">
+                      {comp.holdingName.split(':')[0]}
+                    </span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-base font-bold text-white group-hover:text-cyan-300 transition-colors">
+                      {comp.name}
+                    </h3>
+                    <p className="text-[11px] font-mono text-[#2997ff] line-clamp-1 mt-0.5">
+                      {comp.type}
+                    </p>
+                  </div>
+
+                  <p className="text-xs text-[#86868b] leading-relaxed line-clamp-2">
+                    {comp.role}
+                  </p>
+                </div>
+
+                {/* Footer: Live domain + 3D trigger */}
+                <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between text-[11px] font-mono">
+                  <a
+                    href={comp.website}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[#2997ff] hover:underline inline-flex items-center gap-1 truncate max-w-[150px]"
+                  >
+                    <Globe className="w-3 h-3 shrink-0" />
+                    <span className="truncate">{comp.domain}</span>
+                    <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                  </a>
+
+                  <button
+                    type="button"
+                    onClick={() => onSelectSubholding(comp.holdingKey, '3d')}
+                    className="text-white hover:text-cyan-300 transition-colors cursor-pointer inline-flex items-center gap-0.5"
+                  >
+                    <span>3D Orbit</span>
+                    <ChevronRight className="w-3 h-3" />
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* ================================================================= */}
         {/* SECTION 2: 3D TILT BENTO GRID — DE 6 KERNPIJLERS VAN DE HOLDING    */}
         {/* ================================================================= */}
         <section className="space-y-8">
@@ -948,14 +1088,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
                   <div className="pt-5 mt-5 border-t border-white/[0.08] space-y-3">
                     <div className="flex flex-wrap gap-1.5">
-                      {sub.entityNames.map((name) => (
-                        <span
-                          key={name}
-                          className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-white/[0.05] text-[#f5f5f7] border border-white/10"
-                        >
-                          {name}
-                        </span>
-                      ))}
+                      {sub.entityNames.map((name) => {
+                        const pillLogo = getCompanyLogo(name);
+                        return (
+                          <span
+                            key={name}
+                            className="inline-flex items-center gap-1.5 text-[11px] font-mono px-2.5 py-1 rounded-full bg-white/[0.05] text-[#f5f5f7] border border-white/10 hover:border-white/25 transition-colors"
+                          >
+                            {pillLogo && (
+                              <img src={pillLogo} alt="" className="w-3.5 h-3.5 object-contain rounded-sm" />
+                            )}
+                            <span>{name}</span>
+                          </span>
+                        );
+                      })}
                     </div>
 
                     <div className="flex items-center justify-between text-xs pt-1">
@@ -1340,53 +1486,79 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {visibleEntities.map((entity) => (
-              <motion.div
-                layout
-                key={entity.name}
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.25 }}
-                className="apple-glass-card rounded-3xl p-5 flex flex-col justify-between space-y-4"
-              >
-                <div className="space-y-2.5">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-semibold text-sm text-white truncate">{entity.name}</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.07] text-[#2997ff] border border-white/10 shrink-0">
-                      {entity.type}
-                    </span>
+            {visibleEntities.map((entity) => {
+              const entityLogo = getCompanyLogo(entity.name);
+              return (
+                <motion.div
+                  layout
+                  key={entity.name}
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.25 }}
+                  className="apple-glass-card rounded-3xl p-5 flex flex-col justify-between space-y-4 group hover:border-cyan-400/35 transition-all"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        {entityLogo ? (
+                          <div className="w-10 h-10 rounded-xl bg-white/[0.08] border border-white/12 p-1.5 flex items-center justify-center shrink-0 shadow-sm group-hover:border-cyan-400/40 group-hover:scale-105 transition-all">
+                            <img
+                              src={entityLogo}
+                              alt={entity.name}
+                              className="w-full h-full object-contain"
+                              loading="lazy"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-10 h-10 rounded-xl bg-[#0071e3]/15 border border-[#2997ff]/30 flex items-center justify-center text-[#2997ff] shrink-0">
+                            <Building2 className="w-5 h-5" />
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <span className="font-semibold text-sm text-white truncate block group-hover:text-cyan-300 transition-colors">
+                            {entity.name}
+                          </span>
+                          <span className="text-[10px] font-mono text-[#86868b] truncate block">
+                            {entity.holdingName.split(':')[0]}
+                          </span>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.07] text-[#2997ff] border border-white/10 shrink-0">
+                        {entity.type}
+                      </span>
+                    </div>
+                    <p className="text-xs text-[#86868b] line-clamp-3 leading-relaxed">{entity.role}</p>
                   </div>
-                  <p className="text-xs text-[#86868b] line-clamp-3 leading-relaxed">{entity.role}</p>
-                </div>
 
-                <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between text-[11px] font-mono">
-                  {entity.website ? (
-                    <a
-                      href={entity.website}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-[#2997ff] hover:underline inline-flex items-center gap-1 truncate max-w-[140px]"
+                  <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between text-[11px] font-mono">
+                    {entity.website ? (
+                      <a
+                        href={entity.website}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[#2997ff] hover:underline inline-flex items-center gap-1 truncate max-w-[140px]"
+                      >
+                        <Globe className="w-3 h-3 shrink-0" />
+                        <span className="truncate">{entity.domain || entity.website.replace(/^https?:\/\//, '')}</span>
+                        <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                      </a>
+                    ) : (
+                      <span className="text-[#86868b]">Londen UK</span>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => onSelectSubholding(entity.holdingKey, '3d')}
+                      className="text-white hover:text-[#2997ff] transition-colors cursor-pointer inline-flex items-center gap-0.5"
                     >
-                      <Globe className="w-3 h-3 shrink-0" />
-                      <span className="truncate">{entity.domain || entity.website.replace(/^https?:\/\//, '')}</span>
-                      <ExternalLink className="w-2.5 h-2.5 shrink-0" />
-                    </a>
-                  ) : (
-                    <span className="text-[#86868b]">Londen UK</span>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={() => onSelectSubholding(entity.holdingKey, '3d')}
-                    className="text-white hover:text-[#2997ff] transition-colors cursor-pointer inline-flex items-center gap-0.5"
-                  >
-                    <span>3D</span>
-                    <ChevronRight className="w-3 h-3" />
-                  </button>
-                </div>
-              </motion.div>
-            ))}
+                      <span>3D</span>
+                      <ChevronRight className="w-3 h-3" />
+                    </button>
+                  </div>
+                </motion.div>
+              );
+            })}
           </motion.div>
         </section>
 

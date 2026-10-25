@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient: matching Header.tsx [hsl(220,30%,15%)] to [hsl(220,35%,8%)] -->
+    <linearGradient id="badgeBg" x1="15%" y1="15%" x2="85%" y2="85%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="45%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#080d1a"/>
+    </linearGradient>
+
+    <!-- Subtle Premium Border Gradient: Green hint to Cyan hint -->
+    <linearGradient id="badgeBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.5"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.5"/>
+    </linearGradient>
+
+    <!-- Neon Glow Filter for Green Node -->
+    <filter id="glowGreen" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Neon Glow Filter for Cyan Node -->
+    <filter id="glowCyan" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Radial Green Ambient Aura -->
+    <radialGradient id="greenAura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.45"/>
+      <stop offset="60%" stop-color="#22c55e" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Radial Cyan Ambient Aura -->
+    <radialGradient id="cyanAura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.45"/>
+      <stop offset="60%" stop-color="#0ea5e9" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Node 3D Gradients -->
+    <linearGradient id="greenNodeGrad" x1="20%" y1="20%" x2="80%" y2="80%">
+      <stop offset="0%" stop-color="#4ade80"/>
+      <stop offset="100%" stop-color="#16a34a"/>
+    </linearGradient>
+
+    <linearGradient id="cyanNodeGrad" x1="20%" y1="20%" x2="80%" y2="80%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Circular Base Badge -->
+  <circle cx="64" cy="64" r="58" fill="url(#badgeBg)"/>
+  <circle cx="64" cy="64" r="57" fill="none" stroke="url(#badgeBorder)" stroke-width="2.2"/>
+
+  <!-- Left Green Node Ambient Glow -->
+  <circle cx="45" cy="64" r="26" fill="url(#greenAura)"/>
+
+  <!-- Right Cyan Node Ambient Glow -->
+  <circle cx="83" cy="64" r="26" fill="url(#cyanAura)"/>
+
+  <!-- Left Green Node (Hsl 142, 76%, 45% - BoostPlug Signature Green) -->
+  <circle cx="45" cy="64" r="14.5" fill="url(#greenNodeGrad)" filter="url(#glowGreen)"/>
+  <circle cx="41.5" cy="60.5" r="4.5" fill="#ffffff" opacity="0.6"/>
+
+  <!-- Right Cyan Node (Hsl 199, 89%, 48% - BoostPlug Signature Cyan) -->
+  <circle cx="83" cy="64" r="14.5" fill="url(#cyanNodeGrad)" filter="url(#glowCyan)"/>
+  <circle cx="79.5" cy="60.5" r="4.5" fill="#ffffff" opacity="0.6"/>
+</svg>

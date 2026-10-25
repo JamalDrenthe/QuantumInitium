@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   Award,
   Menu,
@@ -773,7 +773,30 @@ export function App() {
   const [currentChapter, setCurrentChapter] = useState<number>(1);
   const [selectedArchNode, setSelectedArchNode] = useState<string>('mother');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const mobileMenuOpen = menuOpen;
+  const setMobileMenuOpen = setMenuOpen;
+
+  // Keyboard dismiss (Escape) & scroll-lock for Hamburger Menu (`modern-web-guidance`)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && menuOpen) {
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (menuOpen) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+  }, [menuOpen]);
 
   // Upgraded Menu & Sidebar State
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
@@ -1107,402 +1130,476 @@ export function App() {
           : 'bg-black text-[#f5f5f7] selection:bg-[#0071e3] selection:text-white'
       }`}
     >
-      {/* Sticky Apple Glass Header (`uiuxapple`) */}
-      <header className="sticky top-0 z-50 apple-glass border-b border-white/[0.08] px-4 lg:px-7 py-2.5">
-        <div className="max-w-7xl mx-auto flex w-full flex-wrap items-center justify-between gap-3">
-          {/* Left Area: Brand Logo & Name */}
-          <div className="flex min-w-0 items-center gap-3">
-            <div
-              onClick={() => setActiveTab('landing')}
-              className="flex min-w-0 items-center gap-3 cursor-pointer group"
-            >
-              <div className="w-9 h-9 rounded-2xl p-[1.5px] bg-gradient-to-b from-white/40 to-white/10 flex items-center justify-center shadow-lg shrink-0 overflow-hidden ring-1 ring-white/15">
-                <img
-                  src={quantumInitiumLogo}
-                  alt="QuantumInitium Logo"
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover rounded-[14px]"
-                />
+      {/* Serene Apple Glass Minimalist Header (`uiuxapple`) */}
+      <header className="sticky top-0 z-40 apple-glass border-b border-white/[0.08] px-4 sm:px-6 lg:px-8 py-3 transition-all">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          {/* Left Area: Brand Identity */}
+          <div
+            onClick={() => setActiveTab('landing')}
+            className="flex items-center gap-3 cursor-pointer group select-none"
+            title="QuantumInitium Ltd — Hoofdpagina"
+          >
+            <div className="w-9 h-9 rounded-2xl p-[1.5px] bg-gradient-to-b from-white/40 to-white/10 flex items-center justify-center shadow-lg shrink-0 overflow-hidden ring-1 ring-white/15 group-hover:scale-105 transition-transform">
+              <img
+                src={quantumInitiumLogo}
+                alt="QuantumInitium Logo"
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover rounded-[14px]"
+              />
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-sm sm:text-base font-semibold tracking-[-0.02em] text-white flex items-center gap-1.5">
+                  <span>QuantumInitium</span>
+                  <span className="text-[10px] text-[#2997ff] font-mono font-semibold px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/12">
+                    Ltd
+                  </span>
+                </h1>
+                <span className="hidden md:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono text-[#30d158] bg-[#30d158]/10 border border-[#30d158]/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#30d158] animate-pulse"></span>
+                  UK Substance Verified
+                </span>
               </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="max-w-full truncate text-sm lg:text-base font-semibold tracking-[-0.02em] text-white flex items-center gap-1.5">
-                    <span>QuantumInitium</span>
-                    <span className="text-[10px] text-[#2997ff] font-mono font-semibold px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/12">
-                      Ltd
-                    </span>
-                  </h1>
-                </div>
-                <p className="text-[11px] text-[#86868b] hidden sm:block leading-tight">
-                  5 Subholdings • 12 Entiteiten • Londen UK
-                </p>
-              </div>
+              <p className="text-[11px] text-[#86868b] hidden sm:block leading-tight">
+                5 Subholdings • 12 Entiteiten • Londen UK
+              </p>
             </div>
           </div>
 
-          {/* Center Desktop Segmented Pill Switcher */}
-          <nav className="hidden xl:flex items-center bg-white/[0.06] p-1 rounded-full border border-white/10 gap-0.5">
-            {navTabs.slice(0, 6).map((tab) => {
-              const isActive = activeTab === tab.id;
-              const IconComp = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition-colors relative cursor-pointer ${
-                    isActive ? 'text-white font-semibold' : 'text-[#86868b] hover:text-white'
-                  }`}
-                >
-                  {isActive && (
-                    <motion.span
-                      layoutId="headerSegmentedPill"
-                      transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                      className="absolute inset-0 rounded-full bg-[#0071e3] shadow-sm -z-10"
-                    />
-                  )}
-                  <IconComp className="w-3.5 h-3.5" />
-                  <span>{tab.shortLabel}</span>
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Right: Privacy Pill, Theme/Language Toggles & Auth CTA Buttons */}
-          <div className="flex w-full min-w-0 flex-nowrap items-center justify-start gap-1.5 overflow-x-auto no-scrollbar sm:gap-2 md:w-auto md:justify-end">
-            {/* Mobile Drawer Trigger */}
-            <button
-              id="mobile-menu-btn"
-              onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden px-3 py-1.5 rounded-full apple-btn-secondary text-xs flex items-center gap-1.5 cursor-pointer shrink-0"
-              title="Open hoofdmenu"
-            >
-              <Menu className="w-4 h-4" />
-            </button>
-
-            {/* Interactive `👁️` Privacy Pill-Badge (`uiuxapple` rule 5.2) */}
-            <button
-              type="button"
-              onClick={toggleAmounts}
-              className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium flex items-center gap-1.5 transition-all cursor-pointer shrink-0 border ${
-                amountsVisible
-                  ? 'bg-[#30d158]/15 text-[#30d158] border-[#30d158]/35'
-                  : 'bg-white/[0.08] text-[#2997ff] border-white/15 hover:bg-white/[0.14]'
-              }`}
-              title={
-                amountsVisible
-                  ? (language === 'nl' ? 'Verberg financiële bedragen' : 'Mask financial amounts')
-                  : (language === 'nl' ? 'Toon financiële bedragen' : 'Reveal financial amounts')
-              }
-            >
-              <span className="text-[11px] leading-none" aria-hidden="true">👁️</span>
-              <span className="hidden sm:inline">{amountsVisible ? 'Bedragen Zichtbaar' : '€ ••••••'}</span>
-            </button>
-
-            {/* Compact Theme & Language Pill */}
-            <div className="flex items-center p-0.5 rounded-full bg-white/[0.06] border border-white/10 gap-0.5 shrink-0">
-              <button
-                onClick={toggleTheme}
-                className="p-1.5 rounded-full hover:bg-white/10 text-[#86868b] hover:text-white transition-colors cursor-pointer text-xs shrink-0"
-                title={
-                  theme === 'dark'
-                    ? (language === 'nl' ? 'Schakel over naar lichte modus' : 'Switch to light mode')
-                    : (language === 'nl' ? 'Schakel over naar donkere modus' : 'Switch to dark mode')
-                }
-              >
-                {theme === 'dark' ? (
-                  <Sun className="w-3.5 h-3.5 text-[#f5f5f7]" />
-                ) : (
-                  <Moon className="w-3.5 h-3.5 text-[#0071e3]" />
-                )}
-              </button>
-
-              <button
-                onClick={toggleLanguage}
-                className="px-2 py-1 rounded-full hover:bg-white/10 text-[#f5f5f7] transition-colors flex items-center gap-1 cursor-pointer text-[11px] font-mono font-semibold shrink-0"
-                title={language === 'nl' ? 'Switch to English (EN)' : 'Wissel naar Nederlands (NL)'}
-              >
-                <Globe className="w-3 h-3 text-[#2997ff]" />
-                <span>{language.toUpperCase()}</span>
-              </button>
+          {/* Right Area: Minimal Active Section Indicator & Apple Hamburger Button */}
+          <div className="flex items-center gap-2.5">
+            {/* Contextual Active Module Pill */}
+            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs text-[#86868b]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2997ff]"></span>
+              <span className="text-white font-medium">
+                {navTabs.find((t) => t.id === activeTab)?.label || 'Overzicht'}
+              </span>
             </div>
 
-            {/* Vacatures Quick Pill */}
+            {/* Apple Pro Hamburger Menu Button */}
             <button
-              onClick={() => setActiveTab('careers')}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ${
-                activeTab === 'careers'
-                  ? 'apple-btn-primary'
-                  : 'apple-btn-secondary'
+              id="main-hamburger-menu-btn"
+              type="button"
+              onClick={() => setMenuOpen(!menuOpen)}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-medium flex items-center gap-2 cursor-pointer transition-all duration-200 border ${
+                menuOpen
+                  ? 'bg-white text-black border-white shadow-lg scale-95 font-semibold'
+                  : 'bg-white/[0.08] hover:bg-white/[0.14] text-white border-white/15'
               }`}
-              title={language === 'en' ? 'Vacancies — 13 Positions' : 'Vacatures — 13 Posities'}
+              aria-label={menuOpen ? 'Sluit hoofdmenu' : 'Open hoofdmenu'}
+              aria-expanded={menuOpen}
             >
-              <Briefcase className="w-3.5 h-3.5 text-[#30d158]" />
-              <span className="hidden sm:inline">{language === 'en' ? 'Careers' : 'Vacatures'}</span>
-              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#30d158]/15 text-[#30d158]">13</span>
+              <div className="w-4 h-4 flex items-center justify-center">
+                {menuOpen ? (
+                  <X className="w-4 h-4 text-black" />
+                ) : (
+                  <Menu className="w-4 h-4 text-[#2997ff]" />
+                )}
+              </div>
+              <span className="font-medium tracking-tight">
+                {menuOpen ? (language === 'en' ? 'Close' : 'Sluiten') : 'Menu'}
+              </span>
             </button>
-
-            {currentUser ? (
-              <div className="flex items-center gap-1.5 shrink-0">
-                <button
-                  onClick={() => setActiveTab(currentUser.role === 'admin' ? 'admin_dashboard' : 'investor_dashboard')}
-                  className="apple-btn-primary px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
-                  title={language === 'en' ? 'To Dashboard' : 'Naar uw Dashboard'}
-                >
-                  {currentUser.role === 'admin' ? (
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                  ) : (
-                    <TrendingUp className="w-3.5 h-3.5" />
-                  )}
-                  <span className="hidden sm:inline">{currentUser.name.split(' ')[0]}</span>
-                </button>
-
-                <button
-                  onClick={handleLogout}
-                  className="apple-btn-secondary p-2 rounded-full cursor-pointer"
-                  title={language === 'en' ? 'Log out' : 'Uitloggen'}
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-1.5 shrink-0">
-                <button
-                  onClick={() => setActiveTab('login')}
-                  className="apple-btn-secondary px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 cursor-pointer"
-                  title={language === 'en' ? 'Sign In' : 'Inloggen'}
-                >
-                  <LogIn className="max-md:hidden w-3.5 h-3.5 text-[#2997ff]" />
-                  <span>{language === 'en' ? 'Sign In' : 'Login'}</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab('register')}
-                  className="apple-btn-primary px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
-                  title={language === 'en' ? 'Register as shareholder' : 'Registreer als aandeelhouder'}
-                >
-                  <UserPlus className="max-md:hidden w-3.5 h-3.5" />
-                  <span>{language === 'en' ? 'Register' : 'Registreer'}</span>
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </header>
 
-      {/* Main Workspace Layout */}
-      <div className="flex min-h-0 min-w-0 flex-1 max-w-7xl w-full mx-auto overflow-hidden relative">
-        {/* Mobile Drawer Overlay */}
-        {mobileMenuOpen && (
-          <div
-            onClick={() => setMobileMenuOpen(false)}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 md:hidden"
-          />
-        )}
+      {/* Modern Accessible Hamburger Navigation Drawer (`modern-web-guidance`) */}
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            {/* Dimming Backdrop Overlay with Light Dismiss */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+              onClick={() => setMenuOpen(false)}
+              className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 cursor-pointer"
+              aria-hidden="true"
+            />
 
-        {/* Mobile Slide-Over Drawer Panel (`apple-glass`) */}
-        <div
-          className={`fixed inset-y-0 left-0 z-50 w-full max-w-xs flex flex-col transition-transform duration-300 md:hidden shadow-2xl apple-glass border-r border-white/12 ${
-            mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-        >
-          {/* Mobile Drawer Header */}
-          <div className="p-4 border-b border-white/10 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-2xl bg-white/10 p-0.5 flex items-center justify-center shrink-0 overflow-hidden ring-1 ring-white/15">
-                <img
-                  src={quantumInitiumLogo}
-                  alt="QuantumInitium Logo"
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover rounded-[14px]"
-                />
-              </div>
-              <div>
-                <div className="font-semibold text-sm text-white">QuantumInitium Ltd</div>
-                <div className="text-[10px] font-mono text-[#2997ff]">Investeerdersportaal</div>
-              </div>
-            </div>
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-2 rounded-full apple-btn-secondary cursor-pointer"
+            {/* Slide-over Apple Glass Flyout Panel */}
+            <motion.aside
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300, mass: 0.8 }}
+              className="fixed inset-y-0 right-0 z-50 w-full max-w-md sm:max-w-lg apple-glass border-l border-white/[0.12] flex flex-col shadow-2xl overflow-hidden"
+              role="dialog"
+              aria-modal="true"
+              aria-label={language === 'en' ? 'Main Menu' : 'Hoofdmenu'}
             >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
+              {/* Drawer Top Header */}
+              <div className="p-4 sm:p-5 border-b border-white/[0.10] flex items-center justify-between shrink-0 bg-white/[0.02]">
+                <div
+                  onClick={() => {
+                    setActiveTab('landing');
+                    setMenuOpen(false);
+                  }}
+                  className="flex items-center gap-3 cursor-pointer group"
+                >
+                  <div className="w-10 h-10 rounded-2xl p-[1.5px] bg-gradient-to-b from-white/40 to-white/10 flex items-center justify-center shadow-lg shrink-0 overflow-hidden ring-1 ring-white/15">
+                    <img
+                      src={quantumInitiumLogo}
+                      alt="QuantumInitium Logo"
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover rounded-[14px]"
+                    />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h2 className="font-semibold text-sm sm:text-base text-white tracking-tight">QuantumInitium</h2>
+                      <span className="text-[10px] text-[#2997ff] font-mono font-semibold px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/12">
+                        Ltd
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-[#86868b] leading-tight">
+                      {language === 'en' ? 'Ecosystem Directory & Portal' : 'Ecosysteem Directory & Portaal'}
+                    </p>
+                  </div>
+                </div>
 
-          {/* Mobile Drawer Content */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-5">
-            {/* Quick Preferences: Theme & Language */}
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={toggleLanguage}
-                className="p-2.5 rounded-full apple-btn-secondary flex items-center justify-center gap-2 cursor-pointer text-xs font-mono font-semibold"
-              >
-                <Globe className="w-4 h-4 text-[#2997ff]" />
-                <span>Taal: {language.toUpperCase()}</span>
-              </button>
-              <button
-                onClick={toggleTheme}
-                className="p-2.5 rounded-full apple-btn-secondary flex items-center justify-center gap-2 cursor-pointer text-xs font-mono"
-              >
-                {theme === 'dark' ? (
-                  <>
-                    <Sun className="w-4 h-4 text-white" />
-                    <span>Licht</span>
-                  </>
-                ) : (
-                  <>
-                    <Moon className="w-4 h-4 text-[#0071e3]" />
-                    <span className="font-semibold">Donker</span>
-                  </>
-                )}
-              </button>
-            </div>
+                <button
+                  type="button"
+                  onClick={() => setMenuOpen(false)}
+                  className="p-2.5 rounded-full apple-btn-secondary text-white cursor-pointer hover:bg-white/[0.12] transition-colors"
+                  aria-label={language === 'en' ? 'Close menu' : 'Sluit menu'}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
 
-            {/* Auth Block in Mobile Drawer */}
-            <div className="p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 space-y-2">
-              {currentUser ? (
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold truncate text-white">{currentUser.name}</span>
-                    <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[#0071e3]/20 text-[#2997ff] border border-[#2997ff]/30">
-                      {currentUser.role === 'admin' ? 'Admin' : 'Investeerder'}
+              {/* Scrollable Structured Drawer Content */}
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5 no-scrollbar">
+                {/* 1. Account & Authenticatie Blok */}
+                <div className="apple-glass-card p-4 rounded-2xl border border-white/[0.12] space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono font-semibold text-[#86868b] uppercase tracking-wider">
+                      {language === 'en' ? 'Shareholder & Executive Portal' : 'Aandeelhouders- & Directieportaal'}
+                    </span>
+                    <span className="text-[10px] font-mono text-[#2997ff] flex items-center gap-1">
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#30d158]" />
+                      Secured
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 pt-1">
+
+                  {currentUser ? (
+                    <div className="space-y-3 pt-1">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-full bg-[#0071e3]/20 border border-[#2997ff]/40 flex items-center justify-center text-xs font-bold text-[#2997ff]">
+                            {currentUser.name.charAt(0)}
+                          </div>
+                          <div>
+                            <div className="text-xs font-semibold text-white">{currentUser.name}</div>
+                            <div className="text-[10px] text-[#86868b]">{currentUser.email}</div>
+                          </div>
+                        </div>
+                        <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[#0071e3]/20 text-[#2997ff] border border-[#2997ff]/30">
+                          {currentUser.role === 'admin' ? (language === 'en' ? 'Director' : 'Directie') : (language === 'en' ? 'Shareholder' : 'Aandeelhouder')}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActiveTab(currentUser.role === 'admin' ? 'admin_dashboard' : 'investor_dashboard');
+                            setMenuOpen(false);
+                          }}
+                          className="apple-btn-primary px-3 py-2 rounded-full font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                          <TrendingUp className="w-3.5 h-3.5" />
+                          <span>{language === 'en' ? 'Dashboard' : 'Naar Dashboard'}</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleLogout();
+                            setMenuOpen(false);
+                          }}
+                          className="apple-btn-secondary px-3 py-2 rounded-full text-xs font-medium flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                          <LogOut className="w-3.5 h-3.5" />
+                          <span>{language === 'en' ? 'Sign Out' : 'Uitloggen'}</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-3 pt-1">
+                      <p className="text-xs text-[#86868b] leading-relaxed">
+                        {language === 'en'
+                          ? 'Access verified shareholder ledger, real-time EBITDA metrics, and executive documentation.'
+                          : 'Toegang tot het geconsolideerde aandeelhoudersregister, EBITDA analyses en executiedossiers.'}
+                      </p>
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActiveTab('login');
+                            setMenuOpen(false);
+                          }}
+                          className="apple-btn-secondary px-3 py-2 rounded-full text-xs font-medium flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                          <LogIn className="w-3.5 h-3.5 text-[#2997ff]" />
+                          <span>{language === 'en' ? 'Sign In' : 'Inloggen'}</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActiveTab('register');
+                            setMenuOpen(false);
+                          }}
+                          className="apple-btn-primary px-3 py-2 rounded-full font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                          <UserPlus className="w-3.5 h-3.5" />
+                          <span>{language === 'en' ? 'Register' : 'Registreren'}</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* 2. Systeemvoorkeuren & Privacy Controles (voorheen de header clutter) */}
+                <div className="apple-glass-card p-4 rounded-2xl border border-white/[0.12] space-y-3.5">
+                  <span className="text-[10px] font-mono font-semibold text-[#86868b] uppercase tracking-wider block">
+                    {language === 'en' ? 'System Controls & Privacy' : 'Systeemvoorkeuren & Privacy'}
+                  </span>
+
+                  {/* Privacy Toggle Row */}
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08]">
+                    <div className="flex items-center gap-2.5">
+                      <div className="p-1.5 rounded-lg bg-white/[0.06] text-[#2997ff]">
+                        {amountsVisible ? <Eye className="w-4 h-4 text-[#30d158]" /> : <EyeOff className="w-4 h-4 text-[#2997ff]" />}
+                      </div>
+                      <div>
+                        <div className="text-xs font-medium text-white">
+                          {amountsVisible
+                            ? (language === 'en' ? 'Amounts Visible' : 'Bedragen Zichtbaar')
+                            : (language === 'en' ? 'Amounts Masked' : 'Bedragen Gemaskeerd')}
+                        </div>
+                        <div className="text-[10px] text-[#86868b]">
+                          {amountsVisible
+                            ? (language === 'en' ? 'Financial figures in plain view' : 'Waarderingen en saldi openbaar')
+                            : (language === 'en' ? 'Private discreet display mode' : 'Privacy modus (••••••)')}
+                        </div>
+                      </div>
+                    </div>
+
                     <button
-                      onClick={() => {
-                        setActiveTab(currentUser.role === 'admin' ? 'admin_dashboard' : 'investor_dashboard');
-                        setMobileMenuOpen(false);
-                      }}
-                      className="apple-btn-primary px-3 py-2 rounded-full font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+                      type="button"
+                      onClick={toggleAmounts}
+                      className={`px-3 py-1.5 rounded-full text-xs font-mono font-semibold flex items-center gap-1.5 cursor-pointer transition-all border ${
+                        amountsVisible
+                          ? 'bg-[#30d158]/20 text-[#30d158] border-[#30d158]/40 shadow-sm'
+                          : 'bg-white/[0.08] text-[#2997ff] border-white/15 hover:bg-white/[0.15]'
+                      }`}
                     >
-                      <TrendingUp className="w-3.5 h-3.5" />
-                      <span>Dashboard</span>
+                      <span>👁️</span>
+                      <span>{amountsVisible ? (language === 'en' ? 'Mask' : 'Maskeer') : (language === 'en' ? 'Reveal' : 'Toon')}</span>
                     </button>
+                  </div>
+
+                  {/* Theme & Language Dual Segmented Switches */}
+                  <div className="grid grid-cols-2 gap-2 pt-0.5">
+                    {/* Theme Switcher */}
+                    <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] flex flex-col gap-2">
+                      <span className="text-[10px] font-mono text-[#86868b]">
+                        {language === 'en' ? 'Appearance' : 'Weergave'}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={toggleTheme}
+                        className="apple-btn-secondary py-1.5 px-2.5 rounded-full text-xs flex items-center justify-between cursor-pointer"
+                      >
+                        <span className="text-white font-medium">
+                          {theme === 'dark' ? 'OLED Dark' : 'Light Mode'}
+                        </span>
+                        {theme === 'dark' ? (
+                          <Sun className="w-3.5 h-3.5 text-white" />
+                        ) : (
+                          <Moon className="w-3.5 h-3.5 text-[#0071e3]" />
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Language Switcher */}
+                    <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] flex flex-col gap-2">
+                      <span className="text-[10px] font-mono text-[#86868b]">
+                        {language === 'en' ? 'Language' : 'Taal'}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={toggleLanguage}
+                        className="apple-btn-secondary py-1.5 px-2.5 rounded-full text-xs flex items-center justify-between cursor-pointer"
+                      >
+                        <span className="text-white font-medium">
+                          {language === 'nl' ? 'Nederlands' : 'English'}
+                        </span>
+                        <Globe className="w-3.5 h-3.5 text-[#2997ff]" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. Hoofdnavigatie & Modules (Alle opties uit de header) */}
+                <div className="space-y-2.5">
+                  <span className="text-[10px] font-mono font-semibold text-[#86868b] uppercase tracking-wider block px-1">
+                    {language === 'en' ? 'Platform Navigation' : 'Hoofdnavigatie & Modules'}
+                  </span>
+
+                  <div className="space-y-1.5">
+                    {navTabs.map((tab) => {
+                      const isActive = activeTab === tab.id;
+                      const IconComp = tab.icon;
+                      return (
+                        <button
+                          key={tab.id}
+                          type="button"
+                          onClick={() => {
+                            setActiveTab(tab.id);
+                            setMenuOpen(false);
+                          }}
+                          className={`w-full p-3 rounded-2xl text-left transition-all border flex items-center justify-between group cursor-pointer ${
+                            isActive
+                              ? 'bg-[#0071e3]/20 border-[#2997ff]/50 shadow-md ring-1 ring-[#2997ff]/30 text-white'
+                              : 'bg-white/[0.04] hover:bg-white/[0.08] border-white/[0.08] text-[#86868b] hover:text-white'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className={`p-2 rounded-xl shrink-0 transition-colors ${
+                              isActive
+                                ? 'bg-[#0071e3] text-white shadow-sm'
+                                : 'bg-white/[0.06] text-[#2997ff] group-hover:text-white'
+                            }`}>
+                              <IconComp className="w-4 h-4" />
+                            </div>
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2">
+                                <span className={`text-xs font-semibold ${isActive ? 'text-white' : 'text-[#f5f5f7]'}`}>
+                                  {tab.label}
+                                </span>
+                              </div>
+                              <p className="text-[11px] text-[#86868b] truncate max-w-[210px] sm:max-w-xs">
+                                {tab.description}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                            <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${tab.badgeColor}`}>
+                              {tab.badge}
+                            </span>
+                            <ChevronRight className="w-3.5 h-3.5 text-[#86868b] group-hover:translate-x-0.5 transition-transform" />
+                          </div>
+                        </button>
+                      );
+                    })}
+
+                    {/* Careers item (specifiek met vacatures badge) */}
                     <button
+                      type="button"
                       onClick={() => {
-                        handleLogout();
-                        setMobileMenuOpen(false);
+                        setActiveTab('careers');
+                        setMenuOpen(false);
                       }}
-                      className="apple-btn-secondary px-3 py-2 rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
+                      className={`w-full p-3 rounded-2xl text-left transition-all border flex items-center justify-between group cursor-pointer ${
+                        activeTab === 'careers'
+                          ? 'bg-[#0071e3]/20 border-[#2997ff]/50 shadow-md ring-1 ring-[#2997ff]/30 text-white'
+                          : 'bg-white/[0.04] hover:bg-white/[0.08] border-white/[0.08] text-[#86868b] hover:text-white'
+                      }`}
                     >
-                      <LogOut className="w-3.5 h-3.5" />
-                      <span>Uitloggen</span>
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className={`p-2 rounded-xl shrink-0 transition-colors ${
+                          activeTab === 'careers'
+                            ? 'bg-[#0071e3] text-white shadow-sm'
+                            : 'bg-white/[0.06] text-[#30d158] group-hover:text-white'
+                        }`}>
+                          <Briefcase className="w-4 h-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className={`text-xs font-semibold ${activeTab === 'careers' ? 'text-white' : 'text-[#f5f5f7]'}`}>
+                              {language === 'en' ? 'Careers & Vacancies' : 'Carrière & Vacatures'}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-[#86868b] truncate max-w-[210px] sm:max-w-xs">
+                            {language === 'en' ? '13 Open positions across 5 subholdings' : '13 Open posities binnen 5 subholdings'}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full border text-[#30d158] bg-[#30d158]/15 border-[#30d158]/30">
+                          13 Posities
+                        </span>
+                        <ChevronRight className="w-3.5 h-3.5 text-[#86868b] group-hover:translate-x-0.5 transition-transform" />
+                      </div>
                     </button>
                   </div>
                 </div>
-              ) : (
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    onClick={() => {
-                      setActiveTab('login');
-                      setMobileMenuOpen(false);
-                    }}
-                    className="apple-btn-secondary px-3 py-2 rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <LogIn className="w-3.5 h-3.5 text-[#2997ff]" />
-                    <span>Inloggen</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      setActiveTab('register');
-                      setMobileMenuOpen(false);
-                    }}
-                    className="apple-btn-primary px-3 py-2 rounded-full font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <UserPlus className="w-3.5 h-3.5" />
-                    <span>Registreren</span>
-                  </button>
+
+                {/* 4. Dossier Hoofdstukken Directe Snelsprong */}
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between px-1">
+                    <span className="text-[10px] font-mono font-semibold text-[#86868b] uppercase tracking-wider">
+                      {language === 'en' ? 'Syllabus Dossier (10 Chapters)' : 'Syllabus Dossier (10 Hoofdstukken)'}
+                    </span>
+                    <span className="text-[10px] font-mono text-[#2997ff]">CH 01 - 10</span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {chapterList.map((ch) => {
+                      const isSelected = activeTab === 'dossier' && currentChapter === ch.num;
+                      return (
+                        <button
+                          key={ch.num}
+                          type="button"
+                          onClick={() => {
+                            handleSelectChapter(ch.num);
+                            setMenuOpen(false);
+                          }}
+                          className={`p-2.5 rounded-xl text-left border transition-all cursor-pointer text-xs ${
+                            isSelected
+                              ? 'bg-[#0071e3]/25 border-[#2997ff] text-white font-semibold shadow-sm'
+                              : 'bg-white/[0.04] border-white/[0.08] text-[#86868b] hover:text-white hover:bg-white/[0.08]'
+                          }`}
+                        >
+                          <div className="font-mono text-[10px] text-[#2997ff] font-semibold">
+                            CH {ch.tag}
+                          </div>
+                          <div className="font-medium text-[11px] text-white truncate mt-0.5">
+                            {ch.title}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              )}
-            </div>
-
-            {/* Primary Views */}
-            <div className="space-y-2">
-              <div className={`text-[11px] font-mono uppercase tracking-wider font-bold px-1 ${
-                theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'
-              }`}>
-                Hoofdweergaves
               </div>
-              <div className="space-y-1.5">
-                {navTabs.map((tab) => {
-                  const isActive = activeTab === tab.id;
-                  const IconComponent = tab.icon;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => {
-                        setActiveTab(tab.id);
-                        setMobileMenuOpen(false);
-                      }}
-                      className={`w-full text-left p-3 rounded-xl text-xs font-semibold flex items-center justify-between border transition-all cursor-pointer ${
-                        isActive
-                          ? tab.activeClass
-                          : theme === 'light'
-                          ? 'bg-white border-sky-200/80 text-sky-950 hover:bg-sky-50 shadow-sm'
-                          : 'bg-slate-900/80 border-slate-800/80 text-slate-300 hover:bg-slate-800'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <IconComponent className={`w-4 h-4 ${tab.iconColor}`} />
-                        <span>{tab.label}</span>
-                      </div>
-                      <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${tab.badgeColor}`}>
-                        {tab.badge}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
 
-            {/* Chapter Quick Selector */}
-            <div className="space-y-2">
-              <div className={`text-[11px] font-mono uppercase tracking-wider font-bold px-1 flex items-center justify-between ${
-                theme === 'light' ? 'text-sky-800/80' : 'text-slate-400'
-              }`}>
-                <span>Dossier Hoofdstukken</span>
-                <span className={`text-[10px] font-bold ${theme === 'light' ? 'text-cyan-700' : 'text-cyan-400'}`}>10 Ch.</span>
+              {/* 5. Menu Footer: Substance & Governance Verification */}
+              <div className="p-4 sm:p-5 border-t border-white/[0.10] bg-white/[0.02] flex items-center justify-between text-xs text-[#86868b] shrink-0">
+                <div className="flex items-center gap-1.5 font-mono text-[11px] text-[#30d158] font-semibold">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>UK Substance Verified</span>
+                </div>
+                <div className="font-mono text-[11px] text-[#86868b]">
+                  London EC2A • v2.4
+                </div>
               </div>
-              <div className="grid grid-cols-2 gap-1.5">
-                {chapterList.map((ch) => (
-                  <button
-                    key={ch.num}
-                    onClick={() => handleSelectChapter(ch.num)}
-                    className={`p-2 rounded-lg text-left border transition-all cursor-pointer text-xs ${
-                      activeTab === 'dossier' && currentChapter === ch.num
-                        ? theme === 'light'
-                          ? 'bg-cyan-100 border-cyan-300 text-cyan-950 font-bold shadow-sm'
-                          : 'bg-cyan-500/20 border-cyan-500/50 text-cyan-300 font-bold'
-                        : theme === 'light'
-                        ? 'bg-white border-sky-200 text-sky-900 hover:bg-sky-50'
-                        : 'bg-slate-900/60 border-slate-800 text-slate-300 hover:bg-slate-800'
-                    }`}
-                  >
-                    <div className={`font-mono text-[10px] font-bold ${theme === 'light' ? 'text-sky-700' : 'text-slate-400'}`}>CH {ch.tag}</div>
-                    <div className={`truncate font-medium text-[11px] ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>{ch.title}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
 
-          {/* Mobile Drawer Footer */}
-          <div className="p-4 border-t border-slate-800 bg-slate-900/80 text-xs text-slate-400">
-            <div className="flex items-center justify-between mb-1">
-              <span className="font-mono text-[11px] text-emerald-400 font-semibold flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5" /> UK Substance Verified
-              </span>
-              <span className="text-slate-400 font-mono text-[11px]">
-                <PrivateAmount value="IPO waardering" />
-              </span>
-            </div>
-          </div>
-        </div>
+      {/* Main Workspace Layout */}
+      <div className="flex min-h-0 min-w-0 flex-1 w-full mx-auto overflow-hidden relative">
 
-        {/* Upgraded Desktop Sidebar Navigation (Open / Collapsed Mode) */}
-        {sidebarOpen ? (
+        {/* Upgraded Desktop Sidebar Navigation (Open / Collapsed Mode) — Omitted on Landing & Auth */}
+        {(activeTab !== 'landing' && activeTab !== 'login' && activeTab !== 'register') && (
+          sidebarOpen ? (
           <aside className="hidden md:flex flex-col w-80 border-r border-white/[0.08] apple-glass transition-all duration-300 h-[calc(100vh-61px)] shrink-0 z-30">
             {/* Sidebar Top: Navigator Title & Mode Switcher */}
             <div className="p-3.5 border-b border-white/[0.08] space-y-3">
@@ -2071,7 +2168,7 @@ export function App() {
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" title="UK Substance Verified"></span>
             </div>
           </aside>
-        )}
+        ))}
 
         {/* Main Workspace Body */}
         <main className="flex min-h-0 min-w-0 flex-1 flex-col h-[calc(100vh-124px)] md:h-[calc(100vh-61px)] overflow-hidden bg-black relative">
