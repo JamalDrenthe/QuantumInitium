@@ -23,7 +23,7 @@ import OAuthButtons from './OAuthButtons';
 interface LoginPageProps {
   onLoginSuccess: (user: AuthUser) => void;
   onNavigateRegister: () => void;
-  onNavigateHome: (tab?: 'architecture' | '3d' | 'dossier' | 'simulator') => void;
+  onNavigateHome: (tab?: 'landing' | 'architecture' | '3d' | 'dossier' | 'simulator') => void;
 }
 
 export default function LoginPage({
@@ -141,49 +141,48 @@ export default function LoginPage({
   };
 
   return (
-    <div className="w-full min-h-full flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-[#05070d] pb-16">
+    <div className="w-full min-h-full flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-black pb-16">
       <div className="w-full max-w-xl mx-auto space-y-6">
         {/* Terug naar presentatie / Sluiten */}
         <div className="flex items-center justify-between gap-3 text-xs">
           <button
-            onClick={() => onNavigateHome('architecture')}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 transition-colors cursor-pointer"
+            onClick={() => onNavigateHome('landing')}
+            className="apple-btn-secondary flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium cursor-pointer"
           >
-            <ArrowRight className="w-3.5 h-3.5 rotate-180 text-amber-400" />
-            <span>Terug naar Presentatie</span>
+            <ArrowRight className="w-3.5 h-3.5 rotate-180 text-[#2997ff]" />
+            <span>Terug naar Overzicht</span>
           </button>
 
-          <span className="text-[11px] font-mono text-slate-500">
+          <span className="text-[11px] font-mono text-[#86868b]">
             Beveiligde SSL 256-bit Toegang
           </span>
         </div>
 
         {/* Hoofd Inlogkaart */}
-        <div className="glass-panel-luxe p-6 sm:p-8 rounded-3xl border border-white/[0.09] shadow-2xl relative overflow-hidden before:absolute before:inset-x-0 before:top-0 before:h-[2px] before:bg-gradient-to-r before:from-transparent before:via-amber-400/60 before:to-transparent">
-          {/* Subtiel decoratief achtergrond raster en gloed */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="apple-glass-card p-6 sm:p-8 rounded-[2rem] border border-white/12 shadow-2xl relative overflow-hidden">
+          <div className="absolute -top-20 right-0 w-64 h-64 bg-[#0071e3]/15 rounded-full blur-[110px] pointer-events-none" />
+          <div className="absolute -bottom-20 left-0 w-64 h-64 bg-[#2997ff]/10 rounded-full blur-[110px] pointer-events-none" />
 
           {/* Titel & Status */}
           <div className="text-center space-y-2 mb-6 relative">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-mono font-bold">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.06] border border-white/12 text-[#2997ff] text-xs font-mono font-semibold">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#30d158]" />
               <span>QuantumInitium Portaal Toegang</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-[-0.03em]">
               Inloggen op uw Dashboard
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
-              Toegang tot het actuele aandelenbezit, live koerswaarde (€{SHARE_PRICE_CURRENT.toFixed(2)}) en directie overzichten.
+            <p className="text-xs sm:text-sm text-[#86868b] max-w-md mx-auto">
+              Toegang tot het actuele aandelenbezit, koerswaarde (€{SHARE_PRICE_CURRENT.toFixed(2)}) en directie-overzichten.
             </p>
           </div>
 
-          {/* Snelkeuze knoppen voor Investeerder en Admin volgens gebruikersverzoek */}
+          {/* Snelkeuze knoppen voor Investeerder en Admin */}
           <div className="space-y-3 mb-6">
-            <div className="flex items-center justify-between text-xs font-mono text-slate-400">
+            <div className="flex items-center justify-between text-xs font-mono text-[#86868b]">
               <span>Kies uw gewenste profielrol:</span>
-              <span className="text-amber-400 font-semibold">
-                Live Demo Gereed
+              <span className="text-[#30d158] font-semibold">
+                Directe Toegang
               </span>
             </div>
 
@@ -192,20 +191,20 @@ export default function LoginPage({
               <button
                 type="button"
                 onClick={() => handleSelectRole('investor')}
-                className={`p-3.5 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
+                className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
                   selectedRole === 'investor'
-                    ? 'bg-amber-500/20 border-amber-500/60 shadow-lg shadow-amber-500/20 text-white'
-                    : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white'
+                    ? 'bg-[#0071e3]/20 border-[#2997ff]/60 shadow-lg text-white'
+                    : 'bg-white/[0.04] border-white/10 text-[#86868b] hover:border-white/25 hover:text-white'
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                  <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-[#0071e3]/20 text-[#2997ff] border border-[#2997ff]/30">
                     Investeerder
                   </span>
-                  <TrendingUp className="w-4 h-4 text-amber-400" />
+                  <TrendingUp className="w-4 h-4 text-[#2997ff]" />
                 </div>
-                <div className="text-sm font-bold text-white">Investor Account</div>
-                <div className="text-[11px] text-slate-400 mt-0.5">
+                <div className="text-sm font-semibold text-white">Investor Account</div>
+                <div className="text-[11px] text-[#86868b] mt-0.5">
                   12.500 aandelen • €{SHARE_PRICE_CURRENT.toFixed(2)} koers
                 </div>
               </button>
@@ -214,20 +213,20 @@ export default function LoginPage({
               <button
                 type="button"
                 onClick={() => handleSelectRole('admin')}
-                className={`p-3.5 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
+                className={`p-3.5 rounded-2xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
                   selectedRole === 'admin'
-                    ? 'bg-cyan-500/20 border-cyan-500/60 shadow-lg shadow-cyan-500/20 text-white'
-                    : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-white'
+                    ? 'bg-[#0071e3]/20 border-[#2997ff]/60 shadow-lg text-white'
+                    : 'bg-white/[0.04] border-white/10 text-[#86868b] hover:border-white/25 hover:text-white'
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                  <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-[#30d158]/15 text-[#30d158] border border-[#30d158]/30">
                     Beheerder
                   </span>
-                  <ShieldCheck className="w-4 h-4 text-cyan-400" />
+                  <ShieldCheck className="w-4 h-4 text-[#30d158]" />
                 </div>
-                <div className="text-sm font-bold text-white">Admin Account</div>
-                <div className="text-[11px] text-slate-400 mt-0.5">
+                <div className="text-sm font-semibold text-white">Admin Account</div>
+                <div className="text-[11px] text-[#86868b] mt-0.5">
                   Directie beheer • 10M emissie
                 </div>
               </button>
@@ -235,31 +234,31 @@ export default function LoginPage({
           </div>
 
           {/* Directe Snelle Demo Knoppen (1 klik inloggen) */}
-          <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2 mb-6">
-            <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
+          <div className="p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 space-y-2.5 mb-6">
+            <div className="flex items-center justify-between text-[11px] font-mono text-[#86868b]">
               <span className="flex items-center gap-1.5">
-                <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
-                Directe 1 klik demo toegang:
+                <UserCheck className="w-3.5 h-3.5 text-[#30d158]" />
+                Directe 1-klik demo toegang:
               </span>
-              <span className="text-emerald-400 font-bold">Hardcoded accounts</span>
+              <span className="text-[#30d158] font-semibold">Geverifieerd</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('investor')}
-                className="px-3 py-2 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="apple-btn-secondary px-3 py-2 rounded-full text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer"
               >
-                <TrendingUp className="w-3.5 h-3.5" />
+                <TrendingUp className="w-3.5 h-3.5 text-[#2997ff]" />
                 <span>Demo Investeerder Log In</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('admin')}
-                className="px-3 py-2 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="apple-btn-secondary px-3 py-2 rounded-full text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer"
               >
-                <ShieldCheck className="w-3.5 h-3.5" />
+                <ShieldCheck className="w-3.5 h-3.5 text-[#30d158]" />
                 <span>Demo Admin Log In</span>
               </button>
             </div>
@@ -277,52 +276,52 @@ export default function LoginPage({
           {/* Formulier */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {errorMsg && (
-              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+              <div className="p-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
                 <HelpCircle className="w-4 h-4 shrink-0 text-rose-400" />
                 <span>{errorMsg}</span>
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-mono font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-mono font-medium text-[#86868b] mb-1.5">
                 Emailadres
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Mail className="w-4 h-4 text-[#86868b] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="naam@quantuminitium.com"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:border-amber-400 focus:outline-none transition-colors"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/12 text-white text-sm focus:border-[#0071e3] focus:outline-none transition-colors"
                 />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-mono font-medium text-slate-300">
+                <label className="block text-xs font-mono font-medium text-[#86868b]">
                   Wachtwoord
                 </label>
-                <span className="text-[11px] text-slate-500 font-mono">
+                <span className="text-[11px] text-[#86868b] font-mono">
                   Demo: {selectedRole === 'investor' ? 'investor2027' : 'admin2027'}
                 </span>
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Lock className="w-4 h-4 text-[#86868b] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:border-amber-400 focus:outline-none transition-colors"
+                  className="w-full pl-10 pr-10 py-2.5 rounded-2xl bg-white/[0.05] border border-white/12 text-white text-sm focus:border-[#0071e3] focus:outline-none transition-colors"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#86868b] hover:text-white cursor-pointer"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -332,7 +331,7 @@ export default function LoginPage({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 disabled:opacity-60 disabled:cursor-wait text-slate-950 shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
+              className="apple-btn-primary w-full py-3 px-4 rounded-full font-semibold text-sm disabled:opacity-60 disabled:cursor-wait flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>{isSubmitting ? 'Authenticatie controleren...' : `Inloggen als ${selectedRole === 'investor' ? 'Investeerder' : 'Admin'}`}</span>
               <ArrowRight className="w-4 h-4" />
@@ -340,12 +339,12 @@ export default function LoginPage({
           </form>
 
           {/* Onderkant switch naar registreren */}
-          <div className="mt-6 pt-5 border-t border-slate-800/80 text-center text-xs text-slate-400">
+          <div className="mt-6 pt-5 border-t border-white/10 text-center text-xs text-[#86868b]">
             Nog geen aandeelhoudersaccount geregistreerd?{' '}
             <button
               type="button"
               onClick={onNavigateRegister}
-              className="font-bold text-amber-400 hover:text-amber-300 underline underline-offset-4 cursor-pointer"
+              className="font-semibold text-[#2997ff] hover:underline underline-offset-4 cursor-pointer"
             >
               Maak een nieuw account aan
             </button>

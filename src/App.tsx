@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { motion } from 'motion/react';
 import {
   Award,
   Menu,
@@ -44,7 +45,8 @@ import {
   Sun,
   Moon,
   Globe,
-  Mail
+  Mail,
+  Briefcase
 } from 'lucide-react';
 import EcosystemCanvas, { EcosystemCanvasHandle } from './components/EcosystemCanvas';
 import OnboardingRoutesPanel from './components/OnboardingRoutesPanel';
@@ -53,6 +55,8 @@ import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
 import InvestorDashboard from './components/InvestorDashboard';
 import AdminDashboard from './components/AdminDashboard';
+import CareersPage from './components/CareersPage';
+import LandingPage from './components/LandingPage';
 import { AuthUser, DEMO_INVESTOR, DEMO_ADMIN, SHARE_PRICE_CURRENT } from './types/auth';
 import { createManagedAccount, loadAccountForSession, loadManagedAccounts, saveManagedAccount } from './lib/accountStore';
 import {
@@ -585,8 +589,8 @@ function renderHoldcoIcon(iconName: string, className: string = 'w-4 h-4') {
 
 export function App() {
   const [activeTab, setActiveTab] = useState<
-    'architecture' | 'simulator' | 'calculator' | 'dossier' | '3d' | 'login' | 'register' | 'investor_dashboard' | 'admin_dashboard'
-  >('architecture');
+    'landing' | 'architecture' | 'simulator' | 'calculator' | 'dossier' | '3d' | 'careers' | 'login' | 'register' | 'investor_dashboard' | 'admin_dashboard'
+  >('landing');
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [amountsVisible, setAmountsVisible] = useState<boolean>(false);
   const [managedAccounts, setManagedAccounts] = useState<AuthUser[]>([]);
@@ -618,7 +622,7 @@ export function App() {
   const handleLogout = () => {
     void clearAuthSession();
     setCurrentUser(null);
-    setActiveTab('architecture');
+    setActiveTab('landing');
   };
 
   useEffect(() => {
@@ -980,6 +984,19 @@ export function App() {
 
   const navTabs = [
     {
+      id: 'landing' as const,
+      label: language === 'en' ? 'Overview & 3D Hero' : 'Overzicht & 3D Hero',
+      shortLabel: language === 'en' ? 'Overview' : 'Overzicht',
+      description: language === 'en'
+        ? 'Interactive 3D spatial core, Bento architecture & motion pipeline'
+        : 'Interactieve 3D spatial core, Bento-architectuur & motion pipeline',
+      icon: Sparkles,
+      badge: 'Home',
+      badgeColor: 'text-[#2997ff] bg-[#0071e3]/15 border-[#2997ff]/30',
+      activeClass: 'bg-[#0071e3]/25 text-white border-[#2997ff]/50 shadow-sm',
+      iconColor: 'text-[#2997ff]'
+    },
+    {
       id: 'architecture' as const,
       label: language === 'en' ? 'Architecture' : 'Architectuur',
       shortLabel: language === 'en' ? 'Architecture' : 'Architectuur',
@@ -988,36 +1005,36 @@ export function App() {
         : '5 Ring-fenced Subholdings & juridische kapitaalstromen',
       icon: Network,
       badge: '12 Ent.',
-      badgeColor: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/25',
-      activeClass: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 shadow-sm shadow-cyan-500/20',
-      iconColor: 'text-cyan-400'
+      badgeColor: 'text-[#2997ff] bg-[#0071e3]/15 border-[#2997ff]/30',
+      activeClass: 'bg-[#0071e3]/25 text-white border-[#2997ff]/50 shadow-sm',
+      iconColor: 'text-[#2997ff]'
     },
     {
       id: 'simulator' as const,
       label: 'IQ Bot / Agent',
-      shortLabel: 'IQ Bot / Agent',
+      shortLabel: 'IQ Bot',
       description: language === 'en'
         ? 'Real-time agentic execution engine & high-tech talent broker'
         : 'Real-time autonome executiemotor & high-tech talent broker',
       icon: Bot,
       badge: 'Sim',
       pulse: true,
-      badgeColor: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/25',
-      activeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm shadow-emerald-500/20',
-      iconColor: 'text-emerald-400'
+      badgeColor: 'text-[#30d158] bg-[#30d158]/15 border-[#30d158]/30',
+      activeClass: 'bg-[#0071e3]/25 text-white border-[#2997ff]/50 shadow-sm',
+      iconColor: 'text-[#30d158]'
     },
     {
       id: 'calculator' as const,
       label: language === 'en' ? 'Cohort Financial Model' : 'Cohort Rekenmodel',
-      shortLabel: language === 'en' ? 'Cohort Model' : 'Cohort Model',
+      shortLabel: language === 'en' ? 'Cohort Model' : 'Rekenmodel',
       description: language === 'en'
         ? 'Strategic cohort compounding model over 12 rolling months'
         : 'Strategisch cohort-accumulatiemodel over 12 opeenvolgende maanden',
       icon: Calculator,
       badge: language === 'en' ? '78 Cycles' : '78 Cycli',
-      badgeColor: 'text-amber-400 bg-amber-500/10 border-amber-500/25',
-      activeClass: 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm shadow-amber-500/20',
-      iconColor: 'text-amber-400'
+      badgeColor: 'text-[#2997ff] bg-[#0071e3]/15 border-[#2997ff]/30',
+      activeClass: 'bg-[#0071e3]/25 text-white border-[#2997ff]/50 shadow-sm',
+      iconColor: 'text-[#2997ff]'
     },
     {
       id: 'dossier' as const,
@@ -1028,22 +1045,35 @@ export function App() {
         : '10 Uitgebreide hoofdstukken van het institutionele dossier',
       icon: BookOpen,
       badge: language === 'en' ? '10 Ch.' : '10 Ch.',
-      badgeColor: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/25',
-      activeClass: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40 shadow-sm shadow-indigo-500/20',
-      iconColor: 'text-indigo-400'
+      badgeColor: 'text-[#2997ff] bg-[#0071e3]/15 border-[#2997ff]/30',
+      activeClass: 'bg-[#0071e3]/25 text-white border-[#2997ff]/50 shadow-sm',
+      iconColor: 'text-[#2997ff]'
     },
     {
       id: '3d' as const,
       label: language === 'en' ? 'Ecosystem' : 'Ecosysteem',
-      shortLabel: language === 'en' ? 'Ecosystem' : 'Ecosysteem',
+      shortLabel: language === 'en' ? '3D Space' : '3D Ecosysteem',
       description: language === 'en'
         ? 'Interactive WebGL 3D spatial orbit visualization'
         : 'Interactieve WebGL 3D ruimtelijke ecosysteem visualisatie',
       icon: Layers,
       badge: '3D',
-      badgeColor: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/25',
-      activeClass: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/40 shadow-sm shadow-yellow-500/20',
-      iconColor: 'text-yellow-400'
+      badgeColor: 'text-[#30d158] bg-[#30d158]/15 border-[#30d158]/30',
+      activeClass: 'bg-[#0071e3]/25 text-white border-[#2997ff]/50 shadow-sm',
+      iconColor: 'text-[#2997ff]'
+    },
+    {
+      id: 'careers' as const,
+      label: language === 'en' ? 'Careers' : 'Vacatures',
+      shortLabel: language === 'en' ? 'Careers' : 'Vacatures',
+      description: language === 'en'
+        ? '13 open positions across tech, AI and real estate'
+        : '13 vacatures — tech, AI & vastgoedgroep',
+      icon: Briefcase,
+      badge: language === 'en' ? '13 Roles' : '13 Posities',
+      badgeColor: 'text-[#30d158] bg-[#30d158]/15 border-[#30d158]/30',
+      activeClass: 'bg-[#0071e3]/25 text-white border-[#2997ff]/50 shadow-sm',
+      iconColor: 'text-[#30d158]'
     },
     ...(currentUser
       ? [
@@ -1060,15 +1090,9 @@ export function App() {
             badge: currentUser.role === 'admin'
               ? (language === 'en' ? 'Board' : 'Directie')
               : (language === 'en' ? 'Portfolio' : 'Portefeuille'),
-            badgeColor:
-              currentUser.role === 'admin'
-                ? 'text-cyan-400 bg-cyan-500/10 border-cyan-500/25'
-                : 'text-amber-400 bg-amber-500/10 border-amber-500/25',
-            activeClass:
-              currentUser.role === 'admin'
-                ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 shadow-sm shadow-cyan-500/20'
-                : 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm shadow-amber-500/20',
-            iconColor: currentUser.role === 'admin' ? 'text-cyan-400' : 'text-amber-400'
+            badgeColor: 'text-[#2997ff] bg-[#0071e3]/15 border-[#2997ff]/30',
+            activeClass: 'bg-[#0071e3]/25 text-white border-[#2997ff]/50 shadow-sm',
+            iconColor: 'text-[#2997ff]'
           }
         ]
       : [])
@@ -1079,87 +1103,107 @@ export function App() {
     <div
       className={`min-h-screen min-w-0 flex flex-col antialiased transition-colors duration-200 ${
         theme === 'light'
-          ? 'bg-[#fafdff] text-[#133b5c] selection:bg-sky-200 selection:text-sky-900'
-          : 'bg-[#05070d] text-slate-100 selection:bg-cyan-500 selection:text-black'
+          ? 'bg-[#f5f5f7] text-[#1d1d1f] selection:bg-[#0071e3]/20 selection:text-[#0071e3]'
+          : 'bg-black text-[#f5f5f7] selection:bg-[#0071e3] selection:text-white'
       }`}
     >
-      {/* Top Header conform zakelijke pitch esthetiek */}
-      <header className="sticky top-0 z-50 glass-panel-luxe border-b border-white/[0.08] px-4 lg:px-7 py-2.5 relative before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-amber-400/40 before:to-transparent">
+      {/* Sticky Apple Glass Header (`uiuxapple`) */}
+      <header className="sticky top-0 z-50 apple-glass border-b border-white/[0.08] px-4 lg:px-7 py-2.5">
         <div className="max-w-7xl mx-auto flex w-full flex-wrap items-center justify-between gap-3">
-          {/* Left Area: Mobile Drawer Trigger / Desktop Sidebar Toggle + Brand */}
-          <div className="flex min-w-0 flex-1 items-center gap-3 md:flex-none">
-            {/* Brand Logo & Name */}
+          {/* Left Area: Brand Logo & Name */}
+          <div className="flex min-w-0 items-center gap-3">
             <div
-              onClick={() => setActiveTab('architecture')}
+              onClick={() => setActiveTab('landing')}
               className="flex min-w-0 items-center gap-3 cursor-pointer group"
             >
-              <div className="w-10 h-10 rounded-xl p-[2px] bg-gradient-to-tr from-amber-400 via-amber-200 to-blue-600 flex items-center justify-center shadow-lg shadow-amber-500/15 shrink-0 group-hover:shadow-amber-500/30 transition-all overflow-hidden ring-1 ring-white/20">
+              <div className="w-9 h-9 rounded-2xl p-[1.5px] bg-gradient-to-b from-white/40 to-white/10 flex items-center justify-center shadow-lg shrink-0 overflow-hidden ring-1 ring-white/15">
                 <img
                   src={quantumInitiumLogo}
                   alt="QuantumInitium Logo"
                   referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover rounded-[9px]"
+                  className="w-full h-full object-cover rounded-[14px]"
                 />
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="max-w-full truncate text-base lg:text-lg font-extrabold tracking-tight text-white flex items-center gap-1.5">
-                    <span>QuantumInitium</span> <span className="text-xs text-amber-400 font-mono font-bold px-1.5 py-0.2 rounded bg-amber-500/10 border border-amber-500/30">Ltd</span>
+                  <h1 className="max-w-full truncate text-sm lg:text-base font-semibold tracking-[-0.02em] text-white flex items-center gap-1.5">
+                    <span>QuantumInitium</span>
+                    <span className="text-[10px] text-[#2997ff] font-mono font-semibold px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/12">
+                      Ltd
+                    </span>
                   </h1>
-                  <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/30 font-mono shadow-sm">
-                    <Award className="w-3 h-3 mr-1 text-amber-400" /> Investeerdersportaal
-                  </span>
                 </div>
-                <p className="text-xs text-slate-400 hidden lg:block leading-tight mt-0.5">
-                  5 Subholdings • Centrale AI Executiemotor • 11 Entiteiten
+                <p className="text-[11px] text-[#86868b] hidden sm:block leading-tight">
+                  5 Subholdings • 12 Entiteiten • Londen UK
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Right: Auth Buttons, Target Metrics & Toggles */}
-          <div className="flex w-full min-w-0 flex-nowrap items-center justify-start gap-1 overflow-x-auto sm:gap-2.5 md:w-auto md:justify-end">
+          {/* Center Desktop Segmented Pill Switcher */}
+          <nav className="hidden xl:flex items-center bg-white/[0.06] p-1 rounded-full border border-white/10 gap-0.5">
+            {navTabs.slice(0, 6).map((tab) => {
+              const isActive = activeTab === tab.id;
+              const IconComp = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition-colors relative cursor-pointer ${
+                    isActive ? 'text-white font-semibold' : 'text-[#86868b] hover:text-white'
+                  }`}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="headerSegmentedPill"
+                      transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                      className="absolute inset-0 rounded-full bg-[#0071e3] shadow-sm -z-10"
+                    />
+                  )}
+                  <IconComp className="w-3.5 h-3.5" />
+                  <span>{tab.shortLabel}</span>
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Right: Privacy Pill, Theme/Language Toggles & Auth CTA Buttons */}
+          <div className="flex w-full min-w-0 flex-nowrap items-center justify-start gap-1.5 overflow-x-auto no-scrollbar sm:gap-2 md:w-auto md:justify-end">
             {/* Mobile Drawer Trigger */}
             <button
               id="mobile-menu-btn"
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden max-md:p-2 p-2 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 transition-all cursor-pointer shrink-0"
+              className="md:hidden px-3 py-1.5 rounded-full apple-btn-secondary text-xs flex items-center gap-1.5 cursor-pointer shrink-0"
               title="Open hoofdmenu"
             >
-              <Menu className="w-5 h-5" />
+              <Menu className="w-4 h-4" />
             </button>
 
-            {/* Geïntegreerde Preferences Toolbar (Bedragen, Thema, Taal) */}
-            <div className="flex items-center p-0.5 rounded-xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-md gap-0.5 shrink-0">
-              {/* Bedragen Zichtbaarheid Toggle */}
-              <button
-                onClick={toggleAmounts}
-                className={`p-1.5 sm:px-2 rounded-lg transition-all flex items-center gap-1 cursor-pointer text-xs shrink-0 ${
-                  theme === 'light'
-                    ? 'hover:bg-sky-100/80 text-sky-900'
-                    : 'hover:bg-slate-800 text-slate-400 hover:text-cyan-300'
-                }`}
-                title={
-                  amountsVisible
-                    ? (language === 'nl' ? 'Verberg bedragen' : 'Hide amounts')
-                    : (language === 'nl' ? 'Toon bedragen' : 'Show amounts')
-                }
-              >
-                {amountsVisible ? (
-                  <Eye className="w-3.5 h-3.5 text-cyan-400" />
-                ) : (
-                  <EyeOff className="w-3.5 h-3.5 text-slate-500" />
-                )}
-              </button>
+            {/* Interactive `👁️` Privacy Pill-Badge (`uiuxapple` rule 5.2) */}
+            <button
+              type="button"
+              onClick={toggleAmounts}
+              className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium flex items-center gap-1.5 transition-all cursor-pointer shrink-0 border ${
+                amountsVisible
+                  ? 'bg-[#30d158]/15 text-[#30d158] border-[#30d158]/35'
+                  : 'bg-white/[0.08] text-[#2997ff] border-white/15 hover:bg-white/[0.14]'
+              }`}
+              title={
+                amountsVisible
+                  ? (language === 'nl' ? 'Verberg financiële bedragen' : 'Mask financial amounts')
+                  : (language === 'nl' ? 'Toon financiële bedragen' : 'Reveal financial amounts')
+              }
+            >
+              <span className="text-[11px] leading-none" aria-hidden="true">👁️</span>
+              <span className="hidden sm:inline">{amountsVisible ? 'Bedragen Zichtbaar' : '€ ••••••'}</span>
+            </button>
 
-              {/* Licht / Donker Modus Toggle Knop */}
+            {/* Compact Theme & Language Pill */}
+            <div className="flex items-center p-0.5 rounded-full bg-white/[0.06] border border-white/10 gap-0.5 shrink-0">
               <button
                 onClick={toggleTheme}
-                className={`p-1.5 sm:px-2 rounded-lg transition-all flex items-center gap-1 cursor-pointer text-xs shrink-0 ${
-                  theme === 'light'
-                    ? 'hover:bg-amber-100/80 text-amber-900'
-                    : 'hover:bg-slate-800 text-slate-400 hover:text-amber-300'
-                }`}
+                className="p-1.5 rounded-full hover:bg-white/10 text-[#86868b] hover:text-white transition-colors cursor-pointer text-xs shrink-0"
                 title={
                   theme === 'dark'
                     ? (language === 'nl' ? 'Schakel over naar lichte modus' : 'Switch to light mode')
@@ -1167,98 +1211,74 @@ export function App() {
                 }
               >
                 {theme === 'dark' ? (
-                  <Sun className="w-3.5 h-3.5 text-amber-400" />
+                  <Sun className="w-3.5 h-3.5 text-[#f5f5f7]" />
                 ) : (
-                  <Moon className="w-3.5 h-3.5 text-cyan-600" />
+                  <Moon className="w-3.5 h-3.5 text-[#0071e3]" />
                 )}
               </button>
 
-              {/* NL / EN Taal Toggle Knop */}
               <button
                 onClick={toggleLanguage}
-                className={`p-1.5 sm:px-2 rounded-lg transition-all flex items-center gap-1 cursor-pointer text-xs font-mono font-bold shrink-0 ${
-                  theme === 'light'
-                    ? 'hover:bg-sky-100/80 text-sky-800'
-                    : 'hover:bg-slate-800 text-slate-400 hover:text-cyan-300'
-                }`}
+                className="px-2 py-1 rounded-full hover:bg-white/10 text-[#f5f5f7] transition-colors flex items-center gap-1 cursor-pointer text-[11px] font-mono font-semibold shrink-0"
                 title={language === 'nl' ? 'Switch to English (EN)' : 'Wissel naar Nederlands (NL)'}
               >
-                <Globe className="w-3.5 h-3.5 opacity-80" />
+                <Globe className="w-3 h-3 text-[#2997ff]" />
                 <span>{language.toUpperCase()}</span>
               </button>
             </div>
 
+            {/* Vacatures Quick Pill */}
+            <button
+              onClick={() => setActiveTab('careers')}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ${
+                activeTab === 'careers'
+                  ? 'apple-btn-primary'
+                  : 'apple-btn-secondary'
+              }`}
+              title={language === 'en' ? 'Vacancies — 13 Positions' : 'Vacatures — 13 Posities'}
+            >
+              <Briefcase className="w-3.5 h-3.5 text-[#30d158]" />
+              <span className="hidden sm:inline">{language === 'en' ? 'Careers' : 'Vacatures'}</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-[#30d158]/15 text-[#30d158]">13</span>
+            </button>
+
             {currentUser ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 shrink-0">
                 <button
                   onClick={() => setActiveTab(currentUser.role === 'admin' ? 'admin_dashboard' : 'investor_dashboard')}
-                  className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    activeTab === 'investor_dashboard' || activeTab === 'admin_dashboard'
-                      ? theme === 'light'
-                        ? 'bg-amber-100 border-amber-300 text-amber-950 shadow-sm shadow-amber-500/10'
-                        : 'bg-amber-500/20 border-amber-400/50 text-amber-300 shadow-sm'
-                      : theme === 'light'
-                      ? 'bg-white border-sky-200 text-sky-950 hover:bg-sky-50 hover:border-sky-300 shadow-sm'
-                      : 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white hover:border-slate-700'
-                  }`}
+                  className="apple-btn-primary px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
                   title={language === 'en' ? 'To Dashboard' : 'Naar uw Dashboard'}
                 >
                   {currentUser.role === 'admin' ? (
-                    <ShieldCheck className={`w-3.5 h-3.5 ${theme === 'light' ? 'text-cyan-600' : 'text-cyan-400'}`} />
+                    <ShieldCheck className="w-3.5 h-3.5" />
                   ) : (
-                    <TrendingUp className={`w-3.5 h-3.5 ${theme === 'light' ? 'text-amber-600' : 'text-amber-400'}`} />
+                    <TrendingUp className="w-3.5 h-3.5" />
                   )}
-                  <span className="hidden sm:inline font-mono">{currentUser.name.split(' ')[0]}</span>
-                  <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
-                    theme === 'light'
-                      ? 'bg-sky-100 text-sky-800 font-semibold'
-                      : 'bg-slate-800 text-slate-400'
-                  }`}>
-                    {currentUser.role === 'admin'
-                      ? (language === 'en' ? 'Admin' : 'Admin')
-                      : (language === 'en' ? 'Investor' : 'Investeerder')}
-                  </span>
+                  <span className="hidden sm:inline">{currentUser.name.split(' ')[0]}</span>
                 </button>
 
                 <button
                   onClick={handleLogout}
-                  className={`p-2 rounded-xl border transition-colors cursor-pointer ${
-                    theme === 'light'
-                      ? 'bg-white border-sky-200 text-slate-500 hover:text-rose-600 hover:border-rose-300 hover:bg-rose-50 shadow-sm'
-                      : 'bg-slate-900/90 border-slate-800 text-slate-400 hover:text-rose-400 hover:border-rose-500/30'
-                  }`}
+                  className="apple-btn-secondary p-2 rounded-full cursor-pointer"
                   title={language === 'en' ? 'Log out' : 'Uitloggen'}
                 >
-                  <LogOut className="w-4 h-4" />
+                  <LogOut className="w-3.5 h-3.5" />
                 </button>
               </div>
             ) : (
-              <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+              <div className="flex items-center gap-1.5 shrink-0">
                 <button
                   onClick={() => setActiveTab('login')}
-                  className={`max-md:px-2 max-md:py-1 px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    activeTab === 'login'
-                      ? theme === 'light'
-                        ? 'bg-amber-100 border-amber-300 text-amber-950 shadow-sm shadow-amber-500/10'
-                        : 'bg-amber-500/20 border-amber-400/50 text-amber-300 shadow-sm shadow-amber-500/20'
-                      : theme === 'light'
-                      ? 'bg-white border-sky-200 text-sky-950 hover:bg-sky-50 shadow-sm'
-                      : 'bg-slate-900 border-slate-800 text-slate-300 hover:text-white hover:border-slate-700'
-                  }`}
+                  className="apple-btn-secondary px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 cursor-pointer"
                   title={language === 'en' ? 'Sign In' : 'Inloggen'}
                 >
-                  <LogIn className="max-md:hidden w-3.5 h-3.5 text-amber-400" />
+                  <LogIn className="max-md:hidden w-3.5 h-3.5 text-[#2997ff]" />
                   <span>{language === 'en' ? 'Sign In' : 'Login'}</span>
                 </button>
 
-                {/* REGISTREER KNOP VOLGENS OPDRACHT */}
                 <button
                   onClick={() => setActiveTab('register')}
-                  className={`max-md:px-2 max-md:py-1 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    activeTab === 'register'
-                      ? 'bg-cyan-400 text-slate-950 shadow-md shadow-cyan-400/25'
-                      : 'bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 shadow-sm shadow-amber-500/20'
-                  }`}
+                  className="apple-btn-primary px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
                   title={language === 'en' ? 'Register as shareholder' : 'Registreer als aandeelhouder'}
                 >
                   <UserPlus className="max-md:hidden w-3.5 h-3.5" />
@@ -1266,18 +1286,8 @@ export function App() {
                 </button>
               </div>
             )}
-
-            <div className="text-right hidden xl:block">
-              <span className="text-slate-500 block text-[9px] font-mono tracking-wider uppercase">
-                HOLDING
-              </span>
-              <span className="text-amber-400 font-mono font-bold text-xs">
-                <PrivateAmount value="€ •••" />
-              </span>
-            </div>
           </div>
         </div>
-
       </header>
 
       {/* Main Workspace Layout */}
@@ -1290,41 +1300,31 @@ export function App() {
           />
         )}
 
-        {/* Mobile Slide-Over Drawer Panel */}
+        {/* Mobile Slide-Over Drawer Panel (`apple-glass`) */}
         <div
-          className={`fixed inset-y-0 left-0 z-50 w-full max-w-xs flex flex-col transition-transform duration-300 md:hidden shadow-2xl ${
-            theme === 'light'
-              ? 'bg-white border-r border-sky-200 text-sky-950'
-              : 'bg-slate-950 border-r border-slate-800 text-slate-100'
-          } ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+          className={`fixed inset-y-0 left-0 z-50 w-full max-w-xs flex flex-col transition-transform duration-300 md:hidden shadow-2xl apple-glass border-r border-white/12 ${
+            mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
         >
           {/* Mobile Drawer Header */}
-          <div className={`p-4 border-b flex items-center justify-between ${
-            theme === 'light' ? 'bg-sky-50/90 border-sky-200' : 'bg-slate-900/60 border-slate-800'
-          }`}>
+          <div className="p-4 border-b border-white/10 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <a href="https://quantuminitium.com/" aria-label="Open quantuminitium.com">
-                <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-amber-400 to-blue-700 p-0.5 flex items-center justify-center shrink-0 overflow-hidden shadow-md">
-                  <img
-                    src={quantumInitiumLogo}
-                    alt="QuantumInitium Logo"
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover rounded-[7px]"
-                  />
-                </div>
-              </a>
+              <div className="w-9 h-9 rounded-2xl bg-white/10 p-0.5 flex items-center justify-center shrink-0 overflow-hidden ring-1 ring-white/15">
+                <img
+                  src={quantumInitiumLogo}
+                  alt="QuantumInitium Logo"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover rounded-[14px]"
+                />
+              </div>
               <div>
-                <div className={`font-extrabold text-sm ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>QuantumInitium Ltd</div>
-                <div className={`text-[10px] font-mono ${theme === 'light' ? 'text-amber-700 font-semibold' : 'text-amber-400'}`}>Investeerdersportaal</div>
+                <div className="font-semibold text-sm text-white">QuantumInitium Ltd</div>
+                <div className="text-[10px] font-mono text-[#2997ff]">Investeerdersportaal</div>
               </div>
             </div>
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className={`p-2 rounded-lg cursor-pointer transition-colors ${
-                theme === 'light'
-                  ? 'bg-sky-100 text-sky-800 hover:bg-sky-200 hover:text-sky-950'
-                  : 'bg-slate-800 text-slate-400 hover:text-white'
-              }`}
+              className="p-2 rounded-full apple-btn-secondary cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -1336,52 +1336,36 @@ export function App() {
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={toggleLanguage}
-                className={`p-2.5 rounded-xl border transition-all flex items-center justify-center gap-2 cursor-pointer text-xs font-mono font-bold ${
-                  theme === 'light'
-                    ? 'bg-sky-50 hover:bg-sky-100 border-sky-200 text-sky-900'
-                    : 'bg-slate-900 border-slate-800 text-slate-300 hover:text-cyan-300'
-                }`}
+                className="p-2.5 rounded-full apple-btn-secondary flex items-center justify-center gap-2 cursor-pointer text-xs font-mono font-semibold"
               >
-                <Globe className="w-4 h-4 text-cyan-500" />
+                <Globe className="w-4 h-4 text-[#2997ff]" />
                 <span>Taal: {language.toUpperCase()}</span>
               </button>
               <button
                 onClick={toggleTheme}
-                className={`p-2.5 rounded-xl border transition-all flex items-center justify-center gap-2 cursor-pointer text-xs font-mono ${
-                  theme === 'light'
-                    ? 'bg-sky-50 hover:bg-sky-100 border-sky-200 text-sky-900'
-                    : 'bg-slate-900 border-slate-800 text-slate-300 hover:text-amber-300'
-                }`}
+                className="p-2.5 rounded-full apple-btn-secondary flex items-center justify-center gap-2 cursor-pointer text-xs font-mono"
               >
                 {theme === 'dark' ? (
                   <>
-                    <Sun className="w-4 h-4 text-amber-400" />
+                    <Sun className="w-4 h-4 text-white" />
                     <span>Licht</span>
                   </>
                 ) : (
                   <>
-                    <Moon className="w-4 h-4 text-cyan-600" />
-                    <span className="font-semibold text-sky-900">Donker</span>
+                    <Moon className="w-4 h-4 text-[#0071e3]" />
+                    <span className="font-semibold">Donker</span>
                   </>
                 )}
               </button>
             </div>
 
             {/* Auth Block in Mobile Drawer */}
-            <div className={`p-3 rounded-xl border space-y-2 ${
-              theme === 'light'
-                ? 'bg-sky-50/80 border-sky-200 text-sky-950 shadow-sm'
-                : 'bg-slate-900/90 border-slate-800'
-            }`}>
+            <div className="p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 space-y-2">
               {currentUser ? (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs">
-                    <span className={`font-bold truncate ${theme === 'light' ? 'text-sky-950' : 'text-white'}`}>{currentUser.name}</span>
-                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
-                      theme === 'light'
-                        ? 'bg-amber-100 text-amber-900 border-amber-300 font-semibold'
-                        : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
-                    }`}>
+                    <span className="font-semibold truncate text-white">{currentUser.name}</span>
+                    <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[#0071e3]/20 text-[#2997ff] border border-[#2997ff]/30">
                       {currentUser.role === 'admin' ? 'Admin' : 'Investeerder'}
                     </span>
                   </div>
@@ -1391,7 +1375,7 @@ export function App() {
                         setActiveTab(currentUser.role === 'admin' ? 'admin_dashboard' : 'investor_dashboard');
                         setMobileMenuOpen(false);
                       }}
-                      className="px-3 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+                      className="apple-btn-primary px-3 py-2 rounded-full font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <TrendingUp className="w-3.5 h-3.5" />
                       <span>Dashboard</span>
@@ -1401,11 +1385,7 @@ export function App() {
                         handleLogout();
                         setMobileMenuOpen(false);
                       }}
-                      className={`px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer border transition-colors ${
-                        theme === 'light'
-                          ? 'bg-white hover:bg-rose-50 text-rose-700 border-rose-200 shadow-sm'
-                          : 'bg-slate-800 text-rose-300 hover:text-white border-slate-700'
-                      }`}
+                      className="apple-btn-secondary px-3 py-2 rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <LogOut className="w-3.5 h-3.5" />
                       <span>Uitloggen</span>
@@ -1419,13 +1399,9 @@ export function App() {
                       setActiveTab('login');
                       setMobileMenuOpen(false);
                     }}
-                    className={`px-3 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 border cursor-pointer transition-colors ${
-                      theme === 'light'
-                        ? 'bg-white hover:bg-sky-50 text-sky-950 border-sky-200 shadow-sm'
-                        : 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700'
-                    }`}
+                    className="apple-btn-secondary px-3 py-2 rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
                   >
-                    <LogIn className="w-3.5 h-3.5 text-amber-500" />
+                    <LogIn className="w-3.5 h-3.5 text-[#2997ff]" />
                     <span>Inloggen</span>
                   </button>
                   <button
@@ -1433,7 +1409,7 @@ export function App() {
                       setActiveTab('register');
                       setMobileMenuOpen(false);
                     }}
-                    className="px-3 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+                    className="apple-btn-primary px-3 py-2 rounded-full font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <UserPlus className="w-3.5 h-3.5" />
                     <span>Registreren</span>
@@ -1527,37 +1503,21 @@ export function App() {
 
         {/* Upgraded Desktop Sidebar Navigation (Open / Collapsed Mode) */}
         {sidebarOpen ? (
-          <aside className={`hidden md:flex flex-col w-80 border-r transition-all duration-300 h-[calc(100vh-61px)] shrink-0 z-30 ${
-            theme === 'light'
-              ? 'bg-white/95 border-sky-200 text-sky-950 shadow-sm'
-              : 'bg-slate-950/90 border-slate-800 text-slate-100'
-          }`}>
+          <aside className="hidden md:flex flex-col w-80 border-r border-white/[0.08] apple-glass transition-all duration-300 h-[calc(100vh-61px)] shrink-0 z-30">
             {/* Sidebar Top: Navigator Title & Mode Switcher */}
-            <div className={`p-3.5 border-b space-y-3 backdrop-blur-md ${
-              theme === 'light' ? 'bg-sky-50/80 border-sky-200' : 'bg-slate-900/40 border-slate-800'
-            }`}>
+            <div className="p-3.5 border-b border-white/[0.08] space-y-3">
               <div className="flex items-center justify-between">
-                <div className={`flex items-center gap-2 text-xs font-bold font-mono uppercase tracking-wider ${
-                  theme === 'light' ? 'text-sky-950' : 'text-slate-200'
-                }`}>
-                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                <div className="flex items-center gap-2 text-xs font-semibold font-mono uppercase tracking-wider text-white">
+                  <span className="w-2 h-2 rounded-full bg-[#30d158]"></span>
                   <span>Quantum Navigator</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
-                    theme === 'light'
-                      ? 'bg-sky-100 text-sky-800 border-sky-300 font-bold'
-                      : 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20'
-                  }`}>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.06] text-[#2997ff] border border-white/10">
                     v2.4
                   </span>
                   <button
                     onClick={() => setSidebarOpen(false)}
-                    className={`p-1 rounded-md transition-colors cursor-pointer ${
-                      theme === 'light'
-                        ? 'text-sky-700 hover:text-sky-950 hover:bg-sky-100'
-                        : 'text-slate-400 hover:text-white hover:bg-slate-800'
-                    }`}
+                    className="p-1 rounded-full text-[#86868b] hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                     title={language === 'en' ? 'Collapse sidebar' : 'Zijpaneel inklappen'}
                   >
                     <PanelLeftClose className="w-4 h-4" />
@@ -1565,54 +1525,40 @@ export function App() {
                 </div>
               </div>
 
-              {/* Mode Tabs: Modules vs Dossier Hoofdstukken vs Entiteiten Index */}
-              <div className={`grid grid-cols-3 p-1 rounded-xl border text-xs shadow-inner ${
-                theme === 'light' ? 'bg-sky-100/70 border-sky-200' : 'bg-slate-900/90 border-slate-800/80'
-              }`}>
+              {/* Segmented Pill-Switcher (`uiuxapple` 4.3) */}
+              <div className="grid grid-cols-3 bg-white/[0.06] p-1 rounded-full border border-white/10 text-xs">
                 <button
                   onClick={() => setSidebarView('modules')}
-                  className={`py-1.5 px-1.5 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`py-1.5 px-1.5 rounded-full font-medium flex items-center justify-center gap-1 transition-all cursor-pointer ${
                     sidebarView === 'modules'
-                      ? theme === 'light'
-                        ? 'bg-white text-cyan-900 border border-sky-300 shadow-sm font-bold'
-                        : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow-sm'
-                      : theme === 'light'
-                      ? 'text-sky-800/70 hover:text-sky-950'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-[#0071e3] text-white font-semibold shadow-sm'
+                      : 'text-[#86868b] hover:text-white'
                   }`}
                 >
                   <LayoutGrid className="w-3.5 h-3.5" />
-                  <span>{language === 'en' ? 'Modules' : 'Modules'}</span>
+                  <span>Modules</span>
                 </button>
                 <button
                   onClick={() => setSidebarView('chapters')}
-                  className={`py-1.5 px-1.5 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`py-1.5 px-1.5 rounded-full font-medium flex items-center justify-center gap-1 transition-all cursor-pointer ${
                     sidebarView === 'chapters'
-                      ? theme === 'light'
-                        ? 'bg-white text-cyan-900 border border-sky-300 shadow-sm font-bold'
-                        : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow-sm'
-                      : theme === 'light'
-                      ? 'text-sky-800/70 hover:text-sky-950'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-[#0071e3] text-white font-semibold shadow-sm'
+                      : 'text-[#86868b] hover:text-white'
                   }`}
                 >
                   <BookOpen className="w-3.5 h-3.5" />
-                  <span>{language === 'en' ? 'Dossier' : 'Dossier'} ({chapterList.length})</span>
+                  <span>Dossier</span>
                 </button>
                 <button
                   onClick={() => setSidebarView('entities')}
-                  className={`py-1.5 px-1.5 rounded-lg font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`py-1.5 px-1.5 rounded-full font-medium flex items-center justify-center gap-1 transition-all cursor-pointer ${
                     sidebarView === 'entities'
-                      ? theme === 'light'
-                        ? 'bg-white text-amber-900 border border-amber-300 shadow-sm font-bold'
-                        : 'bg-amber-500/20 text-amber-300 border border-amber-500/30 shadow-sm'
-                      : theme === 'light'
-                      ? 'text-sky-800/70 hover:text-sky-950'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-[#0071e3] text-white font-semibold shadow-sm'
+                      : 'text-[#86868b] hover:text-white'
                   }`}
                 >
                   <Building2 className="w-3.5 h-3.5" />
-                  <span>{language === 'en' ? 'Entities' : 'Entiteiten'} ({allEntitiesList.length})</span>
+                  <span>12 Ltd’s</span>
                 </button>
               </div>
             </div>
@@ -2128,24 +2074,38 @@ export function App() {
         )}
 
         {/* Main Workspace Body */}
-        <main className="flex min-h-0 min-w-0 flex-1 flex-col h-[calc(100vh-124px)] md:h-[calc(100vh-61px)] overflow-hidden bg-slate-950/40 relative">
+        <main className="flex min-h-0 min-w-0 flex-1 flex-col h-[calc(100vh-124px)] md:h-[calc(100vh-61px)] overflow-hidden bg-black relative">
           {accountSaveError && (
             <div className="absolute inset-x-3 top-3 z-50 rounded-xl border border-rose-500/40 bg-rose-950/90 px-4 py-3 text-xs text-rose-200 shadow-lg">
               {accountSaveError}
             </div>
           )}
+
+          {/* TAB 0: APPLE PRO LANDING PAGE WITH MOTION DESIGN, FRAMER MOTION & 3D */}
+          {activeTab === 'landing' && (
+            <LandingPage
+              theme={theme}
+              language={language}
+              subholdings={subholdingCardsData}
+              entities={allEntitiesList}
+              onNavigateTab={(tab) => setActiveTab(tab)}
+              onSelectSubholding={(holdcoId, targetView) => handleSelectSubholding(holdcoId, targetView)}
+              onSelectChapter={(chNum) => handleSelectChapter(chNum)}
+            />
+          )}
+
           {/* TAB 1: VISUAL FLOW ARCHITECTURE MAP */}
           {activeTab === 'architecture' && (
             <div className="flex-1 min-w-0 overflow-y-auto p-3 sm:p-5 lg:p-8 space-y-6 sm:space-y-8">
-              <div className="glass-panel min-w-0 p-4 sm:p-7 rounded-2xl border border-yellow-500/30 gold-glow flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 sm:gap-6">
+              <div className="apple-glass min-w-0 p-4 sm:p-7 rounded-3xl border border-white/12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 sm:gap-6">
                 <div className="min-w-0 space-y-2">
-                  <div className="flex items-center gap-2 text-yellow-400 font-mono text-xs font-bold uppercase tracking-widest">
+                  <div className="flex items-center gap-2 text-[#2997ff] font-mono text-xs font-semibold uppercase tracking-widest">
                     <Network className="w-4 h-4" /> Strategische Architectuur
                   </div>
-                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight leading-tight break-words">
+                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white tracking-[-0.03em] leading-tight break-words">
                     Vijf Gespecialiseerde Subholdings & Firewalling
                   </h2>
-                  <p className="text-sm text-slate-300 max-w-3xl leading-relaxed">
+                  <p className="text-sm text-[#86868b] max-w-3xl leading-relaxed">
                     Geconsolideerde holdingstructuur rondom <strong>QuantumInitium Ltd (Moederholding)</strong>. Strikte juridische entiteitsscheiding (firewalling) elimineert kruisbesmetting van passiva tussen sectoren.
                   </p>
                 </div>
@@ -3892,13 +3852,24 @@ export function App() {
             </div>
           )}
 
+          {/* TAB: VACATURES / CAREERS PAGINA */}
+          {activeTab === 'careers' && (
+            <div className="flex-1 overflow-y-auto h-full w-full">
+              <CareersPage
+                theme={theme}
+                language={language}
+                onNavigateHome={(t) => setActiveTab(t || 'landing')}
+              />
+            </div>
+          )}
+
           {/* TAB: LOGIN PAGINA */}
           {activeTab === 'login' && (
             <div className="flex-1 overflow-y-auto h-full w-full">
               <LoginPage
                 onLoginSuccess={handleLoginSuccess}
                 onNavigateRegister={() => setActiveTab('register')}
-                onNavigateHome={(t) => setActiveTab(t || 'architecture')}
+                onNavigateHome={(t) => setActiveTab(t || 'landing')}
               />
             </div>
           )}
@@ -3909,7 +3880,7 @@ export function App() {
               <RegisterPage
                 onRegisterSuccess={handleRegisterSuccess}
                 onNavigateLogin={() => setActiveTab('login')}
-                onNavigateHome={(t) => setActiveTab(t || 'architecture')}
+                onNavigateHome={(t) => setActiveTab(t || 'landing')}
               />
             </div>
           )}
@@ -3921,7 +3892,7 @@ export function App() {
                 user={currentUser && currentUser.role !== 'admin' ? currentUser : DEMO_INVESTOR}
                 emailEditable={isDemoModeEnabled}
                 onLogout={handleLogout}
-                onNavigateHome={(t) => setActiveTab(t || 'architecture')}
+                onNavigateHome={(t) => setActiveTab(t || 'landing')}
                 onUpdateShares={(newTotal) => {
                   if (currentUser) setCurrentUser({ ...currentUser, sharesOwned: newTotal });
                 }}
@@ -3941,7 +3912,7 @@ export function App() {
                 emailEditable={isDemoModeEnabled}
                 onUpdateAccount={handleManagedAccountUpdate}
                 onLogout={handleLogout}
-                onNavigateHome={(t) => setActiveTab(t || 'architecture')}
+                onNavigateHome={(t) => setActiveTab(t || 'landing')}
                 onSwitchRole={() => {
                   setCurrentUser(DEMO_INVESTOR);
                   setActiveTab('investor_dashboard');

@@ -27,7 +27,7 @@ import OAuthButtons from './OAuthButtons';
 interface RegisterPageProps {
   onRegisterSuccess: (user: AuthUser) => void;
   onNavigateLogin: () => void;
-  onNavigateHome: (tab?: 'architecture' | '3d' | 'dossier' | 'simulator') => void;
+  onNavigateHome: (tab?: 'landing' | 'architecture' | '3d' | 'dossier' | 'simulator') => void;
 }
 
 export default function RegisterPage({
@@ -113,41 +113,38 @@ export default function RegisterPage({
   };
 
   return (
-    <div className="w-full min-h-full flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-[#05070d] pb-16">
+    <div className="w-full min-h-full flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-black pb-16">
       <div className="w-full max-w-xl mx-auto space-y-6">
         {/* Terug naar presentatie */}
         <div className="flex items-center justify-between gap-3 text-xs">
           <button
-            onClick={() => onNavigateHome('architecture')}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 transition-colors cursor-pointer"
+            onClick={() => onNavigateHome('landing')}
+            className="apple-btn-secondary flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium cursor-pointer"
           >
-            <ArrowRight className="w-3.5 h-3.5 rotate-180 text-cyan-400" />
-            <span>Terug naar Presentatie</span>
+            <ArrowRight className="w-3.5 h-3.5 rotate-180 text-[#2997ff]" />
+            <span>Terug naar Overzicht</span>
           </button>
 
-          <span className="text-[11px] font-mono text-slate-500">
+          <span className="text-[11px] font-mono text-[#86868b]">
             Officiële Uitgifte Serie A
           </span>
         </div>
 
         {/* Registratie Kaart */}
-        <div className="glass-panel-luxe p-6 sm:p-8 rounded-3xl border border-white/[0.09] shadow-2xl relative overflow-hidden before:absolute before:inset-x-0 before:top-0 before:h-[2px] before:bg-gradient-to-r before:from-transparent before:via-cyan-400/60 before:to-transparent">
-          <div className="absolute top-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="apple-glass-card p-6 sm:p-8 rounded-[2rem] border border-white/12 shadow-2xl relative overflow-hidden">
+          <div className="absolute -top-20 left-0 w-64 h-64 bg-[#0071e3]/15 rounded-full blur-[110px] pointer-events-none" />
+          <div className="absolute -bottom-20 right-0 w-64 h-64 bg-[#2997ff]/10 rounded-full blur-[110px] pointer-events-none" />
 
           <div className="text-center space-y-2 mb-6 relative">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-bold">
-              <UserPlus className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.06] border border-white/12 text-[#2997ff] text-xs font-mono font-semibold">
+              <UserPlus className="w-3.5 h-3.5 text-[#30d158]" />
               <span>Nieuwe Participatie Registratie</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-white tracking-[-0.03em]">
               Investeerder Registratie
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto">
+            <p className="text-xs sm:text-sm text-[#86868b] max-w-md mx-auto">
               Registreer direct uw participatie in QuantumInitium Ltd. Officiële aandelenkoers is vastgesteld op €{SHARE_PRICE_CURRENT.toFixed(2)}.
-            </p>
-            <p className="text-[11px] text-slate-500 max-w-md mx-auto">
-              Kies hieronder voor snelle registratie met Google, LinkedIn of Facebook, of gebruik het formulier voor e-mailregistratie.
             </p>
           </div>
 
@@ -162,90 +159,90 @@ export default function RegisterPage({
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {errorMsg && (
-              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+              <div className="p-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
                 <HelpCircle className="w-4 h-4 shrink-0 text-rose-400" />
                 <span>{errorMsg}</span>
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-mono font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-mono font-medium text-[#86868b] mb-1.5">
                 Volledige Naam
               </label>
               <div className="relative">
-                <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <User className="w-4 h-4 text-[#86868b] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
                   placeholder="Bijvoorbeeld: Drs. M. Jansen"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:border-amber-400 focus:outline-none transition-colors"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/12 text-white text-sm focus:border-[#0071e3] focus:outline-none transition-colors"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-mono font-medium text-slate-300 mb-1.5">
+              <label className="block text-xs font-mono font-medium text-[#86868b] mb-1.5">
                 Emailadres
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Mail className="w-4 h-4 text-[#86868b] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="investeerder@domein.nl"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:border-amber-400 focus:outline-none transition-colors"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/12 text-white text-sm focus:border-[#0071e3] focus:outline-none transition-colors"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-mono font-medium text-slate-300 mb-1.5">
+                <label className="block text-xs font-mono font-medium text-[#86868b] mb-1.5">
                   Wachtwoord
                 </label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <Lock className="w-4 h-4 text-[#86868b] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     placeholder="Minimaal 6 tekens"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:border-amber-400 focus:outline-none transition-colors"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/12 text-white text-sm focus:border-[#0071e3] focus:outline-none transition-colors"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-mono font-medium text-slate-300 mb-1.5">
+                <label className="block text-xs font-mono font-medium text-[#86868b] mb-1.5">
                   Wachtwoord Bevestigen
                 </label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <Lock className="w-4 h-4 text-[#86868b] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                   <input
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                     placeholder="Herhaal wachtwoord"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:border-amber-400 focus:outline-none transition-colors"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/[0.05] border border-white/12 text-white text-sm focus:border-[#0071e3] focus:outline-none transition-colors"
                   />
                 </div>
               </div>
             </div>
 
             {/* Investering Calculator Indicatie tijdens registratie */}
-            <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2.5">
+            <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/10 space-y-2.5">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-mono text-slate-300 flex items-center gap-1.5">
-                  <Calculator className="w-3.5 h-3.5 text-amber-400" />
+                <span className="font-mono text-[#f5f5f7] flex items-center gap-1.5">
+                  <Calculator className="w-3.5 h-3.5 text-[#2997ff]" />
                   Aantal Aandelen Reservering:
                 </span>
-                <span className="font-mono font-bold text-amber-300">
+                <span className="font-mono font-bold text-[#2997ff]">
                   {desiredShares.toLocaleString('nl-NL')} aandelen
                 </span>
               </div>
@@ -257,24 +254,24 @@ export default function RegisterPage({
                 step={250}
                 value={desiredShares}
                 onChange={(e) => setDesiredShares(Number(e.target.value))}
-                className="w-full accent-amber-400 cursor-pointer"
+                className="w-full cursor-pointer"
               />
 
-              <div className="flex items-center justify-between text-[11px] font-mono pt-1 border-t border-slate-800/80 text-slate-400">
+              <div className="flex items-center justify-between text-[11px] font-mono pt-1 border-t border-white/10 text-[#86868b]">
                 <span>Koers: €{SHARE_PRICE_CURRENT.toFixed(2)} per aandeel</span>
-                <span className="text-emerald-400 font-bold">
+                <span className="text-[#30d158] font-bold">
                   Waarde: €{totalInvestment.toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>
             </div>
 
             {/* Akkoord voorwaarden */}
-            <label className="flex items-start gap-2.5 text-xs text-slate-400 cursor-pointer select-none">
+            <label className="flex items-start gap-2.5 text-xs text-[#86868b] cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={agreedTerms}
                 onChange={(e) => setAgreedTerms(e.target.checked)}
-                className="mt-0.5 rounded border-slate-700 text-amber-400 focus:ring-amber-400 cursor-pointer"
+                className="mt-0.5 rounded border-white/20 text-[#0071e3] focus:ring-[#0071e3] cursor-pointer"
               />
               <span>
                 Ik verklaar kennis te hebben genomen van het Investeerdersdossier en de juridische brandmuurisolatie tussen de 5 subholdings.
@@ -284,19 +281,19 @@ export default function RegisterPage({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 disabled:opacity-60 disabled:cursor-wait text-slate-950 shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
+              className="apple-btn-primary w-full py-3 px-4 rounded-full font-semibold text-sm disabled:opacity-60 disabled:cursor-wait flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>{isSubmitting ? 'Account beveiligen...' : 'Account Aanmaken & Naar Dashboard'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
 
-          <div className="mt-6 pt-5 border-t border-slate-800/80 text-center text-xs text-slate-400">
+          <div className="mt-6 pt-5 border-t border-white/10 text-center text-xs text-[#86868b]">
             Heeft u reeds een aandeelhoudersaccount?{' '}
             <button
               type="button"
               onClick={onNavigateLogin}
-              className="font-bold text-cyan-400 hover:text-cyan-300 underline underline-offset-4 cursor-pointer"
+              className="font-semibold text-[#2997ff] hover:underline underline-offset-4 cursor-pointer"
             >
               Log hier direct in
             </button>
