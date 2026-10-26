@@ -61,15 +61,7 @@ const AdminDashboard = React.lazy(() => import('./components/AdminDashboard'));
 const CareersPage = React.lazy(() => import('./components/CareersPage'));
 import ErrorBoundary from './components/ErrorBoundary';
 import { AuthUser, DEMO_INVESTOR, DEMO_ADMIN, SHARE_PRICE_CURRENT } from './types/auth';
-import { createManagedAccount, loadAccountForSession, loadManagedAccounts, saveManagedAccount } from './lib/accountStore';
-import {
-  buildRegisteredInvestor,
-  clearAuthSession,
-  consumeOAuthIntent,
-  getCurrentAuthIdentity,
-  isDemoModeEnabled,
-  isFirebaseConfigured
-} from './lib/authStore';
+import { isDemoModeEnabled, isFirebaseConfigured } from './lib/firebaseConfig';
 import { ecosystemData } from './data/ecosystem';
 import { AmountPrivacyProvider, PrivateAmount, maskAmounts } from './lib/amountPrivacy';
 import quantumInitiumLogo from './assets/images/quantum_initium_logo_256.webp';
@@ -622,8 +614,11 @@ export function App() {
     setActiveTab('investor_dashboard');
   };
 
-  const handleLogout = () => {
-    void clearAuthSession();
+  const handleLogout = async () => {
+    try {
+      const { clearAuthSession } = await import('./lib/authStore');
+      void clearAuthSession();
+    } catch {}
     setCurrentUser(null);
     setActiveTab('landing');
   };
@@ -632,20 +627,22 @@ export function App() {
     if (!isFirebaseConfigured) return;
 
     let isMounted = true;
-    void getCurrentAuthIdentity().then(async (identity) => {
+    void import('./lib/authStore').then(async (auth) => {
+      const identity = await auth.getCurrentAuthIdentity();
       if (!identity || !isMounted) {
         return;
       }
-      consumeOAuthIntent();
+      auth.consumeOAuthIntent();
+      const accountStore = await import('./lib/accountStore');
       try {
-        const account = await loadAccountForSession(identity);
+        const account = await accountStore.loadAccountForSession(identity);
         if (isMounted) {
           handleLoginSuccess(account);
         }
       } catch {
         const normalizedEmail = identity.email.toLowerCase();
         const isInfoAdmin = normalizedEmail === 'info@quantuminitium.com' || normalizedEmail === 'info@jamaldrenthe.com';
-        const newUser = buildRegisteredInvestor(
+        const newUser = auth.buildRegisteredInvestor(
           identity.id,
           identity.name || (isInfoAdmin ? 'Directie QuantumInitium' : identity.email.split('@')[0] || 'Investeerder'),
           identity.email,
@@ -655,8 +652,8 @@ export function App() {
           newUser.role = 'admin';
         }
         try {
-          await createManagedAccount(newUser, identity.id);
-          const account = await loadAccountForSession(identity);
+          await accountStore.createManagedAccount(newUser, identity.id);
+          const account = await accountStore.loadAccountForSession(identity);
           if (isMounted) {
             handleLoginSuccess(account);
           }
@@ -685,42 +682,40 @@ export function App() {
 
     let isMounted = true;
     setAccountsLoading(true);
-    loadManagedAccounts()
-      .then((accounts) => {
-        if (isMounted) {
-          setManagedAccounts(accounts);
-        }
-      })
-      .catch((error: unknown) => {
-        if (isMounted) {
-          setAccountSaveError(error instanceof Error ? error.message : 'Accounts laden mislukt.');
-        }
-      })
-      .finally(() => {
-        if (isMounted) {
-          setAccountsLoading(false);
-        }
-      });
+    void import('./lib/accountStore').then(async ({ loadManagedAccounts }) => {
+      const accounts = await loadManagedAccounts();
+      if (isMounted) {
+        setManagedAccounts(accounts);
+      }
+    }).catch((error: unknown) => {
+      if (isMounted) {
+        setAccountSaveError(error instanceof Error ? error.message : 'Accounts laden mislukt.');
+      }
+    }).finally(() => {
+      if (isMounted) {
+        setAccountsLoading(false);
+      }
+    });
 
     return () => {
       isMounted = false;
     };
   }, [currentUser?.role]);
 
-  const handleManagedAccountUpdate = (updatedAccount: AuthUser) => {
+  const handleManagedAccountUpdate = async (updatedAccount: AuthUser) => {
     setAccountSaveError(null);
-    void saveManagedAccount(updatedAccount)
-      .then(() => {
-        setManagedAccounts((accounts) => {
-          const exists = accounts.some((account) => account.id === updatedAccount.id);
-          return exists
-            ? accounts.map((account) => (account.id === updatedAccount.id ? updatedAccount : account))
-            : [...accounts, updatedAccount];
-        });
-      })
-      .catch((error: unknown) => {
-        setAccountSaveError(error instanceof Error ? error.message : 'Account opslaan mislukt.');
+    try {
+      const { saveManagedAccount } = await import('./lib/accountStore');
+      await saveManagedAccount(updatedAccount);
+      setManagedAccounts((accounts) => {
+        const exists = accounts.some((account) => account.id === updatedAccount.id);
+        return exists
+          ? accounts.map((account) => (account.id === updatedAccount.id ? updatedAccount : account))
+          : [...accounts, updatedAccount];
       });
+    } catch (error: unknown) {
+      setAccountSaveError(error instanceof Error ? error.message : 'Account opslaan mislukt.');
+    }
   };
 
   const handleCurrentUserUpdate = (updatedUser: AuthUser) => {

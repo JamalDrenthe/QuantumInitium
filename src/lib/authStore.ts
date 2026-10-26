@@ -15,17 +15,15 @@ import {
   type User
 } from 'firebase/auth';
 import { AuthUser, SHARE_PRICE_CURRENT } from '../types/auth';
-import { firebaseAuth, isFirebaseConfigured } from './firebase';
+import { firebaseAuth } from './firebase';
+import { isFirebaseConfigured, isDemoModeEnabled } from './firebaseConfig';
 
 export type OAuthProvider = 'google' | 'linkedin_oidc' | 'facebook';
 export type OAuthIntent = 'login' | 'register';
 
 const OAUTH_INTENT_STORAGE_KEY = 'qi_auth_oauth_intent';
 
-export const isDemoModeEnabled =
-  import.meta.env.VITE_ENABLE_DEMO_MODE !== 'false' || !isFirebaseConfigured;
-
-export { isFirebaseConfigured };
+export { isFirebaseConfigured, isDemoModeEnabled };
 
 function requireFirebaseAuth() {
   if (!firebaseAuth) {
