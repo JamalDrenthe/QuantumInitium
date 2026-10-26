@@ -41,6 +41,21 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      window.addEventListener('error', function(e) {
+        console.error('Global capture:', e.error || e.message);
+        var root = document.getElementById('root');
+        if (root && (!root.innerHTML || root.innerHTML.trim() === '')) {
+          root.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#05070d;color:#fff;font-family:system-ui,sans-serif;padding:24px;text-align:center;">' +
+            '<div style="max-width:480px;background:#0c121e;border:1px solid rgba(255,255,255,0.15);padding:28px;border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,0.8);">' +
+            '<div style="width:48px;height:48px;border-radius:12px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:24px;">⚠️</div>' +
+            '<h2 style="margin:0 0 8px;font-size:20px;font-weight:700;">Weergave wordt hersteld</h2>' +
+            '<p style="color:#94a3b8;font-size:13px;line-height:1.5;margin-bottom:20px;">Er is een initialisatiefout opgetreden. Klik op de knop om de webapplicatie opnieuw te laden.</p>' +
+            '<button onclick="location.reload()" style="background:#ffffff;color:#000000;border:none;padding:10px 24px;border-radius:999px;font-weight:600;font-size:13px;cursor:pointer;">Opnieuw laden</button>' +
+            '</div></div>';
+        }
+      });
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

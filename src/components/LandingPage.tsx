@@ -168,6 +168,7 @@ const QuantumHero3DCore: React.FC<QuantumHero3DCoreProps> = ({
   activeSubholdingIndex
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
+  const [webGlAvailable, setWebGlAvailable] = useState<boolean>(true);
   const stateRef = useRef({
     isPaused,
     cameraMode,
@@ -186,13 +187,31 @@ const QuantumHero3DCore: React.FC<QuantumHero3DCoreProps> = ({
     const container = mountRef.current;
     if (!container) return;
 
+    // Check WebGL availability
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (!gl) {
+      setWebGlAvailable(false);
+      return;
+    }
+
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+    } catch {
+      setWebGlAvailable(false);
+      return;
+    }
+
+    const initW = Math.max(container.clientWidth || 0, 320);
+    const initH = Math.max(container.clientHeight || 0, 360);
+
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(42, container.clientWidth / Math.max(container.clientHeight, 1), 0.1, 100);
+    const camera = new THREE.PerspectiveCamera(42, initW / initH, 0.1, 100);
     camera.position.set(0, 3.2, 11.5);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(initW, initH);
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
 
@@ -448,7 +467,11 @@ const QuantumHero3DCore: React.FC<QuantumHero3DCoreProps> = ({
 
       particleCloud.rotation.y = clock * 0.12;
 
-      renderer.render(scene, camera);
+      try {
+        renderer.render(scene, camera);
+      } catch {
+        // Ignore frame render error
+      }
     };
 
     animate();
@@ -457,9 +480,28 @@ const QuantumHero3DCore: React.FC<QuantumHero3DCoreProps> = ({
       cancelAnimationFrame(rafId);
       resizeObserver.disconnect();
       container.removeEventListener('pointermove', handlePointerMove);
-      renderer.dispose();
+      try {
+        renderer.dispose();
+      } catch {
+        // Safe disposal
+      }
     };
   }, [theme]);
+
+  if (!webGlAvailable) {
+    return (
+      <div className="w-full h-full min-h-[360px] sm:min-h-[440px] flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-[#070e1c] to-black">
+        <div className="relative flex items-center justify-center p-8">
+          <div className="w-64 h-64 rounded-full border border-cyan-400/20 animate-spin" style={{ animationDuration: '30s' }} />
+          <div className="absolute w-48 h-48 rounded-full border border-blue-500/30 animate-spin" style={{ animationDuration: '20s', animationDirection: 'reverse' }} />
+          <div className="absolute w-32 h-32 rounded-full border border-amber-400/40 animate-pulse" />
+          <div className="absolute w-20 h-20 rounded-2xl bg-white/[0.08] backdrop-blur-xl border border-white/20 p-3 shadow-2xl flex items-center justify-center">
+            <img src="/favicon.svg" alt="Quantum Initium" className="w-full h-full object-contain" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return <div ref={mountRef} className="w-full h-full min-h-[360px] sm:min-h-[440px]" />;
 };
@@ -606,7 +648,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   return (
     <div
       ref={scrollContainerRef}
-      className="flex-1 overflow-y-auto overflow-x-hidden scroll-smooth relative select-none sm:select-auto bg-black text-[#f5f5f7]"
+      className="flex-1 min-h-0 h-full w-full overflow-y-auto overflow-x-hidden scroll-smooth relative select-none sm:select-auto bg-black text-[#f5f5f7]"
     >
       {/* Top Scroll Progress Hairline */}
       <motion.div

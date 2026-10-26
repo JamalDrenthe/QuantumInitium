@@ -57,6 +57,7 @@ import InvestorDashboard from './components/InvestorDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import CareersPage from './components/CareersPage';
 import LandingPage from './components/LandingPage';
+import ErrorBoundary from './components/ErrorBoundary';
 import { AuthUser, DEMO_INVESTOR, DEMO_ADMIN, SHARE_PRICE_CURRENT } from './types/auth';
 import { createManagedAccount, loadAccountForSession, loadManagedAccounts, saveManagedAccount } from './lib/accountStore';
 import {
@@ -2180,15 +2181,17 @@ export function App() {
 
           {/* TAB 0: APPLE PRO LANDING PAGE WITH MOTION DESIGN, FRAMER MOTION & 3D */}
           {activeTab === 'landing' && (
-            <LandingPage
-              theme={theme}
-              language={language}
-              subholdings={subholdingCardsData}
-              entities={allEntitiesList}
-              onNavigateTab={(tab) => setActiveTab(tab)}
-              onSelectSubholding={(holdcoId, targetView) => handleSelectSubholding(holdcoId, targetView)}
-              onSelectChapter={(chNum) => handleSelectChapter(chNum)}
-            />
+            <ErrorBoundary fallbackTitle="Landing Page Herstellen">
+              <LandingPage
+                theme={theme}
+                language={language}
+                subholdings={subholdingCardsData}
+                entities={allEntitiesList}
+                onNavigateTab={(tab) => setActiveTab(tab)}
+                onSelectSubholding={(holdcoId, targetView) => handleSelectSubholding(holdcoId, targetView)}
+                onSelectChapter={(chNum) => handleSelectChapter(chNum)}
+              />
+            </ErrorBoundary>
           )}
 
           {/* TAB 1: VISUAL FLOW ARCHITECTURE MAP */}
