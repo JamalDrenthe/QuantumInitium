@@ -206,7 +206,7 @@ export default function CareersPage({
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl space-y-3">
               <div className="inline-flex items-center gap-2 rounded-lg bg-amber-500/10 border border-amber-500/30 px-3 py-1 text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
-                <Building2 className="w-3.5 h-3.5" />
+                <img src="/favicon.svg" alt="Quantum Initium" className="w-4 h-4 object-contain" />
                 <span>Quantum Initium</span>
               </div>
 
