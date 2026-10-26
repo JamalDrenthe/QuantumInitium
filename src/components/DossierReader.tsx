@@ -64,7 +64,7 @@ export const DossierReader: React.FC<DossierReaderProps> = ({ currentChapter }) 
             </div>
             <div className="w-20 h-20 rounded-2xl bg-slate-900 border border-amber-400/40 p-1.5 shrink-0 shadow-xl gold-glow hidden sm:flex items-center justify-center overflow-hidden">
               <img
-                src="/quantum_initium_logo.jpg"
+                src="/quantum_initium_logo_256.webp"
                 alt="QuantumInitium Ltd Logo"
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover rounded-xl"

@@ -48,15 +48,17 @@ import {
   Mail,
   Briefcase
 } from 'lucide-react';
-import EcosystemCanvas, { EcosystemCanvasHandle } from './components/EcosystemCanvas';
-import OnboardingRoutesPanel from './components/OnboardingRoutesPanel';
-import DossierReader from './components/DossierReader';
-import LoginPage from './components/LoginPage';
-import RegisterPage from './components/RegisterPage';
-import InvestorDashboard from './components/InvestorDashboard';
-import AdminDashboard from './components/AdminDashboard';
-import CareersPage from './components/CareersPage';
+import type { EcosystemCanvasHandle } from './components/EcosystemCanvas';
 import LandingPage from './components/LandingPage';
+// Zware tabbladen worden pas geladen wanneer ze geopend worden (code-splitting)
+const EcosystemCanvas = React.lazy(() => import('./components/EcosystemCanvas'));
+const OnboardingRoutesPanel = React.lazy(() => import('./components/OnboardingRoutesPanel'));
+const DossierReader = React.lazy(() => import('./components/DossierReader'));
+const LoginPage = React.lazy(() => import('./components/LoginPage'));
+const RegisterPage = React.lazy(() => import('./components/RegisterPage'));
+const InvestorDashboard = React.lazy(() => import('./components/InvestorDashboard'));
+const AdminDashboard = React.lazy(() => import('./components/AdminDashboard'));
+const CareersPage = React.lazy(() => import('./components/CareersPage'));
 import ErrorBoundary from './components/ErrorBoundary';
 import { AuthUser, DEMO_INVESTOR, DEMO_ADMIN, SHARE_PRICE_CURRENT } from './types/auth';
 import { createManagedAccount, loadAccountForSession, loadManagedAccounts, saveManagedAccount } from './lib/accountStore';
@@ -70,7 +72,7 @@ import {
 } from './lib/authStore';
 import { ecosystemData } from './data/ecosystem';
 import { AmountPrivacyProvider, PrivateAmount, maskAmounts } from './lib/amountPrivacy';
-import quantumInitiumLogo from './assets/images/quantum_initium_logo_1790097745176.jpg';
+import quantumInitiumLogo from './assets/images/quantum_initium_logo_256.webp';
 
 interface EntityItem {
   name: string;
@@ -2173,6 +2175,14 @@ export function App() {
 
         {/* Main Workspace Body */}
         <main className="flex min-h-0 min-w-0 flex-1 flex-col h-[calc(100vh-124px)] md:h-[calc(100vh-61px)] overflow-hidden bg-black relative">
+          <React.Suspense
+            fallback={
+              <div className="flex flex-1 items-center justify-center" role="status" aria-live="polite">
+                <div className="h-8 w-8 rounded-full border-2 border-white/15 border-t-[#2997ff] animate-spin" />
+                <span className="sr-only">Laden…</span>
+              </div>
+            }
+          >
           {accountSaveError && (
             <div className="absolute inset-x-3 top-3 z-50 rounded-xl border border-rose-500/40 bg-rose-950/90 px-4 py-3 text-xs text-rose-200 shadow-lg">
               {accountSaveError}
@@ -4060,6 +4070,7 @@ export function App() {
               </button>
             </footer>
           )}
+          </React.Suspense>
         </main>
       </div>
     </div>

@@ -1261,7 +1261,7 @@ export const InstitutionalDossierModal: React.FC<InstitutionalDossierModalProps>
         <div className="flex items-center justify-between px-10 py-6 border-b border-white/10 bg-slate-950/90 shrink-0">
           <div className="flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-xl bg-slate-900 border border-amber-400/40 flex items-center justify-center p-0.5 shrink-0 overflow-hidden shadow-md">
-              <img src="/quantum_initium_logo.jpg" alt="QuantumInitium Logo" referrerPolicy="no-referrer" className="w-full h-full object-cover rounded-[9px]" />
+              <img src="/quantum_initium_logo_256.webp" alt="QuantumInitium Logo" referrerPolicy="no-referrer" className="w-full h-full object-cover rounded-[9px]" />
             </div>
             <div>
               <div className="text-base font-bold text-white">QuantumInitium Ltd</div>
