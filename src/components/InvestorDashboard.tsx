@@ -59,8 +59,11 @@ import {
   Copy,
   Eye,
   QrCode,
-  Power
+  Power,
+  Inbox
 } from 'lucide-react';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { firebaseAuth, firestoreDb } from '../lib/firebase';
 import {
   AuthUser,
   SHARE_PRICE_CURRENT,
@@ -93,6 +96,19 @@ interface StoredPortfolio {
   sharesOwned: number;
   cashBalance: number;
   transactions?: ShareTransaction[];
+}
+
+interface PitchIntake {
+  id: string;
+  name: string;
+  org: string;
+  email: string;
+  phone?: string;
+  area: string;
+  scope: string;
+  language?: string;
+  source?: string;
+  createdAtLabel: string;
 }
 
 function readStoredPortfolio(userId: string): StoredPortfolio | null {
@@ -214,7 +230,46 @@ export default function InvestorDashboard({
   const [calcShares, setCalcShares] = useState<number>(currentUser.sharesOwned || 12500);
 
   // Account Sub-Tab & Institutional State
-  const [accountSubTab, setAccountSubTab] = useState<'profiel' | 'bank' | 'ecosysteem' | 'documenten' | 'beveiliging'>('profiel');
+  const [accountSubTab, setAccountSubTab] = useState<'profiel' | 'bank' | 'ecosysteem' | 'documenten' | 'beveiliging' | 'intakes'>('profiel');
+  const [intakes, setIntakes] = useState<PitchIntake[]>([]);
+  const [intakesLoading, setIntakesLoading] = useState(false);
+  const [intakesError, setIntakesError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (accountSubTab !== 'intakes' || intakes.length > 0) return;
+    if (!firestoreDb || !firebaseAuth?.currentUser) return;
+    setIntakesLoading(true);
+    setIntakesError(null);
+    (async () => {
+      try {
+        const snap = await getDocs(
+          query(collection(firestoreDb, 'intakes'), orderBy('createdAt', 'desc'))
+        );
+        setIntakes(
+          snap.docs.map((d) => {
+            const data = d.data();
+            const ts = data.createdAt?.toDate?.();
+            return {
+              id: d.id,
+              name: data.name ?? '',
+              org: data.org ?? '',
+              email: data.email ?? '',
+              phone: data.phone ?? '',
+              area: data.area ?? '',
+              scope: data.scope ?? '',
+              language: data.language ?? '',
+              source: data.source ?? '',
+              createdAtLabel: ts ? ts.toLocaleString('nl-NL') : 'Onbekend'
+            };
+          })
+        );
+      } catch {
+        setIntakesError('Intakes konden niet worden geladen. Alleen admins hebben leesrechten.');
+      } finally {
+        setIntakesLoading(false);
+      }
+    })();
+  }, [accountSubTab]);
   const [accountFormData, setAccountFormData] = useState({
     name: currentUser.name || '',
     email: currentUser.email || '',
@@ -2539,7 +2594,10 @@ export default function InvestorDashboard({
                 { id: 'bank' as const, label: 'Bank, Dividend & Xabi World Rails', icon: Landmark, color: 'text-emerald-400' },
                 { id: 'ecosysteem' as const, label: 'Ecosysteem Rechten (4 Pijlers)', icon: Network, color: 'text-cyan-400' },
                 { id: 'documenten' as const, label: `Documenten Kluis (${vaultDocuments.length})`, icon: FileText, color: 'text-amber-400' },
-                { id: 'beveiliging' as const, label: 'Beveiliging & Gemachtigden', icon: ShieldCheck, color: 'text-teal-400' }
+                { id: 'beveiliging' as const, label: 'Beveiliging & Gemachtigden', icon: ShieldCheck, color: 'text-teal-400' },
+                ...(currentUser.role === 'admin'
+                  ? [{ id: 'intakes' as const, label: `Pitch Intakes${intakes.length ? ` (${intakes.length})` : ''}`, icon: Inbox, color: 'text-rose-400' }]
+                  : [])
               ].map((tab) => {
                 const TabIcon = tab.icon;
                 const isActive = accountSubTab === tab.id;
@@ -3515,6 +3573,86 @@ export default function InvestorDashboard({
                       <span className={`text-[11px] font-mono ${sess.current ? 'text-emerald-400 font-bold' : (theme === 'light' ? 'text-sky-800/70' : 'text-slate-400')}`}>
                         {sess.lastActive}
                       </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* SUB-TAB 6: PITCH INTAKES (VANGUARDTECH PITCHTOOL, ADMIN ONLY)           */}
+          {/* ========================================================================= */}
+          {accountSubTab === 'intakes' && (
+            <div className="space-y-4">
+              <div className={`p-6 sm:p-8 rounded-3xl border shadow-lg ${
+                theme === 'light' ? 'bg-white border-sky-200 text-sky-950' : 'bg-slate-900/60 border-slate-800 text-white'
+              }`}>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+                  <div>
+                    <h3 className="text-base font-bold flex items-center gap-2">
+                      <Inbox className="w-5 h-5 text-rose-400" />
+                      <span>Pitch Intakes | pitch.vanguardtech.nl</span>
+                    </h3>
+                    <p className={`text-xs ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                      Vertrouwelijke briefings aangevraagd via de Vanguard Tech pitchtool. Alleen zichtbaar voor admins.
+                    </p>
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/30 text-xs font-mono font-bold">
+                    {intakes.length} aanvragen
+                  </span>
+                </div>
+
+                {intakesLoading && (
+                  <p className={`py-8 text-center text-sm ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                    Intakes laden...
+                  </p>
+                )}
+
+                {intakesError && (
+                  <p className="py-8 text-center text-sm text-rose-400">{intakesError}</p>
+                )}
+
+                {!intakesLoading && !intakesError && intakes.length === 0 && (
+                  <p className={`py-8 text-center text-sm ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                    Nog geen intakes ontvangen.
+                  </p>
+                )}
+
+                <div className="space-y-3 pt-4">
+                  {intakes.map((intake) => (
+                    <div
+                      key={intake.id}
+                      className={`p-4 rounded-xl border ${
+                        theme === 'light' ? 'bg-sky-50/50 border-sky-200' : 'bg-slate-950 border-slate-800'
+                      }`}
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-500/30 to-cyan-500/30 border border-rose-500/30 flex items-center justify-center font-black text-xs text-rose-300">
+                            {intake.name.slice(0, 2).toUpperCase() || '??'}
+                          </div>
+                          <div>
+                            <div className="text-sm font-bold">{intake.name}</div>
+                            <div className={`text-[11px] ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                              {intake.org} • {intake.email}{intake.phone ? ` • ${intake.phone}` : ''}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="px-2.5 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-[10px] font-mono font-bold">
+                            {intake.area}
+                          </span>
+                          <span className={`text-[10px] font-mono ${theme === 'light' ? 'text-sky-800/70' : 'text-slate-400'}`}>
+                            {intake.createdAtLabel}
+                          </span>
+                        </div>
+                      </div>
+                      {intake.scope && (
+                        <p className={`mt-3 text-xs leading-relaxed ${theme === 'light' ? 'text-sky-900' : 'text-slate-300'}`}>
+                          {intake.scope}
+                        </p>
+                      )}
                     </div>
                   ))}
                 </div>
