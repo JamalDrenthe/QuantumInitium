@@ -423,62 +423,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             className="apple-hardware-frame rounded-[2rem] sm:rounded-[2.5rem] p-2 sm:p-3.5 relative overflow-hidden"
           >
             <div className="rounded-[1.6rem] sm:rounded-[2rem] bg-[#060608] border border-white/10 overflow-hidden relative">
-              {/* Top macOS / VisionOS Window Bar */}
-              <div className="apple-glass border-b border-white/[0.08] px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 z-20 relative">
-                <div className="flex items-center gap-2.5">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
-                  </div>
-                  <span className="text-xs font-mono text-[#86868b] pl-2 border-l border-white/10">
-                    QuantumInitium Spatial Core • WebGL 3D
-                  </span>
-                </div>
-
-                {/* Segmented Pill Camera Mode Switcher + Pause Button */}
-                <div className="flex items-center gap-2 flex-wrap">
-                  <div className="bg-white/[0.06] p-1 rounded-full border border-white/10 flex items-center text-[11px] font-medium">
-                    {(
-                      [
-                        { id: 'orbit', label: 'Orbit 3D' },
-                        { id: 'topdown', label: 'Top-Down' },
-                        { id: 'closeup', label: 'Core Focus' }
-                      ] as const
-                    ).map((preset) => (
-                      <button
-                        key={preset.id}
-                        type="button"
-                        onClick={() => setCameraMode(preset.id)}
-                        className={`px-3 py-1 rounded-full transition-all cursor-pointer relative ${
-                          cameraMode === preset.id ? 'text-white font-semibold' : 'text-[#86868b] hover:text-white'
-                        }`}
-                      >
-                        {cameraMode === preset.id && (
-                          <motion.span
-                            layoutId="heroCamPill"
-                            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                            className="absolute inset-0 rounded-full bg-[#0071e3] -z-10"
-                          />
-                        )}
-                        {preset.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setIs3DPaused((p) => !p)}
-                    className="apple-btn-secondary px-3 py-1.5 rounded-full text-[11px] font-mono inline-flex items-center gap-1.5 cursor-pointer"
-                    title={is3DPaused ? 'Hervat 3D rotatie' : 'Pauzeer 3D rotatie'}
-                    aria-label={is3DPaused ? 'Hervat 3D rotatie' : 'Pauzeer 3D rotatie'}
-                  >
-                    {is3DPaused ? <Play className="w-3 h-3 text-[#30d158]" /> : <Pause className="w-3 h-3 text-[#2997ff]" />}
-                    <span>{is3DPaused ? 'Play' : 'Pause'}</span>
-                  </button>
-                </div>
-              </div>
-
               {/* Main Split Inside Hardware Frame: Interactive 3D Canvas + Live Ring-Fence Selector */}
               <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch min-h-[420px]">
                 <div className="lg:col-span-8 relative min-h-[360px] sm:min-h-[440px] flex items-center justify-center">
