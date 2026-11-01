@@ -41,6 +41,7 @@ import {
   applicationSteps,
   domainFilters
 } from '../data/vacancies';
+import { crmos } from '../lib/crmos';
 
 interface CareersPageProps {
   theme?: 'dark' | 'light';
@@ -124,7 +125,7 @@ export default function CareersPage({
     }
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
 
@@ -148,12 +149,44 @@ export default function CareersPage({
 
     setFormSubmitting(true);
 
-    // Gesimuleerde verzending naar de directie van Quantum Initium
-    setTimeout(() => {
-      setFormSubmitting(false);
-      const code = `QI-VAC-${selectedVacancyCode}-${Math.floor(1000 + Math.random() * 9000)}`;
-      setFormSuccessCode(code);
-    }, 750);
+    const nameParts = formName.trim().split(' ');
+    const firstName = nameParts[0] || 'Kandidaat';
+    const lastName = nameParts.slice(1).join(' ') || '';
+    const vacancyTitle = currentVacancy?.title || `Vacature [${selectedVacancyCode}/13]`;
+
+    // Bi-directionele sync naar CRMos (kandidaten & contacten)
+    try {
+      // 1. Schrijf kandidaat in CRMos (/api/v1/candidates)
+      await crmos.submitCandidate({
+        first_name: firstName,
+        last_name: lastName,
+        email: formEmail.trim(),
+        phone: formPhone.trim() || undefined,
+        skills: [vacancyTitle, formContractType, formHours],
+        experience_years: 3,
+        location: '100% Remote',
+        notes: `Sollicitatie via Quantum Initium webportaal op [${selectedVacancyCode}/13] ${vacancyTitle}. LinkedIn: ${formLinkedIn || 'Niet opgegeven'}. Motivatie: ${formMotivation || 'Geen'}`
+      });
+
+      // 2. Upsert contact in CRMos (/api/v1/contacts/upsert)
+      await crmos.upsertContact({
+        first_name: firstName,
+        last_name: lastName,
+        email: formEmail.trim(),
+        phone: formPhone.trim() || undefined,
+        company: 'Quantum Initium Sollicitant',
+        company_tags: ['#quantum_initium'],
+        tags: ['Sollicitant', `#qi_${selectedVacancyCode}`, '#recruitment'],
+        notes: `Sollicitatie op ${vacancyTitle} (${formContractType}, ${formHours}). LinkedIn: ${formLinkedIn}`,
+        status: 'qualified'
+      });
+    } catch (apiErr) {
+      console.warn('[CareersPage] CRMos push notice:', apiErr);
+    }
+
+    setFormSubmitting(false);
+    const code = `QI-VAC-${selectedVacancyCode}-${Math.floor(1000 + Math.random() * 9000)}`;
+    setFormSuccessCode(code);
   };
 
   const handleResetForm = () => {
