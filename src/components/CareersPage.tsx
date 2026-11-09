@@ -162,10 +162,14 @@ export default function CareersPage({
         last_name: lastName,
         email: formEmail.trim(),
         phone: formPhone.trim() || undefined,
+        role_applied: vacancyTitle,
+        deal_model: 'no_cure_no_pay',
+        company: 'Quantum Initium',
+        tags: ['#quantum-initium', '#careers', 'Sollicitant', `#qi_${selectedVacancyCode}`],
         skills: [vacancyTitle, formContractType, formHours],
         experience_years: 3,
         location: '100% Remote',
-        notes: `Sollicitatie via Quantum Initium webportaal op [${selectedVacancyCode}/13] ${vacancyTitle}. LinkedIn: ${formLinkedIn || 'Niet opgegeven'}. Motivatie: ${formMotivation || 'Geen'}`
+        notes: `Sollicitatie via Quantum Initium webportaal op [${selectedVacancyCode}/13] ${vacancyTitle} (${formContractType}, ${formHours}). LinkedIn: ${formLinkedIn || 'Niet opgegeven'}. Motivatie: ${formMotivation || 'Geen'}`
       });
 
       // 2. Upsert contact in CRMos (/api/v1/contacts/upsert)
@@ -174,10 +178,10 @@ export default function CareersPage({
         last_name: lastName,
         email: formEmail.trim(),
         phone: formPhone.trim() || undefined,
-        company: 'Quantum Initium Sollicitant',
-        company_tags: ['#quantum_initium'],
-        tags: ['Sollicitant', `#qi_${selectedVacancyCode}`, '#recruitment'],
-        notes: `Sollicitatie op ${vacancyTitle} (${formContractType}, ${formHours}). LinkedIn: ${formLinkedIn}`,
+        company: 'Quantum Initium',
+        company_tags: ['#quantum-initium'],
+        tags: ['#quantum-initium', 'Sollicitant', 'Kandidaat', `#qi_${selectedVacancyCode}`],
+        notes: `Sollicitatie ontvangen voor [${selectedVacancyCode}/13] ${vacancyTitle} (${formContractType}, ${formHours}). LinkedIn: ${formLinkedIn || 'Niet opgegeven'}.`,
         status: 'qualified'
       });
     } catch (apiErr) {
